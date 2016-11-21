@@ -22,5 +22,5 @@ import (
 )
 
 func init() {
-	fmt.Fprintf(os.Stderr, "Not yet implemented\n")
+	fmt.Fprintf(os.Stderr, "spec: Not yet implemented\n")
 }
