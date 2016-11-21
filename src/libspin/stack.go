@@ -42,13 +42,9 @@ type OpRepo struct {
 	RepoURI  string
 }
 
-// Compatible determines if two operations are compatible with one
-// another
+// Compatible will always return false as OpRepo cannot be stacked
 func (o *OpRepo) Compatible(o2 Operation) bool {
-	if reflect.TypeOf(o) != reflect.TypeOf(o2) {
-		return false
-	}
-	return true
+	return false
 }
 
 // An OpGroup is an operation to install a group/component
