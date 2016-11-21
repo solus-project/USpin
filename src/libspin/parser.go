@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
 )
 
@@ -53,6 +54,16 @@ func (i *ImageSpecParser) pushOperation(op Operation) {
 	if i.curSet == nil {
 		i.curSet = &OpSet{}
 	}
+	// Just insert the operation, it's the first guy
+	if len(i.curSet.Ops) == 0 {
+		goto insertOp
+	}
+	// Type mismatch, begin a new stack
+	if reflect.TypeOf(op) != reflect.TypeOf(i.curSet.Ops[0]) {
+		i.Stack.Blocks = append(i.Stack.Blocks, i.curSet)
+		i.curSet = &OpSet{}
+	}
+insertOp:
 	i.curSet.Ops = append(i.curSet.Ops, op)
 }
 
@@ -128,8 +139,7 @@ func (i *ImageSpecParser) Parse(path string) error {
 			}
 		}
 		i.pushOperation(op)
-		fmt.Fprintf(os.Stderr, "Line: (group? %v ignoreSafety? %v) %s\n", isGroup, ignoreSafety, line)
 	}
 
-	return errors.New("Not yet implemented!")
+	return nil
 }
