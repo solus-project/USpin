@@ -29,6 +29,8 @@ import (
 type ImageSpecParser struct {
 	CommentCharacter   string
 	RepoSplitCharacter string
+	SafetyCharacter    string
+	GroupCharacter     string
 }
 
 // NewParser will return a new parser for the image specification file
@@ -36,6 +38,8 @@ func NewParser() *ImageSpecParser {
 	return &ImageSpecParser{
 		CommentCharacter:   "#",
 		RepoSplitCharacter: "=",
+		SafetyCharacter:    "~",
+		GroupCharacter:     "@",
 	}
 }
 
@@ -54,6 +58,10 @@ func (i *ImageSpecParser) Parse(path string) error {
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
 		lineno++
+
+		// ~ character ignores safety.
+		ignoreSafety := false
+		isGroup := false
 
 		if line == "" {
 			continue
@@ -75,7 +83,19 @@ func (i *ImageSpecParser) Parse(path string) error {
 			continue
 		}
 
-		fmt.Fprintf(os.Stderr, "Line: %s\n", line)
+		// Check if safety is disabled
+		if strings.HasPrefix(line, i.SafetyCharacter) {
+			ignoreSafety = true
+			line = line[len(i.SafetyCharacter):]
+		}
+
+		// Check if its a group or not
+		if strings.HasPrefix(line, i.GroupCharacter) {
+			isGroup = true
+			line = line[len(i.GroupCharacter):]
+		}
+
+		fmt.Fprintf(os.Stderr, "Line: (group? %v ignoreSafety? %v) %s\n", isGroup, ignoreSafety, line)
 	}
 
 	return errors.New("Not yet implemented!")
