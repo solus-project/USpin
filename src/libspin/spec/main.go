@@ -14,24 +14,13 @@
 // limitations under the License.
 //
 
-package libspin
+package spec
 
 import (
-	"testing"
+	"fmt"
+	"os"
 )
 
-const (
-	minimalFile = "../../testdata/minimal.conf"
-)
-
-func TestParseMinimalImage(t *testing.T) {
-	p := NewParser()
-
-	if err := p.Parse(minimalFile); err != nil {
-		t.Fatalf("Failed to parse minimal file: %v\n", err)
-	}
-
-	if len(p.Stack.Blocks) != 4 {
-		t.Fatalf("Incorrect number of blocks for config: %v\n", len(p.Stack.Blocks))
-	}
+func init() {
+	fmt.Fprintf(os.Stderr, "Not yet implemented\n")
 }

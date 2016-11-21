@@ -7,7 +7,7 @@ BINARIES = \
 	solspin
 
 LIBRARIES = \
-	libspin
+	libspin/spec
 
 GO_TESTS = \
 	$(addsuffix .test,$(LIBRARIES))
