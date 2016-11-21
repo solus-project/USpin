@@ -18,6 +18,7 @@ package libspin
 
 import (
 	"errors"
+	"os"
 )
 
 // ImageSpecParser does the heavy lifting of parsing a .spin file to pull all
@@ -33,5 +34,10 @@ func NewParser() *ImageSpecParser {
 // Parse will attempt to parse the given image speicifcation file at the given
 // path, and will return an error if this fails.
 func (i *ImageSpecParser) Parse(path string) error {
+	fi, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer fi.Close()
 	return errors.New("Not yet implemented!")
 }
