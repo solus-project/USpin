@@ -18,10 +18,8 @@ package libspin
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 )
 
@@ -59,10 +57,12 @@ func (i *ImageSpecParser) pushOperation(op Operation) {
 		goto insertOp
 	}
 	// Type mismatch, begin a new stack
-	if reflect.TypeOf(op) != reflect.TypeOf(i.curSet.Ops[0]) {
+	if !op.Compatible(i.curSet.Ops[0]) {
+		fmt.Fprintf(os.Stderr, "%v not compatible with %v\n", op, i.curSet.Ops[0])
 		i.Stack.Blocks = append(i.Stack.Blocks, i.curSet)
 		i.curSet = &OpSet{}
 	}
+
 insertOp:
 	i.curSet.Ops = append(i.curSet.Ops, op)
 }
@@ -140,6 +140,9 @@ func (i *ImageSpecParser) Parse(path string) error {
 		}
 		i.pushOperation(op)
 	}
+
+	i.Stack.Blocks = append(i.Stack.Blocks, i.curSet)
+	i.curSet = nil
 
 	return nil
 }

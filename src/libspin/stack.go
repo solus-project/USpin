@@ -16,6 +16,10 @@
 
 package libspin
 
+import (
+	"reflect"
+)
+
 // OpStack contains all top level blocks
 type OpStack struct {
 	Blocks []*OpSet
@@ -27,13 +31,24 @@ type OpSet struct {
 }
 
 // Operation is the base Op type
-type Operation interface{}
+type Operation interface {
+	Compatible(Operation) bool
+}
 
 // An OpRepo is an operation to enable a repository on a target
 type OpRepo struct {
 	Operation
 	RepoName string
 	RepoURI  string
+}
+
+// Compatible determines if two operations are compatible with one
+// another
+func (o *OpRepo) Compatible(o2 Operation) bool {
+	if reflect.TypeOf(o) != reflect.TypeOf(o2) {
+		return false
+	}
+	return true
 }
 
 // An OpGroup is an operation to install a group/component
@@ -43,9 +58,31 @@ type OpGroup struct {
 	IgnoreSafety bool
 }
 
+// Compatible determines if two OpGroup's are compatible with one another
+func (o *OpGroup) Compatible(o2 Operation) bool {
+	if reflect.TypeOf(o) != reflect.TypeOf(o2) {
+		return false
+	}
+	if o2.(*OpGroup).IgnoreSafety != o.IgnoreSafety {
+		return false
+	}
+	return true
+}
+
 // An OpPackage is an operation to install a given package
 type OpPackage struct {
 	Operation
 	Name         string
 	IgnoreSafety bool
+}
+
+// Compatible determines if two OpPackage's are compatible with one another
+func (o *OpPackage) Compatible(o2 Operation) bool {
+	if reflect.TypeOf(o) != reflect.TypeOf(o2) {
+		return false
+	}
+	if o2.(*OpPackage).IgnoreSafety != o.IgnoreSafety {
+		return false
+	}
+	return true
 }
