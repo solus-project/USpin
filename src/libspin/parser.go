@@ -17,8 +17,11 @@
 package libspin
 
 import (
+	"bufio"
 	"errors"
+	"fmt"
 	"os"
+	"strings"
 )
 
 // ImageSpecParser does the heavy lifting of parsing a .spin file to pull all
@@ -39,5 +42,12 @@ func (i *ImageSpecParser) Parse(path string) error {
 		return err
 	}
 	defer fi.Close()
+	sc := bufio.NewScanner(fi)
+
+	for sc.Scan() {
+		line := strings.TrimSpace(sc.Text())
+		fmt.Fprintf(os.Stderr, "Line: %s\n", line)
+	}
+
 	return errors.New("Not yet implemented!")
 }
