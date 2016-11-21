@@ -1,0 +1,20 @@
+# "Normal" static binary
+%.statbin:
+	GOPATH=$(PWD) go install $(subst .statbin,,$@)
+
+clean:
+	test ! -d $(PWD)/pkg || rm -rvf $(PWD)/pkg; \
+	test ! -d $(PWD)/bin || rm -rvf $(PWD)/bin
+
+%.compliant:
+	@ ( \
+		pushd "$(PROJECT_ROOT)/$(subst .compliant,,$@)" >/dev/null || exit 1; \
+		go fmt || exit 1; \
+		GOPATH=$(PWD)/ golint || exit 1; \
+		GOPATH=$(PWD)/ go vet || exit 1; \
+	);
+
+%.test:
+	GOPATH=$(PWD) go test $(subst .test,,$@)
+
+check: $(GO_TESTS)
