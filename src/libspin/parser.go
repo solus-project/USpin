@@ -27,13 +27,15 @@ import (
 // ImageSpecParser does the heavy lifting of parsing a .spin file to pull all
 // relevant stack operations from it.
 type ImageSpecParser struct {
-	CommentCharacter string
+	CommentCharacter   string
+	RepoSplitCharacter string
 }
 
 // NewParser will return a new parser for the image specification file
 func NewParser() *ImageSpecParser {
 	return &ImageSpecParser{
-		CommentCharacter: "#",
+		CommentCharacter:   "#",
+		RepoSplitCharacter: "=",
 	}
 }
 
@@ -47,8 +49,11 @@ func (i *ImageSpecParser) Parse(path string) error {
 	defer fi.Close()
 	sc := bufio.NewScanner(fi)
 
+	lineno := 0
+
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
+		lineno++
 
 		if line == "" {
 			continue
@@ -56,6 +61,17 @@ func (i *ImageSpecParser) Parse(path string) error {
 
 		// Check for single line comments
 		if strings.HasPrefix(line, i.CommentCharacter) {
+			continue
+		}
+
+		// Check if this is a repo
+		if strings.Contains(line, i.RepoSplitCharacter) {
+			fields := strings.Split(line, "=")
+			value := strings.TrimSpace(strings.Join(fields[1:], "="))
+			if value == "" {
+				return fmt.Errorf("Missing value for repo declaration '%v' on line '%v'\n", fields[0], lineno)
+			}
+			// TODO: Add an OpRepo to the stack
 			continue
 		}
 
