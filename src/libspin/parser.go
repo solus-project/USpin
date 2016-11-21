@@ -27,11 +27,14 @@ import (
 // ImageSpecParser does the heavy lifting of parsing a .spin file to pull all
 // relevant stack operations from it.
 type ImageSpecParser struct {
+	CommentCharacter string
 }
 
 // NewParser will return a new parser for the image specification file
 func NewParser() *ImageSpecParser {
-	return &ImageSpecParser{}
+	return &ImageSpecParser{
+		CommentCharacter: "#",
+	}
 }
 
 // Parse will attempt to parse the given image speicifcation file at the given
@@ -46,6 +49,16 @@ func (i *ImageSpecParser) Parse(path string) error {
 
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
+
+		if line == "" {
+			continue
+		}
+
+		// Check for single line comments
+		if strings.HasPrefix(line, i.CommentCharacter) {
+			continue
+		}
+
 		fmt.Fprintf(os.Stderr, "Line: %s\n", line)
 	}
 
