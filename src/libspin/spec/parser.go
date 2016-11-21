@@ -23,9 +23,9 @@ import (
 	"strings"
 )
 
-// ImageSpecParser does the heavy lifting of parsing a .spin file to pull all
+// Parser does the heavy lifting of parsing a .spin file to pull all
 // relevant stack operations from it.
-type ImageSpecParser struct {
+type Parser struct {
 	CommentCharacter   string
 	RepoSplitCharacter string
 	SafetyCharacter    string
@@ -37,8 +37,8 @@ type ImageSpecParser struct {
 }
 
 // NewParser will return a new parser for the image specification file
-func NewParser() *ImageSpecParser {
-	return &ImageSpecParser{
+func NewParser() *Parser {
+	return &Parser{
 		CommentCharacter:   "#",
 		RepoSplitCharacter: "=",
 		SafetyCharacter:    "~",
@@ -48,7 +48,7 @@ func NewParser() *ImageSpecParser {
 }
 
 // pushOperation will push an operation to the last set we have
-func (i *ImageSpecParser) pushOperation(op Operation) {
+func (i *Parser) pushOperation(op Operation) {
 	if i.curSet == nil {
 		i.curSet = &OpSet{}
 	}
@@ -69,7 +69,7 @@ insertOp:
 
 // Parse will attempt to parse the given image speicifcation file at the given
 // path, and will return an error if this fails.
-func (i *ImageSpecParser) Parse(path string) error {
+func (i *Parser) Parse(path string) error {
 	fi, err := os.Open(path)
 	if err != nil {
 		return err
