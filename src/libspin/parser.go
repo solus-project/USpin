@@ -33,6 +33,8 @@ type ImageSpecParser struct {
 	GroupCharacter     string
 
 	Stack *OpStack
+
+	curSet *OpSet
 }
 
 // NewParser will return a new parser for the image specification file
@@ -46,6 +48,14 @@ func NewParser() *ImageSpecParser {
 	}
 }
 
+// pushOperation will push an operation to the last set we have
+func (i *ImageSpecParser) pushOperation(op Operation) {
+	if i.curSet == nil {
+		i.curSet = &OpSet{}
+	}
+	i.curSet.Ops = append(i.curSet.Ops, op)
+}
+
 // Parse will attempt to parse the given image speicifcation file at the given
 // path, and will return an error if this fails.
 func (i *ImageSpecParser) Parse(path string) error {
@@ -57,8 +67,6 @@ func (i *ImageSpecParser) Parse(path string) error {
 	sc := bufio.NewScanner(fi)
 
 	lineno := 0
-
-	stack := &OpSet{}
 
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
@@ -89,7 +97,7 @@ func (i *ImageSpecParser) Parse(path string) error {
 				RepoURI:  value,
 			}
 			// TODO: Check we're adding to the right stack or need another one!
-			stack.Ops = append(stack.Ops, op)
+			i.pushOperation(op)
 			continue
 		}
 
@@ -105,20 +113,21 @@ func (i *ImageSpecParser) Parse(path string) error {
 			line = line[len(i.GroupCharacter):]
 		}
 
+		var op Operation
+
 		// Add the operation to the stack
 		if isGroup {
-			op := &OpGroup{
+			op = &OpGroup{
 				GroupName:    line,
 				IgnoreSafety: ignoreSafety,
 			}
-			stack.Ops = append(stack.Ops, op)
 		} else {
-			op := &OpPackage{
+			op = &OpPackage{
 				Name:         line,
 				IgnoreSafety: ignoreSafety,
 			}
-			stack.Ops = append(stack.Ops, op)
 		}
+		i.pushOperation(op)
 		fmt.Fprintf(os.Stderr, "Line: (group? %v ignoreSafety? %v) %s\n", isGroup, ignoreSafety, line)
 	}
 
