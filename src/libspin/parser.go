@@ -31,6 +31,8 @@ type ImageSpecParser struct {
 	RepoSplitCharacter string
 	SafetyCharacter    string
 	GroupCharacter     string
+
+	Stack *OpStack
 }
 
 // NewParser will return a new parser for the image specification file
@@ -40,6 +42,7 @@ func NewParser() *ImageSpecParser {
 		RepoSplitCharacter: "=",
 		SafetyCharacter:    "~",
 		GroupCharacter:     "@",
+		Stack:              &OpStack{},
 	}
 }
 
@@ -54,6 +57,8 @@ func (i *ImageSpecParser) Parse(path string) error {
 	sc := bufio.NewScanner(fi)
 
 	lineno := 0
+
+	stack := &OpSet{}
 
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
@@ -79,7 +84,12 @@ func (i *ImageSpecParser) Parse(path string) error {
 			if value == "" {
 				return fmt.Errorf("Missing value for repo declaration '%v' on line '%v'\n", fields[0], lineno)
 			}
-			// TODO: Add an OpRepo to the stack
+			op := &OpRepo{
+				RepoName: fields[0],
+				RepoURI:  value,
+			}
+			// TODO: Check we're adding to the right stack or need another one!
+			stack.Ops = append(stack.Ops, op)
 			continue
 		}
 
@@ -95,6 +105,20 @@ func (i *ImageSpecParser) Parse(path string) error {
 			line = line[len(i.GroupCharacter):]
 		}
 
+		// Add the operation to the stack
+		if isGroup {
+			op := &OpGroup{
+				GroupName:    line,
+				IgnoreSafety: ignoreSafety,
+			}
+			stack.Ops = append(stack.Ops, op)
+		} else {
+			op := &OpPackage{
+				Name:         line,
+				IgnoreSafety: ignoreSafety,
+			}
+			stack.Ops = append(stack.Ops, op)
+		}
 		fmt.Fprintf(os.Stderr, "Line: (group? %v ignoreSafety? %v) %s\n", isGroup, ignoreSafety, line)
 	}
 

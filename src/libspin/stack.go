@@ -23,7 +23,7 @@ type OpStack struct {
 
 // OpSet has a given type of operations that it supports
 type OpSet struct {
-	Ops []*Operation
+	Ops []Operation
 }
 
 // Operation is the base Op type
@@ -39,7 +39,8 @@ type OpRepo struct {
 // An OpGroup is an operation to install a group/component
 type OpGroup struct {
 	Operation
-	GroupName string
+	GroupName    string
+	IgnoreSafety bool
 }
 
 // An OpPackage is an operation to install a given package
