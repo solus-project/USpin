@@ -17,8 +17,6 @@
 package libspin
 
 import (
-	"fmt"
-	"os"
 	"testing"
 )
 
@@ -31,13 +29,6 @@ func TestParseMinimalImage(t *testing.T) {
 
 	if err := p.Parse(minimalFile); err != nil {
 		t.Fatalf("Failed to parse minimal file: %v\n", err)
-	}
-
-	for _, block := range p.Stack.Blocks {
-		fmt.Fprintf(os.Stderr, "Block start\n")
-		for _, op := range block.Ops {
-			fmt.Fprintf(os.Stderr, "%v\n", op)
-		}
 	}
 
 	if len(p.Stack.Blocks) != 4 {
