@@ -16,13 +16,17 @@
 
 package libspin
 
+import (
+	"errors"
+)
+
 // ImageSpecParser does the heavy lifting of parsing a .spin file to pull all
 // relevant stack operations from it.
 type ImageSpecParser struct {
 }
 
 // NewParser will return a new parser for the image specification file
-func NewParser(path string) *ImageSpecParser {
+func NewParser() *ImageSpecParser {
 	return &ImageSpecParser{}
 }
 
