@@ -107,7 +107,6 @@ func (i *ImageSpecParser) Parse(path string) error {
 				RepoName: fields[0],
 				RepoURI:  value,
 			}
-			// TODO: Check we're adding to the right stack or need another one!
 			i.pushOperation(op)
 			continue
 		}
