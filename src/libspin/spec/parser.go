@@ -58,7 +58,6 @@ func (i *Parser) pushOperation(op Operation) {
 	}
 	// Type mismatch, begin a new stack
 	if !op.Compatible(i.curSet.Ops[0]) {
-		fmt.Fprintf(os.Stderr, "%v not compatible with %v\n", op, i.curSet.Ops[0])
 		i.Stack.Blocks = append(i.Stack.Blocks, i.curSet)
 		i.curSet = &OpSet{}
 	}
