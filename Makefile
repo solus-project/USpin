@@ -12,7 +12,7 @@ LIBRARIES = \
 GO_TESTS = \
 	$(addsuffix .test,$(LIBRARIES))
 
-include Makefile.go
+include Makefile.gobuild
 
 # We want to add compliance for all built binaries
 _CHECK_COMPLIANCE = $(addsuffix .compliant,$(BINARIES)) $(addsuffix .compliant,$(LIBRARIES))
