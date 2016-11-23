@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	_ "libspin/config"
 	_ "libspin/spec"
 	"os"
 )
