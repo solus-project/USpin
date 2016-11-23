@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	minimalFile = "../../../testdata/minimal.conf"
+	minimalFile = "../../../testdata/minimal.packages"
 )
 
 func TestParseMinimalImage(t *testing.T) {
