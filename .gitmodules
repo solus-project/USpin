@@ -1,0 +1,3 @@
+[submodule "BurntSushi/toml"]
+	path = src/vendor/github.com/BurntSushi/toml
+	url = https://github.com/BurntSushi/toml.git
