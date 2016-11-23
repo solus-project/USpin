@@ -16,6 +16,12 @@
 
 package config
 
+import (
+	"github.com/BurntSushi/toml"
+	"io/ioutil"
+	"os"
+)
+
 // ImageConfiguration is the configuration for an image build
 type ImageConfiguration struct {
 }
@@ -24,5 +30,25 @@ type ImageConfiguration struct {
 // parse it. This function will return a nil ImageConfiguration if parsing
 // fails.
 func New(cpath string) (*ImageConfiguration, error) {
-	return nil, nil
+	iconf := &ImageConfiguration{}
+	var data []byte
+	var err error
+	var fi *os.File
+
+	fi, err = os.Open(cpath)
+	if err != nil {
+		return nil, err
+	}
+	defer fi.Close()
+
+	// Read the configuration file in
+	if data, err = ioutil.ReadAll(fi); err != nil {
+		return nil, err
+	}
+
+	// Attempt to populate config from the toml spin file
+	if _, err = toml.Decode(string(data), iconf); err != nil {
+		return nil, err
+	}
+	return iconf, nil
 }
