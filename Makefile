@@ -7,6 +7,7 @@ BINARIES = \
 	solspin
 
 LIBRARIES = \
+	libspin/config \
 	libspin/spec
 
 GO_TESTS = \
