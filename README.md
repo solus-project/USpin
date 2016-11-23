@@ -12,7 +12,7 @@ TODO
 ----
 
  - [x] Add parser for the Solus image specification format
- - [ ] Port the `Stack` implementation from old image creator
+ - [x] Port the `Stack` implementation from old image creator
  - [ ] Add config format for the main image configuration
  - [ ] Add utilities for image format & creation (`dd`/`fallocate`, etc)
  - [ ] Add basic ISO9660 support once again
