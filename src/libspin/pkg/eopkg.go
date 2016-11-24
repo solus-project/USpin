@@ -28,6 +28,9 @@ import (
 var (
 	// ErrNotYetImplemented is a placeholder until eopkg implementation is done
 	ErrNotYetImplemented = errors.New("Not yet implemented!")
+
+	// ErrNotEnoughOps should never, ever happen. So check for it. >_>
+	ErrNotEnoughOps = errors.New("Internal error: 0 args passed to ApplyOperations")
 )
 
 // EopkgManager is used to apply operations with the eopkg package manager
@@ -79,6 +82,9 @@ func (e *EopkgManager) InitRoot(root string) error {
 
 // ApplyOperations will apply the given set of operations via eopkg
 func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
+	if len(ops) == 0 {
+		return ErrNotEnoughOps
+	}
 	return ErrNotYetImplemented
 }
 
