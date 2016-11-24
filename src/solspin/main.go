@@ -78,17 +78,20 @@ func doBuild(spinfile string) {
 
 	logImg.Info("Initialising builder")
 	if err = builder.Init(spec); err != nil {
-		logImg.Fatal(err)
+		logImg.Error(err)
+		return
 	}
 
 	logImg.Info("Preparing workspace")
 	if err = builder.PrepareWorkspace(); err != nil {
-		logImg.Fatal(err)
+		logImg.Error(err)
+		return
 	}
 
 	logImg.Info("Creating storage")
 	if err = builder.CreateStorage(); err != nil {
-		logImg.Fatal(err)
+		logImg.Error(err)
+		return
 	}
 }
 
