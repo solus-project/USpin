@@ -25,11 +25,12 @@ import (
 // PackageManager is the interface that should be implemented by vendors to enable
 // solspin to understand them and construct images according to their particulars.
 type PackageManager interface {
+
 	// Init will allwo implementations to initialise themselves according to any
 	// particulars in the image configuration, allowing it to make better informed
 	// decisions later on.
-
 	Init(conf *config.ImageConfiguration) error
+
 	// InitRoot implementations should set up the root filesystem to handle any
 	// quirks prior to installing packages. This also allows manipulating the
 	// filesystem layout, i.e. for usr-merge situations, or for working around
