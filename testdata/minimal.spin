@@ -1,10 +1,10 @@
 [image]
 # Consider making .packages implicit?
 packages = "minimal.packages"
-type = "livecd"
+type = "liveos"
 
-# LiveCD specific options
-[livecd]
+# LiveOS specific options
+[liveos]
 compression = "gzip"
 filename = "Solus-1.2.1.iso"
 

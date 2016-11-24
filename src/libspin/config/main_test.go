@@ -32,7 +32,7 @@ func TestConfig(t *testing.T) {
 	if c.Image.Packages != "minimal.packages" {
 		t.Fatalf("Invalid packages file")
 	}
-	if c.Image.Type != "livecd" {
+	if c.Image.Type != "liveos" {
 		t.Fatalf("Invalid type")
 	}
 	if c.LiveOS.Compression != "gzip" {
