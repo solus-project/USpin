@@ -28,7 +28,9 @@ var (
 
 // A LiveOSBuilder is responsible for building ISO format images that are USB
 // compatible. It is the "LiveCD" type of Builder
-type LiveOSBuilder struct{}
+type LiveOSBuilder struct {
+	img *libspin.ImageSpec
+}
 
 // NewLiveOSBuilder should only be used by builder.go
 func NewLiveOSBuilder() *LiveOSBuilder {
@@ -36,8 +38,9 @@ func NewLiveOSBuilder() *LiveOSBuilder {
 }
 
 // Init will initialise a LiveOSBuilder from the given spec
-func (l *LiveOSBuilder) Init(_ *libspin.ImageSpec) error {
-	return ErrNotYetImplemented
+func (l *LiveOSBuilder) Init(img *libspin.ImageSpec) error {
+	l.img = img
+	return nil
 }
 
 // PrepareWorkspace sets up the required directories for the LiveOSBuilder
