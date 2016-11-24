@@ -121,6 +121,9 @@ func (e *EopkgManager) FinalizeRoot() error {
 	if err := e.copyBaselayout(); err != nil {
 		return err
 	}
+	if err := e.configureDbus(); err != nil {
+		return err
+	}
 	return ErrNotYetImplemented
 }
 
@@ -143,6 +146,18 @@ func (e *EopkgManager) copyBaselayout() error {
 		if err = image.CopyFile(srcPath, tgtPath); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+// This is also largely anti-stateless but is required just to get dbus running
+// so we can configure-pending. sol can't come quick enough...
+func (e *EopkgManager) configureDbus() error {
+	if err := AddGroup(e.root, "messagebus", 18); err != nil {
+		return err
+	}
+	if err := AddSystemUser(e.root, "messagebus", "D-Bus Message Daemon", "/var/run/dbus", "/bin/false", 18, 18); err != nil {
+		return err
 	}
 	return nil
 }
