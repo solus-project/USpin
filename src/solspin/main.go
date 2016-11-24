@@ -69,7 +69,10 @@ func doBuild(spinfile string) {
 
 	// For nicer logging
 	imgType := spec.Config.Image.Type
+	// TODO: Don't hardcode package manager??
+	packageManager := "eopkg"
 	logImg := log.WithFields(logrus.Fields{"imageType": imgType})
+	logPkg := log.WithFields(logrus.Fields{"packageManager": packageManager})
 
 	// Get the builder instance
 	builder, err = image.NewBuilder(spec.Config.Image.Type)
@@ -85,16 +88,15 @@ func doBuild(spinfile string) {
 	}
 
 	// Try to init the package manager
-	// TODO: Don't hardcode package manager??
 	pman, err = pkg.NewManager("eopkg")
 	if err != nil {
-		logImg.Error(err)
+		logPkg.Error(err)
 		return
 	}
 
-	logImg.Info("Initialising package manager")
+	logPkg.Info("Initialising package manager")
 	if err = pman.Init(&spec.Config); err != nil {
-		logImg.Error(err)
+		logPkg.Error(err)
 		return
 	}
 
@@ -117,9 +119,9 @@ func doBuild(spinfile string) {
 	}
 
 	// Attempt to init root now
-	logImg.Info("Initialising root with package manager")
+	logPkg.Info("Initialising root with package manager")
 	if err = pman.InitRoot(builder.GetRootDir()); err != nil {
-		logImg.Error(err)
+		logPkg.Error(err)
 		return
 	}
 }
