@@ -93,6 +93,12 @@ func doBuild(spinfile string) {
 		logImg.Error(err)
 		return
 	}
+
+	logImg.Info("Mounting storage")
+	if err = builder.MountStorage(); err != nil {
+		logImg.Error(err)
+		return
+	}
 }
 
 func main() {
