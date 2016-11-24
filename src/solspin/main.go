@@ -21,7 +21,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"libspin"
 	"libspin/image"
-	_ "libspin/pkg"
+	"libspin/pkg"
 	"os"
 )
 
@@ -52,6 +52,7 @@ func doBuild(spinfile string) {
 	var spec *libspin.ImageSpec
 	var err error
 	var builder image.Builder
+	var pman pkg.Manager
 
 	// Check the user has root privs
 	if os.Geteuid() != 0 {
@@ -83,6 +84,20 @@ func doBuild(spinfile string) {
 		return
 	}
 
+	// Try to init the package manager
+	// TODO: Don't hardcode package manager??
+	pman, err = pkg.NewManager("eopkg")
+	if err != nil {
+		logImg.Error(err)
+		return
+	}
+
+	logImg.Info("Initialising package manager")
+	if err = pman.Init(&spec.Config); err != nil {
+		logImg.Error(err)
+		return
+	}
+
 	logImg.Info("Preparing workspace")
 	if err = builder.PrepareWorkspace(); err != nil {
 		logImg.Error(err)
@@ -97,6 +112,12 @@ func doBuild(spinfile string) {
 
 	logImg.Info("Mounting storage")
 	if err = builder.MountStorage(); err != nil {
+		logImg.Error(err)
+		return
+	}
+
+	// Attempt to init root now
+	if err = pman.InitRoot(builder.GetRootDir()); err != nil {
 		logImg.Error(err)
 		return
 	}
