@@ -43,6 +43,10 @@ type Builder interface {
 	// the rootfs.
 	MountStorage() error
 
+	// GetRootDir is used by implementations to return the root directory for the
+	// OS files
+	GetRootDir() string
+
 	// Cleanup should be used by implementations to do any required cleanup operations,
 	// including killing processes, unmounting anything, etc.
 	Cleanup()

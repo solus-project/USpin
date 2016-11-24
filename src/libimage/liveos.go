@@ -135,3 +135,8 @@ func (l *LiveOSBuilder) Cleanup() {
 func (l *LiveOSBuilder) MountStorage() error {
 	return GetMountManager().Mount(l.rootfsImg, l.rootfsDir, l.rootfsFormat, "loop")
 }
+
+// GetRootDir returns the path to the mounted rootfs.img
+func (l *LiveOSBuilder) GetRootDir() string {
+	return l.rootfsDir
+}
