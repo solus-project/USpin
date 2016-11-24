@@ -17,6 +17,7 @@
 package pkg
 
 import (
+	"io/ioutil"
 	"libspin/config"
 	"libspin/image"
 	"libspin/spec"
@@ -118,6 +119,29 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 // ensure that dbus, etc, works.
 func (e *EopkgManager) FinalizeRoot() error {
 	return ErrNotYetImplemented
+}
+
+// This needs to die in a fire and will not be supported when sol replaces eopkg
+func (e *EopkgManager) copyBaselayout() error {
+	var files []os.FileInfo
+	var err error
+
+	// elements of /usr/share/baselayout are copied to /etc/ - ANTI STATELESS
+	baseDir := filepath.Join(e.root, "usr", "share", "baselayout")
+	tgtDir := filepath.Join(e.root, "etc")
+	if files, err = ioutil.ReadDir(baseDir); err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		srcPath := filepath.Join(baseDir, file.Name())
+		tgtPath := filepath.Join(tgtDir, file.Name())
+
+		if err = image.CopyFile(srcPath, tgtPath); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // Cleanup will cleanup the rootfs at any given point
