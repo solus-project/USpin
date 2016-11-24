@@ -24,7 +24,16 @@ import (
 	"os"
 )
 
-var log = logrus.New()
+var log *logrus.Logger
+
+func init() {
+	form := &logrus.TextFormatter{}
+	form.FullTimestamp = true
+	form.TimestampFormat = "15:04:05.00"
+	log = logrus.New()
+	log.Out = os.Stderr
+	log.Formatter = form
+}
 
 func printUsage(exitCode int) {
 	var fd *os.File
