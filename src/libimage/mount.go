@@ -17,6 +17,8 @@
 package libimage
 
 import (
+	"fmt"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"time"
@@ -97,14 +99,24 @@ func (m *MountManager) insertMount(sourcepath, destpath string) {
 
 // MountPath will attempt to mount the given sourcepath at the destpath
 func (m *MountManager) MountPath(sourcepath, destpath, filesystem string, flags uintptr, options ...string) error {
+	// Only store the absolute path for the mountpoint
+	dpath, err := filepath.Abs(destpath)
+	if err != nil {
+		return err
+	}
+
+	if _, ok := m.mounts[dpath]; ok {
+		return fmt.Errorf("Path already known to MountManager: %v", dpath)
+	}
+
 	optString := ""
 	if len(options) > 1 {
 		optString = strings.Join(options, ",")
 	}
-	if err := syscall.Mount(sourcepath, destpath, filesystem, flags, optString); err != nil {
+	if err := syscall.Mount(sourcepath, dpath, filesystem, flags, optString); err != nil {
 		return err
 	}
-	m.insertMount(sourcepath, destpath)
+	m.insertMount(sourcepath, dpath)
 	return nil
 }
 
