@@ -123,4 +123,5 @@ func (l *LiveOSBuilder) CreateStorage() error {
 // Cleanup currently does nothing within this builder
 func (l *LiveOSBuilder) Cleanup() {
 	log.Info("Cleaning up")
+	GetMountManager().UnmountAll()
 }
