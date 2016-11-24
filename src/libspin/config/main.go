@@ -17,10 +17,12 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 const (
@@ -69,6 +71,12 @@ func New(cpath string) (*ImageConfiguration, error) {
 	// Attempt to populate config from the toml spin file
 	if _, err = toml.Decode(string(data), iconf); err != nil {
 		return nil, err
+	}
+
+	// Ensure errors is non empty!
+	iconf.Image.Packages = strings.TrimSpace(iconf.Image.Packages)
+	if iconf.Image.Packages == "" {
+		return nil, errors.New("image.packages cannot be empty")
 	}
 
 	// Validate the type

@@ -7,6 +7,7 @@ BINARIES = \
 	solspin
 
 LIBRARIES = \
+	libspin \
 	libspin/config \
 	libspin/spec
 
