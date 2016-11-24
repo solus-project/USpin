@@ -19,6 +19,7 @@ package libimage
 import (
 	"fmt"
 	"libspin"
+	"libspin/config"
 )
 
 // A Builder is the contract definition for all image builders, and the implementations
@@ -34,11 +35,11 @@ type Builder interface {
 }
 
 // NewBuilder will try to return a builder for the given type
-func NewBuilder(name string) (*Builder, error) {
+func NewBuilder(name string) (Builder, error) {
 	switch name {
+	case config.ImageTypeLiveOS:
+		return NewLiveOSBuilder(), nil
 	default:
-		{
-			return nil, fmt.Errorf("Unknown builder: %v", name)
-		}
+		return nil, fmt.Errorf("Unknown builder: %v", name)
 	}
 }
