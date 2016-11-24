@@ -19,6 +19,7 @@ package libimage
 
 import (
 	"fmt"
+	"github.com/Sirupsen/logrus"
 	"os"
 	"os/exec"
 	"strings"
@@ -27,10 +28,20 @@ import (
 
 var filesystemCommands map[string]string
 
+var log *logrus.Logger
+
 func init() {
 	// Initialise the filesystemCommands
 	filesystemCommands = make(map[string]string)
 	filesystemCommands["ext4"] = "mkfs -t ext4 -F %s"
+
+	// Create the logger
+	form := &logrus.TextFormatter{}
+	form.FullTimestamp = true
+	form.TimestampFormat = "15:04:05.00"
+	log = logrus.New()
+	log.Out = os.Stderr
+	log.Formatter = form
 }
 
 // ExecStdout is a convenience function to execute a command to the stdout
@@ -64,6 +75,9 @@ func ExecStdout(command string) error {
 // This is highly dependent on the underlying filesystem at the directory
 // where the file is to be created, making use of the syscall ftruncate.
 func CreateSparseFile(filename string, nMegabytes int) error {
+	log.WithFields(logrus.Fields{
+		"filename": filename,
+		"size":     nMegabytes}).Info("Creating sparse file")
 	f, err := os.OpenFile(filename, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 00644)
 	if err != nil {
 		return err
@@ -84,5 +98,9 @@ func FormatAs(filename string, filesystem string) error {
 	if !ok {
 		return fmt.Errorf("Cannot format with unknown filesystem '%v'", filesystem)
 	}
+	log.WithFields(logrus.Fields{
+		"filename":   filename,
+		"filesystem": filesystem,
+	}).Info("Formatting filesystem")
 	return ExecStdout(fmt.Sprintf(command, filename))
 }
