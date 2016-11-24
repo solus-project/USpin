@@ -31,6 +31,11 @@ var (
 	requiredBinaries []string
 )
 
+const (
+	// DefaultImageSize is the size of the rootfs we try to create (4GB)
+	DefaultImageSize = 4000
+)
+
 func init() {
 	requiredBinaries = []string{
 		"isohybrid",
