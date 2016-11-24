@@ -54,7 +54,7 @@ func main() {
 
 	// Check the user has root privs
 	if os.Geteuid() != 0 {
-		log.WithFields(logrus.Fields{"euid": os.Geteuid()}).Error("solspin requires root privileges")
+		log.WithFields(logrus.Fields{"type": "privilege", "euid": os.Geteuid()}).Error("solspin requires root privileges")
 		os.Exit(1)
 	}
 
