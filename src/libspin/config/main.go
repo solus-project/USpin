@@ -25,7 +25,6 @@ import (
 
 // SectionImage describes the [image] portion of a spin file
 type SectionImage struct {
-	FileName string `toml:"filename"` // Filename for resulting image
 	Packages string `toml:"packages"` // Path to the packages file
 	Type     string `toml:"type"`     // Type of image to construct
 }
