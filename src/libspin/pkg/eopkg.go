@@ -45,7 +45,7 @@ func (e *EopkgManager) Init(conf *config.ImageConfiguration) error {
 	if _, err := exec.LookPath("eopkg"); err != nil {
 		return err
 	}
-	return ErrNotYetImplemented
+	return nil
 }
 
 // InitRoot will set up the filesystem root in accordance with eopkg needs
