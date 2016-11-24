@@ -95,7 +95,7 @@ func doBuild(spinfile string) {
 	}
 
 	logPkg.Info("Initialising package manager")
-	if err = pman.Init(&spec.Config); err != nil {
+	if err = pman.Init(spec.Config); err != nil {
 		logPkg.Error(err)
 		return
 	}
@@ -123,6 +123,14 @@ func doBuild(spinfile string) {
 	if err = pman.InitRoot(builder.GetRootDir()); err != nil {
 		logPkg.Error(err)
 		return
+	}
+
+	logPkg.Info("Applying operations")
+	for _, opset := range spec.Stack.Blocks {
+		if err := pman.ApplyOperations(opset.Ops); err != nil {
+			logPkg.Error(err)
+			return
+		}
 	}
 }
 
