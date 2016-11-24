@@ -29,9 +29,15 @@ type ImageSection struct {
 	Type     string `toml:"type"`     // Type of image to construct
 }
 
+// BrandingSection describes the image branding rules
+type BrandingSection struct {
+	Title string `toml:"title"` // Title of the OS to use in bootloaders
+}
+
 // ImageConfiguration is the configuration for an image build
 type ImageConfiguration struct {
-	Image ImageSection `toml:"image"`
+	Image    ImageSection    `toml:"image"`
+	Branding BrandingSection `toml:"branding"`
 }
 
 // New will return a new ImageConfiguration for the given path and attempt to
