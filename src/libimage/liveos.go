@@ -103,7 +103,7 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 		}
 	}
 
-	return ErrNotYetImplemented
+	return nil
 }
 
 // CreateStorage will create the rootfs.img in which we will contain the
