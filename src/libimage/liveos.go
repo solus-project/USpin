@@ -109,5 +109,5 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 // CreateStorage will create the rootfs.img in which we will contain the
 // Live OS
 func (l *LiveOSBuilder) CreateStorage() error {
-	return ErrNotYetImplemented
+	return CreateSparseFile(l.rootfsImg, DefaultImageSize)
 }
