@@ -20,6 +20,7 @@ import (
 	"errors"
 	"libspin/config"
 	"libspin/spec"
+	"os/exec"
 )
 
 var (
@@ -38,6 +39,10 @@ func NewEopkgManager() *EopkgManager {
 
 // Init will attempt to initialise EopkgManager from the given configuration
 func (e *EopkgManager) Init(conf *config.ImageConfiguration) error {
+	// Ensure the system has eopkg available first!
+	if _, err := exec.LookPath("eopkg"); err != nil {
+		return err
+	}
 	return ErrNotYetImplemented
 }
 
