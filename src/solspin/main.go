@@ -19,8 +19,8 @@ package main
 import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
-	"libimage"
 	"libspin"
+	"libspin/image"
 	"os"
 )
 
@@ -50,7 +50,7 @@ func printUsage(exitCode int) {
 func doBuild(spinfile string) {
 	var spec *libspin.ImageSpec
 	var err error
-	var builder libimage.Builder
+	var builder image.Builder
 
 	// Check the user has root privs
 	if os.Geteuid() != 0 {
@@ -70,7 +70,7 @@ func doBuild(spinfile string) {
 	logImg := log.WithFields(logrus.Fields{"imageType": imgType})
 
 	// Get the builder instance
-	builder, err = libimage.NewBuilder(spec.Config.Image.Type)
+	builder, err = image.NewBuilder(spec.Config.Image.Type)
 	if err != nil {
 		logImg.Fatal(err)
 	}

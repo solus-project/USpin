@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-package libimage
+package image
 
 import (
 	"fmt"

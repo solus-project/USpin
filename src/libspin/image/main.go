@@ -14,8 +14,8 @@
 // limitations under the License.
 //
 
-// Package libimage provides routines for the core elements of image building
-package libimage
+// Package image provides routines for the core elements of image building
+package image
 
 import (
 	"fmt"
