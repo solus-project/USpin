@@ -15,6 +15,7 @@ TODO
  - [x] Port the `Stack` implementation from old image creator
  - [x] Add config format for the main image configuration
  - [x] Add utilities for image format & creation (`dd`/`fallocate`, etc)
+ - [ ] Implement full `eopkg` support in generic `pkg.Manager` interface
  - [ ] Add basic ISO9660 support once again
  - [ ] Build (successfully!) an existing Solus image specification
  - [ ] Construct specifications for our chroot builder images
