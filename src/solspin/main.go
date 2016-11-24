@@ -23,6 +23,22 @@ import (
 	"os"
 )
 
+func printUsage(exitCode int) {
+	var fd *os.File
+	if exitCode == 0 {
+		fd = os.Stdout
+	} else {
+		fd = os.Stderr
+	}
+
+	fmt.Fprintf(fd, "%s [image.spin]\n", os.Args[0])
+	os.Exit(exitCode)
+}
+
 func main() {
+	if len(os.Args) < 2 {
+		printUsage(1)
+	}
+
 	fmt.Fprintf(os.Stderr, "Not yet implemented\n")
 }
