@@ -32,8 +32,10 @@ const (
 
 // SectionLiveOS is the Live ISO specific configuration
 type SectionLiveOS struct {
-	Compression string `toml:"compression"` // The type of compression to use on the LiveOS
-	FileName    string `toml:"filename"`    // The resulting filename for this image spin
+	Compression  string `toml:"compression"`   // The type of compression to use on the LiveOS
+	FileName     string `toml:"filename"`      // The resulting filename for this image spin
+	RootfsSize   int    `toml:"rootfs_size"`   // Size of the image in megabytes (default 4000)
+	RootfsFormat string `toml:"rootfs_format"` // Format of the rootfs, defaults to ext4
 }
 
 // ValidateSectionLiveOS will determine if the configuration is valid for a LiveOS

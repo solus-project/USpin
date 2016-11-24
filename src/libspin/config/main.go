@@ -52,7 +52,12 @@ type ImageConfiguration struct {
 // parse it. This function will return a nil ImageConfiguration if parsing
 // fails.
 func New(cpath string) (*ImageConfiguration, error) {
-	iconf := &ImageConfiguration{}
+	iconf := &ImageConfiguration{
+		LiveOS: SectionLiveOS{
+			RootfsFormat: "ext4",
+			RootfsSize:   4000,
+		},
+	}
 	var data []byte
 	var err error
 	var fi *os.File
