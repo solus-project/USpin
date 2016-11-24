@@ -129,3 +129,18 @@ func (m *MountManager) BindMount(sourcepath, destpath, filesystem string, option
 func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ...string) error {
 	return m.MountPath(sourcepath, destpath, filesystem, 0, options...)
 }
+
+// Unmount will attempt to unmount the given path
+func (m *MountManager) Unmount(mountpoint string) error {
+	dpath, err := filepath.Abs(mountpoint)
+	if err != nil {
+		return err
+	}
+	me, ok := m.mounts[dpath]
+	if !ok {
+		return fmt.Errorf("Attempting to umount unknown path to manager: %v", dpath)
+	}
+	err = me.UmountSync()
+	delete(m.mounts, dpath)
+	return err
+}
