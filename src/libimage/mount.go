@@ -86,14 +86,26 @@ func GetMountManager() *MountManager {
 	return mountManager
 }
 
+// insertMount will store the given mount point in order to permit deletion of it later
+func (m *MountManager) insertMount(sourcepath, destpath string) {
+	me := &MountEntry{
+		SourcePath: sourcepath,
+		MountPoint: destpath,
+	}
+	m.mounts[destpath] = me
+}
+
 // MountPath will attempt to mount the given sourcepath at the destpath
 func (m *MountManager) MountPath(sourcepath, destpath, filesystem string, flags uintptr, options ...string) error {
 	optString := ""
 	if len(options) > 1 {
 		optString = strings.Join(options, ",")
 	}
-	er := syscall.Mount(sourcepath, destpath, filesystem, flags, optString)
-	return er
+	if err := syscall.Mount(sourcepath, destpath, filesystem, flags, optString); err != nil {
+		return err
+	}
+	m.insertMount(sourcepath, destpath)
+	return nil
 }
 
 // BindMount will attempt to mount the given sourcepath at the destpath with a binding
