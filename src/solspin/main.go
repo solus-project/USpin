@@ -18,8 +18,7 @@ package main
 
 import (
 	"fmt"
-	_ "libspin/config"
-	_ "libspin/spec"
+	"libspin"
 	"os"
 )
 
@@ -38,6 +37,11 @@ func printUsage(exitCode int) {
 func main() {
 	if len(os.Args) < 2 {
 		printUsage(1)
+	}
+
+	if _, err := libspin.NewImageSpec(os.Args[1]); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
 	}
 
 	fmt.Fprintf(os.Stderr, "Not yet implemented\n")
