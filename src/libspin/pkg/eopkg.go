@@ -16,6 +16,17 @@
 
 package libspin
 
+import (
+	"errors"
+	"libspin/config"
+	"libspin/spec"
+)
+
+var (
+	// ErrNotYetImplemented is a placeholder until eopkg implementation is done
+	ErrNotYetImplemented = errors.New("Not yet implemented!")
+)
+
 // EopkgManager is used to apply operations with the eopkg package manager
 // for Solus systems.
 type EopkgManager struct{}
@@ -23,4 +34,24 @@ type EopkgManager struct{}
 // NewEopkgManager will return a newly initialised EopkgManager
 func NewEopkgManager() *EopkgManager {
 	return &EopkgManager{}
+}
+
+// Init will attempt to initialise EopkgManager from the given configuration
+func (e *EopkgManager) Init(conf *config.ImageConfiguration) error {
+	return ErrNotYetImplemented
+}
+
+// InitRoot will set up the filesystem root in accordance with eopkg needs
+func (e *EopkgManager) InitRoot() error {
+	return ErrNotYetImplemented
+}
+
+// ApplyOperations will apply the given set of operations via eopkg
+func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
+	return ErrNotYetImplemented
+}
+
+// Cleanup will cleanup the rootfs at any given point
+func (e *EopkgManager) Cleanup() error {
+	return ErrNotYetImplemented
 }
