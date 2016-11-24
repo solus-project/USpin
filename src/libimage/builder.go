@@ -38,6 +38,11 @@ type Builder interface {
 	// should be spawned within it, nor should it be mounted, at this point.
 	CreateStorage() error
 
+	// MountStorage should be used by the implementation if it needs to do any mounting
+	// to allow the package manager instance to start installing packages and such into
+	// the rootfs.
+	MountStorage() error
+
 	// Cleanup should be used by implementations to do any required cleanup operations,
 	// including killing processes, unmounting anything, etc.
 	Cleanup()

@@ -47,11 +47,13 @@ func init() {
 // A LiveOSBuilder is responsible for building ISO format images that are USB
 // compatible. It is the "LiveCD" type of Builder
 type LiveOSBuilder struct {
-	img       *libspin.ImageSpec
-	rootfsImg string
-	rootfsDir string
-	deployDir string
-	workspace string
+	img          *libspin.ImageSpec
+	rootfsImg    string
+	rootfsDir    string
+	rootfsFormat string
+	rootfsSize   int
+	deployDir    string
+	workspace    string
 }
 
 // NewLiveOSBuilder should only be used by builder.go
@@ -69,6 +71,10 @@ func (l *LiveOSBuilder) Init(img *libspin.ImageSpec) error {
 			return err
 		}
 	}
+
+	// rootfs.img particulars
+	l.rootfsFormat = l.img.Config.LiveOS.RootfsFormat
+	l.rootfsSize = l.img.Config.LiveOS.RootfsSize
 
 	return nil
 }
@@ -109,12 +115,10 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 // CreateStorage will create the rootfs.img in which we will contain the
 // Live OS
 func (l *LiveOSBuilder) CreateStorage() error {
-	rootSize := l.img.Config.LiveOS.RootfsSize
-	rootFormat := l.img.Config.LiveOS.RootfsFormat
-	if err := CreateSparseFile(l.rootfsImg, rootSize); err != nil {
+	if err := CreateSparseFile(l.rootfsImg, l.rootfsSize); err != nil {
 		return err
 	}
-	if err := FormatAs(l.rootfsImg, rootFormat); err != nil {
+	if err := FormatAs(l.rootfsImg, l.rootfsFormat); err != nil {
 		return err
 	}
 	return nil
@@ -124,4 +128,10 @@ func (l *LiveOSBuilder) CreateStorage() error {
 func (l *LiveOSBuilder) Cleanup() {
 	log.Info("Cleaning up")
 	GetMountManager().UnmountAll()
+}
+
+// MountStorage will mount the rootfs.img so that the package manager can
+// take over
+func (l *LiveOSBuilder) MountStorage() error {
+	return GetMountManager().Mount(l.rootfsImg, l.rootfsDir, l.rootfsFormat, "loop")
 }
