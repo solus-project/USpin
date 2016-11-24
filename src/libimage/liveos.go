@@ -16,6 +16,16 @@
 
 package libimage
 
+import (
+	"errors"
+	"libspin"
+)
+
+var (
+	// ErrNotYetImplemented is just used until we actually implement some code....
+	ErrNotYetImplemented = errors.New("Not yet implemented")
+)
+
 // A LiveOSBuilder is responsible for building ISO format images that are USB
 // compatible. It is the "LiveCD" type of Builder
 type LiveOSBuilder struct{}
@@ -23,4 +33,14 @@ type LiveOSBuilder struct{}
 // NewLiveOSBuilder should only be used by builder.go
 func NewLiveOSBuilder() *LiveOSBuilder {
 	return &LiveOSBuilder{}
+}
+
+// Init will initialise a LiveOSBuilder from the given spec
+func (l *LiveOSBuilder) Init(_ *libspin.ImageSpec) error {
+	return ErrNotYetImplemented
+}
+
+// PrepareWorkspace sets up the required directories for the LiveOSBuilder
+func (l *LiveOSBuilder) PrepareWorkspace() error {
+	return ErrNotYetImplemented
 }
