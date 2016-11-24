@@ -20,6 +20,7 @@ import (
 	"errors"
 	"libspin"
 	"os/exec"
+	"path/filepath"
 )
 
 var (
@@ -40,7 +41,10 @@ func init() {
 // A LiveOSBuilder is responsible for building ISO format images that are USB
 // compatible. It is the "LiveCD" type of Builder
 type LiveOSBuilder struct {
-	img *libspin.ImageSpec
+	img       *libspin.ImageSpec
+	rootfsImg string
+	rootfsDir string
+	workspace string
 }
 
 // NewLiveOSBuilder should only be used by builder.go
@@ -62,7 +66,19 @@ func (l *LiveOSBuilder) Init(img *libspin.ImageSpec) error {
 	return nil
 }
 
+// JoinPath is a helper to join paths onto our root workspace directory
+func (l *LiveOSBuilder) JoinPath(paths ...string) string {
+	return filepath.Join(l.workspace, filepath.Join(paths...))
+}
+
 // PrepareWorkspace sets up the required directories for the LiveOSBuilder
 func (l *LiveOSBuilder) PrepareWorkspace() error {
+	var err error
+	if l.workspace, err = filepath.Abs("./workspace"); err != nil {
+		return err
+	}
+	// Initialise our base variables
+	l.rootfsImg = l.JoinPath("rootfs.img")
+	l.rootfsDir = l.JoinPath("rootfs")
 	return ErrNotYetImplemented
 }
