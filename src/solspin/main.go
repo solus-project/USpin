@@ -74,6 +74,7 @@ func doBuild(spinfile string) {
 	if err != nil {
 		logImg.Fatal(err)
 	}
+	defer builder.Cleanup()
 
 	logImg.Info("Initialising builder")
 	if err = builder.Init(spec); err != nil {
@@ -89,7 +90,6 @@ func doBuild(spinfile string) {
 	if err = builder.CreateStorage(); err != nil {
 		logImg.Fatal(err)
 	}
-
 }
 
 func main() {
