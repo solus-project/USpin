@@ -20,9 +20,6 @@ import (
 	"errors"
 	"libspin/config"
 	"libspin/spec"
-	"os"
-	"os/exec"
-	"strings"
 )
 
 const (
@@ -64,21 +61,4 @@ func NewManager(name string) (Manager, error) {
 	default:
 		return nil, errors.New("Not yet implemented")
 	}
-}
-
-// ExecStdoutArgs is a convenience function to execute a command on stdout with
-// the given arguments
-func ExecStdoutArgs(command string, args []string) error {
-	var err error
-	// Search the path if necessary
-	if !strings.Contains(command, "/") {
-		command, err = exec.LookPath(command)
-		if err != nil {
-			return err
-		}
-	}
-	c := exec.Command(command, args...)
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	return c.Run()
 }

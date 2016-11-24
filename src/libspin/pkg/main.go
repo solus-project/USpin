@@ -18,6 +18,9 @@ package pkg
 
 import (
 	"errors"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 var (
@@ -30,3 +33,20 @@ var (
 	// ErrUnknownOperation is returned when we don't know how to handle an operation
 	ErrUnknownOperation = errors.New("Unknown or unsupported operation requested")
 )
+
+// ExecStdoutArgs is a convenience function to execute a command on stdout with
+// the given arguments
+func ExecStdoutArgs(command string, args []string) error {
+	var err error
+	// Search the path if necessary
+	if !strings.Contains(command, "/") {
+		command, err = exec.LookPath(command)
+		if err != nil {
+			return err
+		}
+	}
+	c := exec.Command(command, args...)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	return c.Run()
+}
