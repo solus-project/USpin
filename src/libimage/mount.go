@@ -19,10 +19,29 @@ package libimage
 import (
 	"fmt"
 	"path/filepath"
+	"sort"
 	"strings"
 	"syscall"
 	"time"
 )
+
+// LenSort is to enable reverse length sorting
+type LenSort []string
+
+// Len returns the length of the string slice
+func (l LenSort) Len() int {
+	return len(l)
+}
+
+// Swap will swap two elements by index in the string slice
+func (l LenSort) Swap(a, b int) {
+	l[a], l[b] = l[b], l[a]
+}
+
+// Less determines if a is less than b. This is deliberately negated
+func (l LenSort) Less(a, b int) bool {
+	return len(l[a]) > len(l[b])
+}
 
 const (
 	// UmountMaxTries is the maximum number of times to try unmounting before
@@ -143,4 +162,18 @@ func (m *MountManager) Unmount(mountpoint string) error {
 	err = me.UmountSync()
 	delete(m.mounts, dpath)
 	return err
+}
+
+// UnmountAll will attempt to unmount all registered mountpoints
+func (m *MountManager) UnmountAll() {
+	var keys []string
+	for key := range m.mounts {
+		keys = append(keys, key)
+	}
+	sort.Sort(LenSort(keys))
+	for _, key := range keys {
+		if err := m.Unmount(key); err != nil {
+			log.Error(err)
+		}
+	}
 }
