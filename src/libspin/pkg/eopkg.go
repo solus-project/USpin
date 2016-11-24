@@ -20,7 +20,9 @@ import (
 	"errors"
 	"libspin/config"
 	"libspin/spec"
+	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 var (
@@ -51,7 +53,28 @@ func (e *EopkgManager) Init(conf *config.ImageConfiguration) error {
 // InitRoot will set up the filesystem root in accordance with eopkg needs
 func (e *EopkgManager) InitRoot(root string) error {
 	e.root = root
-	return ErrNotYetImplemented
+
+	// Ensures we don't end up with /var/lock vs /run/lock nonsense
+	reqDirs := []string{
+		"run/lock",
+		"var",
+	}
+
+	// Construct the required directories in the tree
+	for _, dir := range reqDirs {
+		dirPath := filepath.Join(root, dir)
+		if err := os.MkdirAll(dirPath, 00755); err != nil {
+			return err
+		}
+	}
+
+	if err := os.Symlink("../run/lock", filepath.Join(root, "var", "lock")); err != nil {
+		return err
+	}
+	if err := os.Symlink("../run", filepath.Join(root, "var", "run")); err != nil {
+		return err
+	}
+	return nil
 }
 
 // ApplyOperations will apply the given set of operations via eopkg
