@@ -47,7 +47,7 @@ func (e *EopkgManager) Init(conf *config.ImageConfiguration) error {
 }
 
 // InitRoot will set up the filesystem root in accordance with eopkg needs
-func (e *EopkgManager) InitRoot() error {
+func (e *EopkgManager) InitRoot(root string) error {
 	return ErrNotYetImplemented
 }
 

@@ -40,7 +40,7 @@ type Manager interface {
 	// quirks prior to installing packages. This also allows manipulating the
 	// filesystem layout, i.e. for usr-merge situations, or for working around
 	// default directories created by a host-side package manager tool.
-	InitRoot() error
+	InitRoot(root string) error
 
 	// ApplyOperations should apply all of the given operations in bulk, as they
 	// are always guaranteed to have the same type.
