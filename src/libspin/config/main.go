@@ -23,24 +23,23 @@ import (
 	"os"
 )
 
-// ImageSection describes the [image] portion of a spin file
-type ImageSection struct {
+// SectionImage describes the [image] portion of a spin file
+type SectionImage struct {
 	FileName string `toml:"filename"` // Filename for resulting image
 	Packages string `toml:"packages"` // Path to the packages file
 	Type     string `toml:"type"`     // Type of image to construct
 }
 
-// BrandingSection describes the image branding rules
-type BrandingSection struct {
+// SectionBranding describes the image branding rules
+type SectionBranding struct {
 	Title string `toml:"title"` // Title of the OS to use in bootloaders
 }
 
 // ImageConfiguration is the configuration for an image build
 type ImageConfiguration struct {
-	Image    ImageSection    `toml:"image"`
-	Branding BrandingSection `toml:"branding"`
-
-	LiveCD SectionLiveCD `toml:"livecd"`
+	Image    SectionImage    `toml:"image"`
+	Branding SectionBranding `toml:"branding"`
+	LiveCD   SectionLiveCD   `toml:"livecd"`
 }
 
 // New will return a new ImageConfiguration for the given path and attempt to
