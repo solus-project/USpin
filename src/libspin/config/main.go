@@ -17,6 +17,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/BurntSushi/toml"
 	"io/ioutil"
 	"os"
@@ -64,5 +65,16 @@ func New(cpath string) (*ImageConfiguration, error) {
 	if _, err = toml.Decode(string(data), iconf); err != nil {
 		return nil, err
 	}
+
+	// Validate the type
+	// TODO: Add more image types!
+	switch iconf.Image.Type {
+	case "livecd":
+		{
+		}
+	default:
+		return nil, fmt.Errorf("Unknown image type: %v", iconf.Image.Type)
+	}
+
 	return iconf, nil
 }
