@@ -39,6 +39,8 @@ type BrandingSection struct {
 type ImageConfiguration struct {
 	Image    ImageSection    `toml:"image"`
 	Branding BrandingSection `toml:"branding"`
+
+	LiveCD SectionLiveCD `toml:"livecd"`
 }
 
 // New will return a new ImageConfiguration for the given path and attempt to
@@ -70,7 +72,8 @@ func New(cpath string) (*ImageConfiguration, error) {
 	// TODO: Add more image types!
 	switch iconf.Image.Type {
 	case "livecd":
-		{
+		if err := ValidateSectionLiveCD(&iconf.LiveCD); err != nil {
+			return nil, err
 		}
 	default:
 		return nil, fmt.Errorf("Unknown image type: %v", iconf.Image.Type)
