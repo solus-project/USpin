@@ -162,6 +162,7 @@ func (m *MountManager) Unmount(mountpoint string) error {
 
 // UnmountAll will attempt to unmount all registered mountpoints
 func (m *MountManager) UnmountAll() {
+	ExecStdout("sync")
 	var keys []string
 	for key := range m.mounts {
 		keys = append(keys, key)
