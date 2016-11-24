@@ -17,23 +17,11 @@
 package pkg
 
 import (
-	"errors"
 	"libspin/config"
 	"libspin/spec"
 	"os"
 	"os/exec"
 	"path/filepath"
-)
-
-var (
-	// ErrNotYetImplemented is a placeholder until eopkg implementation is done
-	ErrNotYetImplemented = errors.New("Not yet implemented!")
-
-	// ErrNotEnoughOps should never, ever happen. So check for it. >_>
-	ErrNotEnoughOps = errors.New("Internal error: 0 args passed to ApplyOperations")
-
-	// ErrUnknownOperation is returned when we don't know how to handle an operation
-	ErrUnknownOperation = errors.New("Unknown or unsupported operation requested")
 )
 
 // EopkgManager is used to apply operations with the eopkg package manager
