@@ -41,6 +41,10 @@ type Manager interface {
 	// are always guaranteed to have the same type.
 	ApplyOperations(ops []spec.Operation) error
 
+	// FinalizeRoot should be invoked once all packaging operations have been applied,
+	// allowing any post configuration, etc, to take place.
+	FinalizeRoot() error
+
 	// Cleanup may be called at any time, and the package manager implementation
 	// should ensure it cleans anything it did in the past, such as closing open
 	// processes.

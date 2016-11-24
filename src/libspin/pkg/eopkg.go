@@ -90,6 +90,12 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 	}
 }
 
+// FinalizeRoot will configure all of the eopkgs installed in the system, and
+// ensure that dbus, etc, works.
+func (e *EopkgManager) FinalizeRoot() error {
+	return ErrNotYetImplemented
+}
+
 // Cleanup will cleanup the rootfs at any given point
 func (e *EopkgManager) Cleanup() error {
 	return ErrNotYetImplemented

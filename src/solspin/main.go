@@ -132,6 +132,12 @@ func doBuild(spinfile string) {
 			return
 		}
 	}
+
+	logPkg.Info("Finalizing package operations")
+	if err = pman.FinalizeRoot(); err != nil {
+		logPkg.Error(err)
+		return
+	}
 }
 
 func main() {
