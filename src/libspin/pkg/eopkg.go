@@ -30,7 +30,9 @@ var (
 
 // EopkgManager is used to apply operations with the eopkg package manager
 // for Solus systems.
-type EopkgManager struct{}
+type EopkgManager struct {
+	root string // rootfs path
+}
 
 // NewEopkgManager will return a newly initialised EopkgManager
 func NewEopkgManager() *EopkgManager {
@@ -48,6 +50,7 @@ func (e *EopkgManager) Init(conf *config.ImageConfiguration) error {
 
 // InitRoot will set up the filesystem root in accordance with eopkg needs
 func (e *EopkgManager) InitRoot(root string) error {
+	e.root = root
 	return ErrNotYetImplemented
 }
 
