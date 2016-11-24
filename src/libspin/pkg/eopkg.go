@@ -18,6 +18,7 @@ package pkg
 
 import (
 	"errors"
+	"fmt"
 	"libspin/config"
 	"libspin/spec"
 	"os"
@@ -31,6 +32,9 @@ var (
 
 	// ErrNotEnoughOps should never, ever happen. So check for it. >_>
 	ErrNotEnoughOps = errors.New("Internal error: 0 args passed to ApplyOperations")
+
+	// ErrUnknownOperation is returned when we don't know how to handle an operation
+	ErrUnknownOperation = errors.New("Unknown or unsupported operation requested")
 )
 
 // EopkgManager is used to apply operations with the eopkg package manager
@@ -85,10 +89,27 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 	if len(ops) == 0 {
 		return ErrNotEnoughOps
 	}
-	return ErrNotYetImplemented
+	switch ops[0].(type) {
+	case *spec.OpRepo:
+		return e.addRepos(ops)
+	default:
+		return ErrUnknownOperation
+	}
 }
 
 // Cleanup will cleanup the rootfs at any given point
 func (e *EopkgManager) Cleanup() error {
+	return ErrNotYetImplemented
+}
+
+// Eopkg specific functions
+
+// Add a repository to the target
+func (e *EopkgManager) addRepos(ops []spec.Operation) error {
+	for _, repo := range ops {
+		r := repo.(*spec.OpRepo)
+		cmd := fmt.Sprintf("eopkg -D %s add-repo %s %s", e.root, r.RepoName, r.RepoURI)
+		fmt.Fprintf(os.Stderr, "TODO: %s\n", cmd)
+	}
 	return ErrNotYetImplemented
 }
