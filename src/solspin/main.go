@@ -40,6 +40,12 @@ func main() {
 		printUsage(1)
 	}
 
+	// Check the user has root privs
+	if os.Geteuid() != 0 {
+		fmt.Fprintf(os.Stderr, "%v requires root privileges\n", os.Args[0])
+		os.Exit(1)
+	}
+
 	if _, err := libspin.NewImageSpec(os.Args[1]); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
