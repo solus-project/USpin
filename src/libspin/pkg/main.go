@@ -23,6 +23,11 @@ import (
 	"strings"
 )
 
+const (
+	// PackageManagerEopkg is the package manager used within Solus
+	PackageManagerEopkg = "eopkg"
+)
+
 var (
 	// ErrNotYetImplemented is a placeholder until eopkg implementation is done
 	ErrNotYetImplemented = errors.New("Not yet implemented!")

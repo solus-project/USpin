@@ -22,11 +22,6 @@ import (
 	"libspin/spec"
 )
 
-const (
-	// PackageManagerEopkg is the package manager used within Solus
-	PackageManagerEopkg = "eopkg"
-)
-
 // Manager is the interface that should be implemented by vendors to enable
 // solspin to understand them and construct images according to their particulars.
 type Manager interface {
