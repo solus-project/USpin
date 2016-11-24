@@ -19,12 +19,14 @@ package libspin
 import (
 	"libspin/config"
 	"libspin/spec"
+	"path/filepath"
 )
 
 // ImageSpec is a validated/loaded image configuration ready for building
 type ImageSpec struct {
-	Stack  spec.OpStack
-	Config config.ImageConfiguration
+	Stack   spec.OpStack
+	Config  config.ImageConfiguration
+	BaseDir string // Used to join filename paths relative to the .spin file, i.e. packages
 }
 
 // NewImageSpec is a factory function to load a .spin file with it's associated
@@ -38,8 +40,16 @@ func NewImageSpec(spinFile string) (*ImageSpec, error) {
 		return nil, err
 	}
 
+	// Grab the base directory from the .spin file
+	is.BaseDir, err = filepath.Abs(filepath.Dir(spinFile))
+	if err != nil {
+		return nil, err
+	}
+
+	// Load packages file relative to the spin file
 	parser := spec.NewParser()
-	if err = parser.Parse(is.Config.Image.Packages); err != nil {
+	pkgsFile := filepath.Join(is.BaseDir, is.Config.Image.Packages)
+	if err = parser.Parse(pkgsFile); err != nil {
 		return nil, err
 	}
 
