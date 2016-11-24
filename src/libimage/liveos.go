@@ -19,12 +19,23 @@ package libimage
 import (
 	"errors"
 	"libspin"
+	"os/exec"
 )
 
 var (
 	// ErrNotYetImplemented is just used until we actually implement some code....
 	ErrNotYetImplemented = errors.New("Not yet implemented")
+
+	requiredBinaries []string
 )
+
+func init() {
+	requiredBinaries = []string{
+		"isohybrid",
+		"mksquashfs",
+		"xorriso",
+	}
+}
 
 // A LiveOSBuilder is responsible for building ISO format images that are USB
 // compatible. It is the "LiveCD" type of Builder
@@ -40,6 +51,14 @@ func NewLiveOSBuilder() *LiveOSBuilder {
 // Init will initialise a LiveOSBuilder from the given spec
 func (l *LiveOSBuilder) Init(img *libspin.ImageSpec) error {
 	l.img = img
+
+	// Ensure all required binaries are available before we go doing anything.
+	for _, bin := range requiredBinaries {
+		if _, err := exec.LookPath(bin); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
