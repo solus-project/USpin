@@ -37,6 +37,10 @@ type Builder interface {
 	// they will require, i.e. the place where we install packages to. No processes
 	// should be spawned within it, nor should it be mounted, at this point.
 	CreateStorage() error
+
+	// Cleanup should be used by implementations to do any required cleanup operations,
+	// including killing processes, unmounting anything, etc.
+	Cleanup()
 }
 
 // NewBuilder will try to return a builder for the given type

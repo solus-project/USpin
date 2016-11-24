@@ -119,3 +119,8 @@ func (l *LiveOSBuilder) CreateStorage() error {
 	}
 	return nil
 }
+
+// Cleanup currently does nothing within this builder
+func (l *LiveOSBuilder) Cleanup() {
+
+}
