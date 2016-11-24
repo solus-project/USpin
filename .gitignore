@@ -1,2 +1,5 @@
 pkg/
 bin/
+
+# From running the tool in git
+workspace/
