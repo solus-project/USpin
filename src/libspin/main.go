@@ -17,9 +17,11 @@
 package libspin
 
 import (
+	"fmt"
 	"libspin/config"
 	"libspin/spec"
 	"path/filepath"
+	"strings"
 )
 
 // ImageSpec is a validated/loaded image configuration ready for building
@@ -33,6 +35,10 @@ type ImageSpec struct {
 // Packages file prepped into a usable stack.
 func NewImageSpec(spinFile string) (*ImageSpec, error) {
 	is := &ImageSpec{}
+
+	if !strings.HasSuffix(spinFile, ".spin") {
+		return nil, fmt.Errorf("Not a .spin file: %v", spinFile)
+	}
 
 	// Try loading the configuration first
 	conf, err := config.New(spinFile)
