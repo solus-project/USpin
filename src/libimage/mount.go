@@ -37,12 +37,22 @@ func GetMountManager() *MountManager {
 	return mountManager
 }
 
-// Mount will attempt to mount the given sourcepath at the destpath
-func (m *MountManager) Mount(sourcepath, destpath, filesystem string, flags uintptr, options ...string) error {
+// MountPath will attempt to mount the given sourcepath at the destpath
+func (m *MountManager) MountPath(sourcepath, destpath, filesystem string, flags uintptr, options ...string) error {
 	optString := ""
 	if len(options) > 1 {
 		optString = strings.Join(options, ",")
 	}
 	er := syscall.Mount(sourcepath, destpath, filesystem, flags, optString)
 	return er
+}
+
+// BindMount will attempt to mount the given sourcepath at the destpath with a binding
+func (m *MountManager) BindMount(sourcepath, destpath, filesystem string, options ...string) error {
+	return m.MountPath(sourcepath, destpath, filesystem, syscall.MS_BIND, options...)
+}
+
+// Mount will attempt to mount the given sourcepath at the destpath with default options
+func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ...string) error {
+	return m.MountPath(sourcepath, destpath, filesystem, 0, options...)
 }
