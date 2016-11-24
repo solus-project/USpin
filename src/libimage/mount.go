@@ -19,17 +19,66 @@ package libimage
 import (
 	"strings"
 	"syscall"
+	"time"
 )
+
+const (
+	// UmountMaxTries is the maximum number of times to try unmounting before
+	// resorting to lazy detaches
+	UmountMaxTries = 3
+
+	// UmountRetryTime is the length of time to wait in between umounts
+	UmountRetryTime = 500 * time.Millisecond
+)
+
+// A MountEntry is tracked by the MountManager to enable proper cleanup takes
+// place
+type MountEntry struct {
+	SourcePath string // The source of the mount
+	MountPoint string // The destination mount point
+}
+
+// Umount will attempt to unmount the given path
+func (m *MountEntry) Umount() error {
+	return syscall.Unmount(m.MountPoint, 0)
+}
+
+// UmountForce will attempt to forcibly detach the mountpoint
+func (m *MountEntry) UmountForce() error {
+	return syscall.Unmount(m.MountPoint, syscall.MNT_FORCE)
+}
+
+// UmountLazy will attempt a lazy detach of the node
+func (m *MountEntry) UmountLazy() error {
+	return syscall.Unmount(m.MountPoint, syscall.MNT_DETACH)
+}
+
+// UmountSync will attempt everything possible to umount itself
+func (m *MountEntry) UmountSync() error {
+	for i := 0; i < UmountMaxTries; i++ {
+		if err := m.Umount(); err == nil {
+			return nil
+		}
+		time.Sleep(UmountRetryTime)
+	}
+	// Still didn't manage to umount it
+	if err := m.UmountForce(); err == nil {
+		return nil
+	}
+	return m.UmountLazy()
+}
 
 // A MountManager is used to mount and unmount filesystems, and to track them
 // so that they are all properly torn down
 type MountManager struct {
+	mounts map[string]*MountEntry
 }
 
 var mountManager *MountManager
 
 func init() {
 	mountManager = &MountManager{}
+	mountManager.mounts = make(map[string]*MountEntry)
 }
 
 // GetMountManager will return the global mount manager
