@@ -47,11 +47,7 @@ func printUsage(exitCode int) {
 	os.Exit(exitCode)
 }
 
-func main() {
-	if len(os.Args) < 2 {
-		printUsage(1)
-	}
-
+func doBuild(spinfile string) {
 	var spec *libspin.ImageSpec
 	var err error
 	var builder libimage.Builder
@@ -62,11 +58,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	spinfile := os.Args[1]
-
 	log.WithFields(logrus.Fields{"filename": spinfile}).Info("Loading .spin file")
 
-	if spec, err = libspin.NewImageSpec(os.Args[1]); err != nil {
+	if spec, err = libspin.NewImageSpec(spinfile); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
@@ -96,5 +90,12 @@ func main() {
 		logImg.Fatal(err)
 	}
 
+}
+
+func main() {
+	if len(os.Args) < 2 {
+		printUsage(1)
+	}
+	doBuild(os.Args[1])
 	log.Error("Not yet implemented")
 }
