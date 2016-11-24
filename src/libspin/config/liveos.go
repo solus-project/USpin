@@ -30,14 +30,14 @@ const (
 	CompressionXZ = "xz"
 )
 
-// SectionLiveCD is the Live ISO specific configuration
-type SectionLiveCD struct {
-	Compression string `toml:"compression"` // The type of compression to use on the LiveCD
+// SectionLiveOS is the Live ISO specific configuration
+type SectionLiveOS struct {
+	Compression string `toml:"compression"` // The type of compression to use on the LiveOS
 	FileName    string `toml:"filename"`    // The resulting filename for this image spin
 }
 
-// ValidateSectionLiveCD will determine if the configuration is valid for a LiveCD
-func ValidateSectionLiveCD(l *SectionLiveCD) error {
+// ValidateSectionLiveOS will determine if the configuration is valid for a LiveOS
+func ValidateSectionLiveOS(l *SectionLiveOS) error {
 	switch l.Compression {
 	case CompressionGzip, CompressionXZ:
 	default:

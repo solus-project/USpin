@@ -23,6 +23,11 @@ import (
 	"os"
 )
 
+const (
+	// ImageTypeLiveOS refers to an ISO type image that may also be USB compatible
+	ImageTypeLiveOS = "liveos"
+)
+
 // SectionImage describes the [image] portion of a spin file
 type SectionImage struct {
 	Packages string `toml:"packages"` // Path to the packages file
@@ -38,7 +43,7 @@ type SectionBranding struct {
 type ImageConfiguration struct {
 	Image    SectionImage    `toml:"image"`
 	Branding SectionBranding `toml:"branding"`
-	LiveCD   SectionLiveCD   `toml:"livecd"`
+	LiveOS   SectionLiveOS   `toml:"liveos"`
 }
 
 // New will return a new ImageConfiguration for the given path and attempt to
@@ -69,8 +74,8 @@ func New(cpath string) (*ImageConfiguration, error) {
 	// Validate the type
 	// TODO: Add more image types!
 	switch iconf.Image.Type {
-	case "livecd":
-		if err := ValidateSectionLiveCD(&iconf.LiveCD); err != nil {
+	case ImageTypeLiveOS:
+		if err := ValidateSectionLiveOS(&iconf.LiveOS); err != nil {
 			return nil, err
 		}
 	default:

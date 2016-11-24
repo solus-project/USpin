@@ -35,7 +35,7 @@ func TestConfig(t *testing.T) {
 	if c.Image.Type != "livecd" {
 		t.Fatalf("Invalid type")
 	}
-	if c.LiveCD.Compression != "gzip" {
-		t.Fatalf("Invalid compression: %v", c.LiveCD.Compression)
+	if c.LiveOS.Compression != "gzip" {
+		t.Fatalf("Invalid compression: %v", c.LiveOS.Compression)
 	}
 }
