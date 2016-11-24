@@ -118,6 +118,9 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 // FinalizeRoot will configure all of the eopkgs installed in the system, and
 // ensure that dbus, etc, works.
 func (e *EopkgManager) FinalizeRoot() error {
+	if err := e.copyBaselayout(); err != nil {
+		return err
+	}
 	return ErrNotYetImplemented
 }
 
