@@ -18,7 +18,6 @@ package pkg
 
 import (
 	"errors"
-	"fmt"
 	"libspin/config"
 	"libspin/spec"
 	"os"
@@ -104,12 +103,21 @@ func (e *EopkgManager) Cleanup() error {
 
 // Eopkg specific functions
 
+func (e *EopkgManager) eopkgExecRoot(args []string) error {
+	endArgs := []string{
+		"-D", e.root,
+	}
+	args = append(args, endArgs...)
+	return ExecStdoutArgs("eopkg", args)
+}
+
 // Add a repository to the target
 func (e *EopkgManager) addRepos(ops []spec.Operation) error {
 	for _, repo := range ops {
 		r := repo.(*spec.OpRepo)
-		cmd := fmt.Sprintf("eopkg -D %s add-repo %s %s", e.root, r.RepoName, r.RepoURI)
-		fmt.Fprintf(os.Stderr, "TODO: %s\n", cmd)
+		if err := e.eopkgExecRoot([]string{"add-repo", r.RepoName, r.RepoURI}); err != nil {
+			return err
+		}
 	}
-	return ErrNotYetImplemented
+	return nil
 }
