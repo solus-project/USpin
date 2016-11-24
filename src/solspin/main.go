@@ -29,7 +29,7 @@ var log *logrus.Logger
 func init() {
 	form := &logrus.TextFormatter{}
 	form.FullTimestamp = true
-	form.TimestampFormat = "15:04:05.00"
+	form.TimestampFormat = "15:04:05"
 	log = logrus.New()
 	log.Out = os.Stderr
 	log.Formatter = form
