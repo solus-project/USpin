@@ -9,6 +9,7 @@ BINARIES = \
 LIBRARIES = \
 	libspin/config \
 	libspin/image \
+	libspin/pkg \
 	libspin/spec
 
 GO_TESTS = \

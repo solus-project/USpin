@@ -27,9 +27,9 @@ const (
 	PackageManagerEopkg = "eopkg"
 )
 
-// PackageManager is the interface that should be implemented by vendors to enable
+// Manager is the interface that should be implemented by vendors to enable
 // solspin to understand them and construct images according to their particulars.
-type PackageManager interface {
+type Manager interface {
 
 	// Init will allwo implementations to initialise themselves according to any
 	// particulars in the image configuration, allowing it to make better informed
@@ -52,8 +52,8 @@ type PackageManager interface {
 	Cleanup() error
 }
 
-// NewPackageManager will return an appropriate package manager instance for
+// NewManager will return an appropriate package manager instance for
 // the given name, if it exists.
-func NewPackageManager(name string) (PackageManager, error) {
+func NewManager(name string) (Manager, error) {
 	return nil, errors.New("Not yet implemented")
 }
