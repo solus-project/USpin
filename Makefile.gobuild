@@ -6,7 +6,12 @@ clean:
 	test ! -d $(PWD)/pkg || rm -rvf $(PWD)/pkg; \
 	test ! -d $(PWD)/bin || rm -rvf $(PWD)/bin
 
-%.compliant:
+spellcheck:
+	@ ( \
+		misspell -error `find $(PROJECT_ROOT) -not -path '*/vendor/*' -name '*.go'`; \
+	);
+
+%.compliant: spellcheck
 	@ ( \
 		pushd "$(PROJECT_ROOT)/$(subst .compliant,,$@)" >/dev/null || exit 1; \
 		go fmt || exit 1; \
