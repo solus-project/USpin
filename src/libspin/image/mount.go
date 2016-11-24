@@ -127,10 +127,16 @@ func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ..
 		return fmt.Errorf("Path already known to MountManager: %v", dpath)
 	}
 
-	cmd := fmt.Sprintf("mount -t %v %v %v", filesystem, sourcepath, destpath)
+	cmd := fmt.Sprintf("mount %v %v", sourcepath, destpath)
 	if len(options) > 1 {
 		optString := strings.Join(options, ",")
 		cmd += fmt.Sprintf(" -o %v", optString)
+	}
+	// Might be empty if bind-mounting
+	if filesystem != "--bind" {
+		cmd += fmt.Sprintf(" -t %v", filesystem)
+	} else {
+		cmd += " --bind"
 	}
 
 	if err := ExecStdout(cmd); err != nil {
@@ -141,8 +147,8 @@ func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ..
 }
 
 // BindMount will attempt to mount the given sourcepath at the destpath with a binding
-func (m *MountManager) BindMount(sourcepath, destpath, filesystem string) error {
-	return m.Mount(sourcepath, destpath, filesystem, "bind")
+func (m *MountManager) BindMount(sourcepath, destpath string) error {
+	return m.Mount(sourcepath, destpath, "--bind")
 }
 
 // Unmount will attempt to unmount the given path
