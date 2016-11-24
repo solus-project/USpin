@@ -19,7 +19,7 @@ package main
 import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
-	_ "libimage"
+	"libimage"
 	"libspin"
 	"os"
 )
@@ -52,6 +52,10 @@ func main() {
 		printUsage(1)
 	}
 
+	var spec *libspin.ImageSpec
+	var err error
+	var builder libimage.Builder
+
 	// Check the user has root privs
 	if os.Geteuid() != 0 {
 		log.WithFields(logrus.Fields{"type": "privilege", "euid": os.Geteuid()}).Error("solspin requires root privileges")
@@ -62,9 +66,18 @@ func main() {
 
 	log.WithFields(logrus.Fields{"filename": spinfile}).Info("Loading .spin file")
 
-	if _, err := libspin.NewImageSpec(os.Args[1]); err != nil {
+	if spec, err = libspin.NewImageSpec(os.Args[1]); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
+	}
+
+	builder, err = libimage.NewBuilder(spec.Config.Image.Type)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err = builder.Init(spec); err != nil {
+		log.Fatal(err)
 	}
 
 	log.Error("Not yet implemented")
