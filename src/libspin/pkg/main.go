@@ -55,3 +55,9 @@ func ExecStdoutArgs(command string, args []string) error {
 	c.Stderr = os.Stderr
 	return c.Run()
 }
+
+// ChrootExec will run a given command in the chroot directory
+func ChrootExec(dir, command string) error {
+	cmdArgs := []string{dir, "/bin/bash", "-c", command}
+	return ExecStdoutArgs("chroot", cmdArgs)
+}
