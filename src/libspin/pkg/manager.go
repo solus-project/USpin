@@ -55,5 +55,10 @@ type Manager interface {
 // NewManager will return an appropriate package manager instance for
 // the given name, if it exists.
 func NewManager(name string) (Manager, error) {
-	return nil, errors.New("Not yet implemented")
+	switch name {
+	case PackageManagerEopkg:
+		return NewEopkgManager(), nil
+	default:
+		return nil, errors.New("Not yet implemented")
+	}
 }
