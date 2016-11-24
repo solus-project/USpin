@@ -18,10 +18,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/Sirupsen/logrus"
 	_ "libimage"
 	"libspin"
 	"os"
 )
+
+var log = logrus.New()
 
 func printUsage(exitCode int) {
 	var fd *os.File
@@ -42,14 +45,18 @@ func main() {
 
 	// Check the user has root privs
 	if os.Geteuid() != 0 {
-		fmt.Fprintf(os.Stderr, "%v requires root privileges\n", os.Args[0])
+		log.WithFields(logrus.Fields{"euid": os.Geteuid()}).Error("solspin requires root privileges")
 		os.Exit(1)
 	}
+
+	spinfile := os.Args[1]
+
+	log.WithFields(logrus.Fields{"filename": spinfile}).Info("Loading .spin file")
 
 	if _, err := libspin.NewImageSpec(os.Args[1]); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Fprintf(os.Stderr, "Not yet implemented\n")
+	log.Error("Not yet implemented")
 }
