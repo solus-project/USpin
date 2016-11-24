@@ -32,6 +32,11 @@ type Builder interface {
 	// PrepareWorkspace will attempt to do all prework for setting up the image
 	// deployment areas and such.
 	PrepareWorkspace() error
+
+	// CreateStorage is used by implementations to create any initial backing storage
+	// they will require, i.e. the place where we install packages to. No processes
+	// should be spawned within it, nor should it be mounted, at this point.
+	CreateStorage() error
 }
 
 // NewBuilder will try to return a builder for the given type

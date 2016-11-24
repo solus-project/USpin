@@ -91,5 +91,10 @@ func main() {
 		logImg.Fatal(err)
 	}
 
+	logImg.Info("Creating storage")
+	if err = builder.CreateStorage(); err != nil {
+		logImg.Fatal(err)
+	}
+
 	log.Error("Not yet implemented")
 }
