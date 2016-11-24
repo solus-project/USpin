@@ -19,6 +19,7 @@ package libimage
 import (
 	"errors"
 	"libspin"
+	"os"
 	"os/exec"
 	"path/filepath"
 )
@@ -80,5 +81,19 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 	// Initialise our base variables
 	l.rootfsImg = l.JoinPath("rootfs.img")
 	l.rootfsDir = l.JoinPath("rootfs")
+
+	// As and when we add new directories, populate them here
+	requiredDirs := []string{
+		l.workspace,
+		l.rootfsDir,
+	}
+
+	// Create all required directories
+	for _, dir := range requiredDirs {
+		if err = os.MkdirAll(dir, 00755); err != nil {
+			return err
+		}
+	}
+
 	return ErrNotYetImplemented
 }
