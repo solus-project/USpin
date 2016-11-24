@@ -103,7 +103,7 @@ func (i *Parser) Parse(path string) error {
 				return fmt.Errorf("Missing value for repo declaration '%v' on line '%v'\n", fields[0], lineno)
 			}
 			op := &OpRepo{
-				RepoName: fields[0],
+				RepoName: strings.TrimSpace(fields[0]),
 				RepoURI:  value,
 			}
 			i.pushOperation(op)
