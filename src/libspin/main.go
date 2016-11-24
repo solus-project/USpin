@@ -26,8 +26,8 @@ import (
 
 // ImageSpec is a validated/loaded image configuration ready for building
 type ImageSpec struct {
-	Stack   spec.OpStack
-	Config  config.ImageConfiguration
+	Stack   *spec.OpStack
+	Config  *config.ImageConfiguration
 	BaseDir string // Used to join filename paths relative to the .spin file, i.e. packages
 }
 
@@ -54,14 +54,14 @@ func NewImageSpec(spinFile string) (*ImageSpec, error) {
 
 	// Load packages file relative to the spin file
 	parser := spec.NewParser()
-	pkgsFile := filepath.Join(is.BaseDir, is.Config.Image.Packages)
+	pkgsFile := filepath.Join(is.BaseDir, conf.Image.Packages)
 	if err = parser.Parse(pkgsFile); err != nil {
 		return nil, err
 	}
 
 	// Return new ImageSpec with our own copies
 	return &ImageSpec{
-		Stack:  *parser.Stack,
-		Config: *conf,
+		Stack:  parser.Stack,
+		Config: conf,
 	}, nil
 }
