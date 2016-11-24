@@ -25,8 +25,17 @@ const (
 )
 
 func TestConfig(t *testing.T) {
-	_, err := New(confTestPath)
+	c, err := New(confTestPath)
 	if err != nil {
 		t.Fatalf("Couldn't open good config: %v", err)
+	}
+	if c.Image.Packages != "minimal.packages" {
+		t.Fatalf("Invalid packages file")
+	}
+	if c.Image.Type != "livecd" {
+		t.Fatalf("Invalid type")
+	}
+	if c.LiveCD.Compression != "gzip" {
+		t.Fatalf("Invalid compression: %v", c.LiveCD.Compression)
 	}
 }
