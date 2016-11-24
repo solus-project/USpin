@@ -22,6 +22,14 @@ import (
 	"strings"
 )
 
+const (
+	// CompressionGzip will compress the squashfs with gzip
+	CompressionGzip = "gzip"
+
+	// CompressionXZ will compress the squashfs using xz
+	CompressionXZ = "xz"
+)
+
 // SectionLiveCD is the Live ISO specific configuration
 type SectionLiveCD struct {
 	Compression string `toml:"compression"` // The type of compression to use on the LiveCD
@@ -31,7 +39,7 @@ type SectionLiveCD struct {
 // ValidateSectionLiveCD will determine if the configuration is valid for a LiveCD
 func ValidateSectionLiveCD(l *SectionLiveCD) error {
 	switch l.Compression {
-	case "xz", "gzip":
+	case CompressionGzip, CompressionXZ:
 	default:
 		return fmt.Errorf("Unknown compression type: %v", l.Compression)
 	}
