@@ -21,7 +21,6 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"syscall"
 	"time"
 )
 
@@ -61,17 +60,17 @@ type MountEntry struct {
 
 // Umount will attempt to unmount the given path
 func (m *MountEntry) Umount() error {
-	return syscall.Unmount(m.MountPoint, 0)
+	return ExecStdout(fmt.Sprintf("umount %v", m.MountPoint))
 }
 
 // UmountForce will attempt to forcibly detach the mountpoint
 func (m *MountEntry) UmountForce() error {
-	return syscall.Unmount(m.MountPoint, syscall.MNT_FORCE)
+	return ExecStdout(fmt.Sprintf("umount -f %v", m.MountPoint))
 }
 
 // UmountLazy will attempt a lazy detach of the node
 func (m *MountEntry) UmountLazy() error {
-	return syscall.Unmount(m.MountPoint, syscall.MNT_DETACH)
+	return ExecStdout(fmt.Sprintf("umount -l %v", m.MountPoint))
 }
 
 // UmountSync will attempt everything possible to umount itself
@@ -116,8 +115,8 @@ func (m *MountManager) insertMount(sourcepath, destpath string) {
 	m.mounts[destpath] = me
 }
 
-// MountPath will attempt to mount the given sourcepath at the destpath
-func (m *MountManager) MountPath(sourcepath, destpath, filesystem string, flags uintptr, options ...string) error {
+// Mount will attempt to mount the given sourcepath at the destpath
+func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ...string) error {
 	// Only store the absolute path for the mountpoint
 	dpath, err := filepath.Abs(destpath)
 	if err != nil {
@@ -128,11 +127,13 @@ func (m *MountManager) MountPath(sourcepath, destpath, filesystem string, flags 
 		return fmt.Errorf("Path already known to MountManager: %v", dpath)
 	}
 
-	optString := ""
+	cmd := fmt.Sprintf("mount -t %v %v %v", filesystem, sourcepath, destpath)
 	if len(options) > 1 {
-		optString = strings.Join(options, ",")
+		optString := strings.Join(options, ",")
+		cmd += fmt.Sprintf(" -o %v", optString)
 	}
-	if err := syscall.Mount(sourcepath, dpath, filesystem, flags, optString); err != nil {
+
+	if err := ExecStdout(cmd); err != nil {
 		return err
 	}
 	m.insertMount(sourcepath, dpath)
@@ -140,13 +141,8 @@ func (m *MountManager) MountPath(sourcepath, destpath, filesystem string, flags 
 }
 
 // BindMount will attempt to mount the given sourcepath at the destpath with a binding
-func (m *MountManager) BindMount(sourcepath, destpath, filesystem string, options ...string) error {
-	return m.MountPath(sourcepath, destpath, filesystem, syscall.MS_BIND, options...)
-}
-
-// Mount will attempt to mount the given sourcepath at the destpath with default options
-func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ...string) error {
-	return m.MountPath(sourcepath, destpath, filesystem, 0, options...)
+func (m *MountManager) BindMount(sourcepath, destpath, filesystem string) error {
+	return m.Mount(sourcepath, destpath, filesystem, "loop")
 }
 
 // Unmount will attempt to unmount the given path
