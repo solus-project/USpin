@@ -142,7 +142,7 @@ func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ..
 
 // BindMount will attempt to mount the given sourcepath at the destpath with a binding
 func (m *MountManager) BindMount(sourcepath, destpath, filesystem string) error {
-	return m.Mount(sourcepath, destpath, filesystem, "loop")
+	return m.Mount(sourcepath, destpath, filesystem, "bind")
 }
 
 // Unmount will attempt to unmount the given path
