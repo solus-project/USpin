@@ -117,6 +117,7 @@ func doBuild(spinfile string) {
 	}
 
 	// Attempt to init root now
+	logImg.Info("Initialising root with package manager")
 	if err = pman.InitRoot(builder.GetRootDir()); err != nil {
 		logImg.Error(err)
 		return
