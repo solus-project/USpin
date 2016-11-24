@@ -22,8 +22,16 @@ import (
 	"os"
 )
 
+// ImageSection describes the [image] portion of a spin file
+type ImageSection struct {
+	FileName string `toml:"filename"` // Filename for resulting image
+	Packages string `toml:"packages"` // Path to the packages file
+	Type     string `toml:"type"`     // Type of image to construct
+}
+
 // ImageConfiguration is the configuration for an image build
 type ImageConfiguration struct {
+	Image ImageSection `toml:"image"`
 }
 
 // New will return a new ImageConfiguration for the given path and attempt to
