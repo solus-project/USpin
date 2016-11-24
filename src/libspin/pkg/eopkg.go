@@ -91,6 +91,12 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 	switch ops[0].(type) {
 	case *spec.OpRepo:
 		return e.addRepos(ops)
+	case *spec.OpGroup:
+		ignoreSafety := ops[0].(*spec.OpGroup).IgnoreSafety
+		return e.installComponents(ops, ignoreSafety)
+	case *spec.OpPackage:
+		ignoreSafety := ops[0].(*spec.OpPackage).IgnoreSafety
+		return e.installPackages(ops, ignoreSafety)
 	default:
 		return ErrUnknownOperation
 	}
@@ -120,4 +126,34 @@ func (e *EopkgManager) addRepos(ops []spec.Operation) error {
 		}
 	}
 	return nil
+}
+
+// Install the named components
+func (e *EopkgManager) installComponents(ops []spec.Operation, ignoreSafety bool) error {
+	var componentNames []string
+	for _, comp := range ops {
+		c := comp.(*spec.OpGroup)
+		componentNames = append(componentNames, c.GroupName)
+	}
+	cmd := []string{"install", "--ignore-comar", "-c"}
+	cmd = append(cmd, componentNames...)
+	if ignoreSafety {
+		cmd = append(cmd, "--ignore-safety")
+	}
+	return e.eopkgExecRoot(cmd)
+}
+
+// Install the named packages
+func (e *EopkgManager) installPackages(ops []spec.Operation, ignoreSafety bool) error {
+	var pkgNames []string
+	for _, p := range ops {
+		pk := p.(*spec.OpPackage)
+		pkgNames = append(pkgNames, pk.Name)
+	}
+	cmd := []string{"install", "--ignore-comar"}
+	cmd = append(cmd, pkgNames...)
+	if ignoreSafety {
+		cmd = append(cmd, "--ignore-safety")
+	}
+	return e.eopkgExecRoot(cmd)
 }
