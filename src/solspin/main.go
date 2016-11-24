@@ -71,13 +71,24 @@ func main() {
 		os.Exit(1)
 	}
 
+	// For nicer logging
+	imgType := spec.Config.Image.Type
+	logImg := log.WithFields(logrus.Fields{"imageType": imgType})
+
+	// Get the builder instance
 	builder, err = libimage.NewBuilder(spec.Config.Image.Type)
 	if err != nil {
-		log.Fatal(err)
+		logImg.Fatal(err)
 	}
 
+	logImg.Info("Initialising builder")
 	if err = builder.Init(spec); err != nil {
-		log.Fatal(err)
+		logImg.Fatal(err)
+	}
+
+	logImg.Info("Preparing workspace")
+	if err = builder.PrepareWorkspace(); err != nil {
+		logImg.Fatal(err)
 	}
 
 	log.Error("Not yet implemented")
