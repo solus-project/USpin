@@ -21,6 +21,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"libspin"
 	"libspin/image"
+	_ "libspin/pkg"
 	"os"
 )
 
