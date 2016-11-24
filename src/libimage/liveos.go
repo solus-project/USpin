@@ -18,7 +18,6 @@ package libimage
 
 import (
 	"errors"
-	"fmt"
 	"libspin"
 	"os"
 	"os/exec"
@@ -123,5 +122,5 @@ func (l *LiveOSBuilder) CreateStorage() error {
 
 // Cleanup currently does nothing within this builder
 func (l *LiveOSBuilder) Cleanup() {
-	fmt.Fprintf(os.Stderr, "DEBUG: Cleanup() called!\n")
+	log.Info("Cleaning up")
 }
