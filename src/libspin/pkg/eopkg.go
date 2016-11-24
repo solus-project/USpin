@@ -16,8 +16,11 @@
 
 package libspin
 
+// EopkgManager is used to apply operations with the eopkg package manager
+// for Solus systems.
 type EopkgManager struct{}
 
+// NewEopkgManager will return a newly initialised EopkgManager
 func NewEopkgManager() *EopkgManager {
 	return &EopkgManager{}
 }
