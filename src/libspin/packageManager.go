@@ -43,7 +43,7 @@ type PackageManager interface {
 	InitRoot() error
 
 	// ApplyOperations should apply all of the given operations in bulk, as they
-	// are always gauranteed to have the same type.
+	// are always guaranteed to have the same type.
 	ApplyOperations(ops []spec.Operation) error
 
 	// Cleanup may be called at any time, and the package manager implementation
