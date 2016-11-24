@@ -18,10 +18,20 @@ package pkg
 
 import (
 	"libspin/config"
+	"libspin/image"
 	"libspin/spec"
 	"os"
 	"os/exec"
 	"path/filepath"
+)
+
+const (
+	// EopkgCacheDirectory is where we'll bind mount to provide package caching
+	// to speed up subsequent image builds.
+	// This will be mounted at $rootfs/var/cache/eopkg/packages.
+	// It uses the evobuild directory for consistency with evobuild, so that
+	// Solus developers only need one cache system wide.
+	EopkgCacheDirectory = "/var/lib/evobuild/packages"
 )
 
 // EopkgManager is used to apply operations with the eopkg package manager
@@ -52,6 +62,8 @@ func (e *EopkgManager) InitRoot(root string) error {
 	reqDirs := []string{
 		"run/lock",
 		"var",
+		// Enables our bind mounting for caching
+		"var/cache/eopkg/packages",
 	}
 
 	// Construct the required directories in the tree
@@ -62,12 +74,24 @@ func (e *EopkgManager) InitRoot(root string) error {
 		}
 	}
 
+	// Attempt to create the system wide cache directory
+	if err := os.MkdirAll(EopkgCacheDirectory, 00755); err != nil {
+		return err
+	}
+
 	if err := os.Symlink("../run/lock", filepath.Join(root, "var", "lock")); err != nil {
 		return err
 	}
 	if err := os.Symlink("../run", filepath.Join(root, "var", "run")); err != nil {
 		return err
 	}
+
+	// Now attempt to bind mount the cache directory to be .. well. usable
+	cacheTarget := filepath.Join(root, "var", "cache", "eopkg", "packages")
+	if err := image.GetMountManager().BindMount(EopkgCacheDirectory, cacheTarget); err != nil {
+		return err
+	}
+
 	return nil
 }
 
