@@ -45,6 +45,7 @@ type LiveOSBuilder struct {
 	img       *libspin.ImageSpec
 	rootfsImg string
 	rootfsDir string
+	deployDir string
 	workspace string
 }
 
@@ -81,11 +82,13 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 	// Initialise our base variables
 	l.rootfsImg = l.JoinPath("rootfs.img")
 	l.rootfsDir = l.JoinPath("rootfs")
+	l.deployDir = l.JoinPath("deploy")
 
 	// As and when we add new directories, populate them here
 	requiredDirs := []string{
 		l.workspace,
 		l.rootfsDir,
+		l.deployDir,
 	}
 
 	// Create all required directories
