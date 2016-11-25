@@ -23,7 +23,7 @@ import (
 )
 
 // Manager is the interface that should be implemented by vendors to enable
-// solspin to understand them and construct images according to their particulars.
+// USpin to understand them and construct images according to their particulars.
 type Manager interface {
 
 	// Init will allwo implementations to initialise themselves according to any

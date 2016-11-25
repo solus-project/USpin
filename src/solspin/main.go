@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-// Package main provides the solspin command line utility for image generation
+// Package main provides the USpin command line utility for image generation
 package main
 
 import (
@@ -38,7 +38,7 @@ func init() {
 	log.Formatter = form
 }
 
-// SolSpin is the main solspin binary lifetime tracking object
+// SolSpin is the main USpin binary lifetime tracking object
 type SolSpin struct {
 	logImage   *logrus.Entry
 	logPackage *logrus.Entry

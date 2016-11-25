@@ -93,7 +93,7 @@ func (m *MountEntry) UmountSync() error {
 //
 // It is relied upon to provide bulletproof unmounting in instances of failure,
 // so that in every event the mountpoints are always taken back down, ensuring
-// no usability issues for the solspin user.
+// no usability issues for the USpin user.
 type MountManager struct {
 	mounts map[string]*MountEntry
 }

@@ -4,7 +4,7 @@ PROJECT_ROOT := src/
 
 # The resulting binaries map to the subproject names
 BINARIES = \
-	solspin
+	uspin
 
 LIBRARIES = \
 	libspin/config \

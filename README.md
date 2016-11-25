@@ -1,8 +1,8 @@
 
-solspin
+USpin
 -----------
 
-[![Report](https://goreportcard.com/badge/github.com/solus-project/solspin)](https://goreportcard.com/report/github.com/solus-project/solspin) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Report](https://goreportcard.com/badge/github.com/solus-project/USpin)](https://goreportcard.com/report/github.com/solus-project/USpin) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Solus image creation utilities. Intended to succeed the existing `solus-image-creator.py` script with something a bit more robust that can construct multiple image types.
 
@@ -27,4 +27,4 @@ License
 
 Copyright © 2016 Solus Project
 
-`solspin` is available under the terms of the Apache-2.0 license
+`USpin` is available under the terms of the Apache-2.0 license
