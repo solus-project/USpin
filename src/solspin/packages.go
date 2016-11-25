@@ -19,6 +19,7 @@ package main
 // InstallPackages will install all required packages into the rootfs
 func (s *SolSpin) InstallPackages() error {
 	s.logPackage.Info("Applying operations")
+
 	// First thing first, ensure that it always cleans up within this context,
 	// so that we know it's done before we return to building the image
 	defer func() {
@@ -26,6 +27,12 @@ func (s *SolSpin) InstallPackages() error {
 			s.logPackage.Error(err)
 		}
 	}()
+
+	// Attempt to init root now
+	s.logPackage.Info("Initialising root with package manager")
+	if err := s.packager.InitRoot(s.builder.GetRootDir()); err != nil {
+		return err
+	}
 
 	for _, opset := range s.spec.Stack.Blocks {
 		if err := s.packager.ApplyOperations(opset.Ops); err != nil {
