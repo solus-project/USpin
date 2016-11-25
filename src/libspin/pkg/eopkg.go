@@ -131,7 +131,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Before we start chrooting, update libraries to be usable..
-	if err := ChrootExec(e.root, "ldconfig"); err != nil {
+	if err := image.ChrootExec(e.root, "ldconfig"); err != nil {
 		return err
 	}
 	// Set up account for dbus (TODO: Add sysusers.d file for this
@@ -139,10 +139,10 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Create the required nodes for eopkg to run without bind mounts
-	if err := CreateDeviceNode(e.root, DevNodeRandom); err != nil {
+	if err := image.CreateDeviceNode(e.root, image.DevNodeRandom); err != nil {
 		return err
 	}
-	if err := CreateDeviceNode(e.root, DevNodeURandom); err != nil {
+	if err := image.CreateDeviceNode(e.root, image.DevNodeURandom); err != nil {
 		return err
 	}
 	// Start dbus to allow configure-pending
@@ -150,7 +150,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Run all postinstalls inside chroot
-	if err := ChrootExec(e.root, "eopkg configure-pending"); err != nil {
+	if err := image.ChrootExec(e.root, "eopkg configure-pending"); err != nil {
 		e.killDBUS()
 		return err
 	}
@@ -159,7 +159,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Delete cached assets
-	if err := ChrootExec(e.root, "eopkg delete-cache"); err != nil {
+	if err := image.ChrootExec(e.root, "eopkg delete-cache"); err != nil {
 		return err
 	}
 	return nil
@@ -193,10 +193,10 @@ func (e *EopkgManager) startDBUS() error {
 	if e.dbusActive {
 		return nil
 	}
-	if err := ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
+	if err := image.ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
 		return err
 	}
-	if err := ChrootExec(e.root, "dbus-daemon --system"); err != nil {
+	if err := image.ChrootExec(e.root, "dbus-daemon --system"); err != nil {
 		return err
 	}
 	e.dbusActive = true
@@ -229,16 +229,16 @@ func (e *EopkgManager) killDBUS() error {
 	}
 
 	pid := strings.Split(string(b), "\n")[0]
-	return ExecStdoutArgs("kill", []string{"-9", pid})
+	return image.ExecStdoutArgs("kill", []string{"-9", pid})
 }
 
 // This is also largely anti-stateless but is required just to get dbus running
 // so we can configure-pending. sol can't come quick enough...
 func (e *EopkgManager) configureDbus() error {
-	if err := AddGroup(e.root, "messagebus", 18); err != nil {
+	if err := image.AddGroup(e.root, "messagebus", 18); err != nil {
 		return err
 	}
-	if err := AddSystemUser(e.root, "messagebus", "D-Bus Message Daemon", "/var/run/dbus", "/bin/false", 18, 18); err != nil {
+	if err := image.AddSystemUser(e.root, "messagebus", "D-Bus Message Daemon", "/var/run/dbus", "/bin/false", 18, 18); err != nil {
 		return err
 	}
 	return nil
@@ -256,7 +256,7 @@ func (e *EopkgManager) eopkgExecRoot(args []string) error {
 		"-D", e.root,
 	}
 	args = append(args, endArgs...)
-	return ExecStdoutArgs("eopkg", args)
+	return image.ExecStdoutArgs("eopkg", args)
 }
 
 // Add a repository to the target
