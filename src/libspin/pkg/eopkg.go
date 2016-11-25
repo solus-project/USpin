@@ -244,8 +244,8 @@ func (e *EopkgManager) configureDbus() error {
 }
 
 // Cleanup will cleanup the rootfs at any given point
-func (e *EopkgManager) Cleanup() {
-	e.killDBUS()
+func (e *EopkgManager) Cleanup() error {
+	return e.killDBUS()
 }
 
 // Eopkg specific functions
