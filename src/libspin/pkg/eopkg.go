@@ -41,6 +41,8 @@ const (
 type EopkgManager struct {
 	root        string // rootfs path
 	cacheTarget string // Where we mount the cache directory
+
+	dbusActive bool // Whether we have dbus alive or not
 }
 
 // NewEopkgManager will return a newly initialised EopkgManager
@@ -188,18 +190,26 @@ func (e *EopkgManager) copyBaselayout() error {
 
 // Attempt to start dbus in the root..
 func (e *EopkgManager) startDBUS() error {
+	if e.dbusActive {
+		return nil
+	}
 	if err := ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
 		return err
 	}
 	if err := ChrootExec(e.root, "dbus-daemon --system"); err != nil {
 		return err
 	}
+	e.dbusActive = true
 	return nil
 }
 
 // killDBUS will stop dbus again
 // TODO: Remove the file
 func (e *EopkgManager) killDBUS() error {
+	// No sense killing dbus twice
+	if !e.dbusActive {
+		return nil
+	}
 	fpath := filepath.Join(e.root, "var/run/dbus/pid")
 	var b []byte
 	var err error
@@ -232,6 +242,7 @@ func (e *EopkgManager) configureDbus() error {
 
 // Cleanup will cleanup the rootfs at any given point
 func (e *EopkgManager) Cleanup() {
+	e.killDBUS()
 }
 
 // Eopkg specific functions
