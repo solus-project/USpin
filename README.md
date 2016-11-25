@@ -1,10 +1,11 @@
-
 USpin
------------
+------
 
 [![Report](https://goreportcard.com/badge/github.com/solus-project/USpin)](https://goreportcard.com/report/github.com/solus-project/USpin) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Universal image creation utilities. Used to produce bootable Linux medium in an agnostic fashion.
+
+[![You Spin Me Right Round](https://img.youtube.com/vi/PGNiXGX2nLU/0.jpg)](https://www.youtube.com/watch?v=PGNiXGX2nLU)
 
 Rationale
 -------
