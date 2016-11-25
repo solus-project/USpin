@@ -130,6 +130,9 @@ func (e *EopkgManager) FinalizeRoot() error {
 	if err := CreateDeviceNode(e.root, DevNodeURandom); err != nil {
 		return err
 	}
+	if err := ChrootExec(e.root, "eopkg configure-pending"); err != nil {
+		return err
+	}
 	return ErrNotYetImplemented
 }
 
