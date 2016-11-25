@@ -221,6 +221,7 @@ func (e *EopkgManager) killDBUS() error {
 	defer func() {
 		f.Close()
 		os.Remove(fpath)
+		e.dbusActive = false
 	}()
 
 	if b, err = ioutil.ReadAll(f); err != nil {
