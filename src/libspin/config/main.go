@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+// Package config provides the TOML based configuration format used for the
+// main .spin files
 package config
 
 import (

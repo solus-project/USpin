@@ -14,6 +14,11 @@
 // limitations under the License.
 //
 
+// Package libspin provides key utilities in dealing with the solspin
+// configuration formats.
+//
+// Notably it provides the ImageSpec type, core to the main routines within
+// solspin.
 package libspin
 
 import (

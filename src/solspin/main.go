@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// Package main provides the solspin command line utility for image generation
 package main
 
 import (
