@@ -44,6 +44,12 @@ func (s *SolSpin) Build() error {
 		return err
 	}
 
+	// And now finish the image build
+	if err := s.FinishImageBuild(); err != nil {
+		s.logImage.Error(err)
+		return err
+	}
+
 	// TODO: Finish the image
 	return nil
 }

@@ -136,6 +136,11 @@ func (l *LiveOSBuilder) MountStorage() error {
 	return GetMountManager().Mount(l.rootfsImg, l.rootfsDir, l.rootfsFormat, "loop")
 }
 
+// UnmountStorage will unmount the rootfs.img from earlier
+func (l *LiveOSBuilder) UnmountStorage() error {
+	return GetMountManager().Unmount(l.rootfsDir)
+}
+
 // GetRootDir returns the path to the mounted rootfs.img
 func (l *LiveOSBuilder) GetRootDir() string {
 	return l.rootfsDir

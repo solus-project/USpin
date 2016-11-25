@@ -37,3 +37,12 @@ func (s *SolSpin) StartImageBuild() error {
 	}
 	return nil
 }
+
+// FinishImageBuild will perform all the last steps required to finalize an
+// image for final "spin".
+func (s *SolSpin) FinishImageBuild() error {
+	if err := s.builder.UnmountStorage(); err != nil {
+		return err
+	}
+	return nil
+}

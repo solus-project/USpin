@@ -43,6 +43,11 @@ type Builder interface {
 	// the rootfs.
 	MountStorage() error
 
+	// UnmountStorage should be used by the implementation to tear down any mounts
+	// previously erected in MountStorage() for package manager operations, prior
+	// to image finalisation
+	UnmountStorage() error
+
 	// GetRootDir is used by implementations to return the root directory for the
 	// OS files
 	GetRootDir() string
