@@ -17,7 +17,7 @@
 package main
 
 // InstallPackages will install all required packages into the rootfs
-func (s *SolSpin) InstallPackages() error {
+func (s *USpin) InstallPackages() error {
 	s.logPackage.Info("Applying operations")
 
 	// First thing first, ensure that it always cleans up within this context,

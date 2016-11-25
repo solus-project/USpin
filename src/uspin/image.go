@@ -22,7 +22,7 @@ import (
 
 // StartImageBuild will perform all steps up until the point where it is time
 // for the pkg.Manager to step in and populate the rootfs.
-func (s *SolSpin) StartImageBuild() error {
+func (s *USpin) StartImageBuild() error {
 	var err error
 
 	s.logImage.Info("Preparing workspace")
@@ -44,7 +44,7 @@ func (s *SolSpin) StartImageBuild() error {
 
 // FinishImageBuild will perform all the last steps required to finalize an
 // image for final "spin".
-func (s *SolSpin) FinishImageBuild() error {
+func (s *USpin) FinishImageBuild() error {
 	if err := s.builder.UnmountStorage(); err != nil {
 		return err
 	}

@@ -28,7 +28,7 @@ import (
 
 var log *logrus.Logger
 
-// Set up the main logger formatting used in SolSpin
+// Set up the main logger formatting used in USpin
 func init() {
 	form := &logrus.TextFormatter{}
 	form.FullTimestamp = true
@@ -38,8 +38,8 @@ func init() {
 	log.Formatter = form
 }
 
-// SolSpin is the main USpin binary lifetime tracking object
-type SolSpin struct {
+// USpin is the main USpin binary lifetime tracking object
+type USpin struct {
 	logImage   *logrus.Entry
 	logPackage *logrus.Entry
 
@@ -48,10 +48,10 @@ type SolSpin struct {
 	spec     *libspin.ImageSpec
 }
 
-// NewSolSpin will return a new SolSpin instance which stores global
+// NewUSpin will return a new USpin instance which stores global
 // state for the duration of an image spin process.
-func NewSolSpin(path string) (*SolSpin, error) {
-	ret := &SolSpin{}
+func NewUSpin(path string) (*USpin, error) {
+	ret := &USpin{}
 	var err error
 
 	// Attempt to get the image spec first
@@ -99,7 +99,7 @@ func main() {
 		printUsage(1)
 	}
 
-	spin, err := NewSolSpin(os.Args[1])
+	spin, err := NewUSpin(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)

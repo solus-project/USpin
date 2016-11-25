@@ -17,7 +17,7 @@
 package main
 
 // Build will attempt to build the image, and return an error if this fails
-func (s *SolSpin) Build() error {
+func (s *USpin) Build() error {
 	// Initialise our builder before we go anywhere
 	if err := s.builder.Init(s.spec); err != nil {
 		s.logImage.Error(err)
