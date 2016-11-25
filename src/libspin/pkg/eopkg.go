@@ -122,6 +122,10 @@ func (e *EopkgManager) FinalizeRoot() error {
 	if err := e.copyBaselayout(); err != nil {
 		return err
 	}
+	// Before we start chrooting, update libraries to be usable..
+	if err := ChrootExec(e.root, "ldconfig"); err != nil {
+		return err
+	}
 	if err := e.configureDbus(); err != nil {
 		return err
 	}
