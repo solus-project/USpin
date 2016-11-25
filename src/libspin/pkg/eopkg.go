@@ -231,8 +231,7 @@ func (e *EopkgManager) configureDbus() error {
 }
 
 // Cleanup will cleanup the rootfs at any given point
-func (e *EopkgManager) Cleanup() error {
-	return ErrNotYetImplemented
+func (e *EopkgManager) Cleanup() {
 }
 
 // Eopkg specific functions

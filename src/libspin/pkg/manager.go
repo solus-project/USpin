@@ -48,7 +48,7 @@ type Manager interface {
 	// Cleanup may be called at any time, and the package manager implementation
 	// should ensure it cleans anything it did in the past, such as closing open
 	// processes.
-	Cleanup() error
+	Cleanup()
 }
 
 // NewManager will return an appropriate package manager instance for
