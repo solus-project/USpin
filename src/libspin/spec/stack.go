@@ -22,12 +22,12 @@ import (
 
 // OpStack contains all top level blocks
 type OpStack struct {
-	Blocks []*OpSet
+	Blocks []*OpSet // A set of type-similar OpSet's
 }
 
 // OpSet has a given type of operations that it supports
 type OpSet struct {
-	Ops []Operation
+	Ops []Operation // Slice of operations of the same type
 }
 
 // Operation is the base Op type
@@ -38,8 +38,8 @@ type Operation interface {
 // An OpRepo is an operation to enable a repository on a target
 type OpRepo struct {
 	Operation
-	RepoName string
-	RepoURI  string
+	RepoName string // Name to give the repository
+	RepoURI  string // URI of the repository in question
 }
 
 // Compatible will always return false as OpRepo cannot be stacked
@@ -47,11 +47,11 @@ func (o *OpRepo) Compatible(o2 Operation) bool {
 	return false
 }
 
-// An OpGroup is an operation to install a group/component
+// An OpGroup is an operation to install a group or component
 type OpGroup struct {
 	Operation
-	GroupName    string
-	IgnoreSafety bool
+	GroupName    string // Name of this group or component
+	IgnoreSafety bool   // Whether to bypass dependency safety checks
 }
 
 // Compatible determines if two OpGroup's are compatible with one another
@@ -68,8 +68,8 @@ func (o *OpGroup) Compatible(o2 Operation) bool {
 // An OpPackage is an operation to install a given package
 type OpPackage struct {
 	Operation
-	Name         string
-	IgnoreSafety bool
+	Name         string // Name of the package to install
+	IgnoreSafety bool   // Whether to bypass dependency safety checks
 }
 
 // Compatible determines if two OpPackage's are compatible with one another

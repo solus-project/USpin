@@ -14,6 +14,43 @@
 // limitations under the License.
 //
 
+// Package spec contains the specification format and parser for .spin package files
+//
+// Format
+//
+// A spin package file is a very simple text file, which supports comments and
+// minimal command style.
+// Any line that begins with a '#', or is blank after trimming, is ignored.
+//
+// Repo Lines
+//
+// A repository is defined as having a key and value. If a line is encountered
+// using the split delimiter '=', the left side is assumed to be the name of the
+// repository, and the right side is assumed to be the URI of this repository.
+//      RepoName = http://example.com/eopkg-index.xml.xz
+//
+// Group lines
+//
+// A line beginning with the group character '@' is interpreted as a request
+// to install the named group, whose name shall be the line minus the '@'.
+// Given the input:
+//      @system.base
+// The component named "system.base" would be installed.
+//
+// Package lines
+//
+// Any non blank line neither qualifying as a repo or group line is interpreted
+// as a package installation.
+//
+// Control Characters
+//
+// An additional character, '~', may be used by implementations to control the
+// 'IgnoreSafety' parameter of Package & Group install lines. Depending on the
+// implementation, this will bypass dependency safety checks in order to break
+// a cyclical dependency to inject a group or package before other dependencies
+// are met, such as for baselayout style packages.
+//
+// This control character must be the first character in the sequence.
 package spec
 
 import (
@@ -26,12 +63,12 @@ import (
 // Parser does the heavy lifting of parsing a .spin file to pull all
 // relevant stack operations from it.
 type Parser struct {
-	CommentCharacter   string
-	RepoSplitCharacter string
-	SafetyCharacter    string
-	GroupCharacter     string
+	CommentCharacter   string // If a line starts with this character, it is ignored. Defaults to '#'
+	RepoSplitCharacter string // Character to denote a repo definition. Defaults to '='
+	SafetyCharacter    string // Character to indicate ignoreSafety. Defaults to '~'
+	GroupCharacter     string // Character to indicate a group or component. Defaults to '@'
 
-	Stack *OpStack
+	Stack *OpStack // The parsed stack so far
 
 	curSet *OpSet
 }
