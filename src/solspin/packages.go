@@ -21,7 +21,12 @@ func (s *SolSpin) InstallPackages() error {
 	s.logPackage.Info("Applying operations")
 	// First thing first, ensure that it always cleans up within this context,
 	// so that we know it's done before we return to building the image
-	defer s.packager.Cleanup()
+	defer func() {
+		if err := s.packager.Cleanup(); err != nil {
+			s.logPackage.Error(err)
+		}
+	}()
+
 	for _, opset := range s.spec.Stack.Blocks {
 		if err := s.packager.ApplyOperations(opset.Ops); err != nil {
 			s.logPackage.Error(err)
