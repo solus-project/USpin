@@ -24,6 +24,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -130,10 +131,14 @@ func (e *EopkgManager) FinalizeRoot() error {
 	if err := CreateDeviceNode(e.root, DevNodeURandom); err != nil {
 		return err
 	}
-	if err := ChrootExec(e.root, "eopkg configure-pending"); err != nil {
+	if err := e.startDBUS(); err != nil {
 		return err
 	}
-	return ErrNotYetImplemented
+	if err := ChrootExec(e.root, "eopkg configure-pending"); err != nil {
+		e.killDBUS()
+		return err
+	}
+	return e.killDBUS()
 }
 
 // This needs to die in a fire and will not be supported when sol replaces eopkg
@@ -157,6 +162,38 @@ func (e *EopkgManager) copyBaselayout() error {
 		}
 	}
 	return nil
+}
+
+// Attempt to start dbus in the root..
+func (e *EopkgManager) startDBUS() error {
+	if err := ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
+		return err
+	}
+	if err := ChrootExec(e.root, "dbus-daemon --system"); err != nil {
+		return err
+	}
+	return nil
+}
+
+// killDBUS will stop dbus again
+// TODO: Remove the file
+func (e *EopkgManager) killDBUS() error {
+	fpath := filepath.Join(e.root, "var/run/dbus/pid")
+	var b []byte
+	var err error
+	var f *os.File
+
+	if f, err = os.Open(fpath); err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if b, err = ioutil.ReadAll(f); err != nil {
+		return err
+	}
+
+	pid := strings.Split(string(b), "\n")[0]
+	return ExecStdoutArgs("kill", []string{"-9", pid})
 }
 
 // This is also largely anti-stateless but is required just to get dbus running
