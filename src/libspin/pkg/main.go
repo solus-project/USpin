@@ -21,8 +21,17 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
+
+// DeviceNode represents a /dev/ node to be created in chroots
+type DeviceNode struct {
+	Mode  string // Mode to create the device node in
+	Major uint32 // Major ID
+	Minor uint32 // Minor ID
+	Path  string // Path within a chroot (no / prefix)
+}
 
 const (
 	// PackageManagerEopkg is the package manager used within Solus
@@ -38,7 +47,18 @@ var (
 
 	// ErrUnknownOperation is returned when we don't know how to handle an operation
 	ErrUnknownOperation = errors.New("Unknown or unsupported operation requested")
+
+	// DevNodeRandom is /dev/random
+	DevNodeRandom *DeviceNode
+
+	// DevNodeURandom is /dev/urandom
+	DevNodeURandom *DeviceNode
 )
+
+func init() {
+	DevNodeURandom = &DeviceNode{Mode: "00666", Major: 1, Minor: 9, Path: "dev/urandom"}
+	DevNodeRandom = &DeviceNode{Mode: "00666", Major: 1, Minor: 8, Path: "dev/random"}
+}
 
 // ExecStdoutArgs is a convenience function to execute a command on stdout with
 // the given arguments
@@ -81,4 +101,12 @@ func AddSystemUser(root, userName, gecos, home, shell string, uid, gid int) erro
 	cmd := fmt.Sprintf("useradd -m -d \"%s\" -r -s \"%s\" -u %d -g %d \"%s\" -c \"%s\"",
 		home, shell, uid, gid, userName, gecos)
 	return ChrootExec(root, cmd)
+}
+
+// CreateDeviceNode will create the essential nodes in a chroot path
+func CreateDeviceNode(root string, node *DeviceNode) error {
+	fpath := filepath.Join(root, node.Path)
+	cmd := []string{"-m", node.Mode, fpath, "c", fmt.Sprintf("%d", node.Major), fmt.Sprintf("%d", node.Minor)}
+
+	return ExecStdoutArgs("mknod", cmd)
 }

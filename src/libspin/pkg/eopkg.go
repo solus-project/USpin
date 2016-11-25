@@ -124,6 +124,12 @@ func (e *EopkgManager) FinalizeRoot() error {
 	if err := e.configureDbus(); err != nil {
 		return err
 	}
+	if err := CreateDeviceNode(e.root, DevNodeRandom); err != nil {
+		return err
+	}
+	if err := CreateDeviceNode(e.root, DevNodeURandom); err != nil {
+		return err
+	}
 	return ErrNotYetImplemented
 }
 
