@@ -17,7 +17,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/Sirupsen/logrus"
 	"libspin"
@@ -40,8 +39,8 @@ func init() {
 
 // SolSpin is the main solspin binary lifetime tracking object
 type SolSpin struct {
-	logImage   *logrus.Logger
-	logPackage *logrus.Logger
+	logImage   *logrus.Entry
+	logPackage *logrus.Entry
 
 	builder  image.Builder
 	packager pkg.Manager
@@ -51,7 +50,35 @@ type SolSpin struct {
 // NewSolSpin will return a new SolSpin instance which stores global
 // state for the duration of an image spin process.
 func NewSolSpin(path string) (*SolSpin, error) {
-	return nil, errors.New("Not yet implemented")
+	ret := &SolSpin{}
+	var err error
+
+	// Attempt to get the image spec first
+	if ret.spec, err = libspin.NewImageSpec(path); err != nil {
+		return nil, err
+	}
+
+	// Get a builder
+	buildType := ret.spec.Config.Image.Type
+	if ret.builder, err = image.NewBuilder(buildType); err != nil {
+		return nil, err
+	}
+
+	// Get our image log
+	ret.logImage = log.WithFields(logrus.Fields{"imageType": buildType})
+
+	// TODO: Stop hardcoding this!
+	pkgType := "eopkg"
+
+	// Get our package manager
+	if ret.packager, err = pkg.NewManager(pkgType); err != nil {
+		return nil, err
+	}
+
+	// Get packager log
+	ret.logPackage = log.WithFields(logrus.Fields{"packageManager": pkgType})
+
+	return ret, nil
 }
 
 func printUsage(exitCode int) {
