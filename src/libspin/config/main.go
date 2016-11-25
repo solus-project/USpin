@@ -27,15 +27,18 @@ import (
 	"strings"
 )
 
+// ImageType is the type of image that will be created
+type ImageType string
+
 const (
-	// ImageTypeLiveOS refers to an ISO type image that may also be USB compatible
-	ImageTypeLiveOS = "liveos"
+	// ImageTypeLiveOS is an ISO type image that may also be USB compatible
+	ImageTypeLiveOS ImageType = "liveos"
 )
 
 // SectionImage describes the [image] portion of a spin file
 type SectionImage struct {
-	Packages string `toml:"packages"` // Path to the packages file
-	Type     string `toml:"type"`     // Type of image to construct
+	Packages string    `toml:"packages"` // Path to the packages file
+	Type     ImageType `toml:"type"`     // Type of image to construct
 }
 
 // SectionBranding describes the image branding rules

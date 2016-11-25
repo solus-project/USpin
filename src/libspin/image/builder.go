@@ -58,7 +58,7 @@ type Builder interface {
 }
 
 // NewBuilder will try to return a builder for the given type
-func NewBuilder(name string) (Builder, error) {
+func NewBuilder(name config.ImageType) (Builder, error) {
 	switch name {
 	case config.ImageTypeLiveOS:
 		return NewLiveOSBuilder(), nil
