@@ -39,7 +39,8 @@ const (
 // EopkgManager is used to apply operations with the eopkg package manager
 // for Solus systems.
 type EopkgManager struct {
-	root string // rootfs path
+	root        string // rootfs path
+	cacheTarget string // Where we mount the cache directory
 }
 
 // NewEopkgManager will return a newly initialised EopkgManager
@@ -89,8 +90,8 @@ func (e *EopkgManager) InitRoot(root string) error {
 	}
 
 	// Now attempt to bind mount the cache directory to be .. well. usable
-	cacheTarget := filepath.Join(root, "var", "cache", "eopkg", "packages")
-	if err := image.GetMountManager().BindMount(EopkgCacheDirectory, cacheTarget); err != nil {
+	e.cacheTarget = filepath.Join(root, "var", "cache", "eopkg", "packages")
+	if err := image.GetMountManager().BindMount(EopkgCacheDirectory, e.cacheTarget); err != nil {
 		return err
 	}
 
@@ -119,6 +120,11 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 // FinalizeRoot will configure all of the eopkgs installed in the system, and
 // ensure that dbus, etc, works.
 func (e *EopkgManager) FinalizeRoot() error {
+	// First things first, unmount the cache
+	if err := image.GetMountManager().Unmount(e.cacheTarget); err != nil {
+		return err
+	}
+	// Copy base layout
 	if err := e.copyBaselayout(); err != nil {
 		return err
 	}
@@ -126,23 +132,35 @@ func (e *EopkgManager) FinalizeRoot() error {
 	if err := ChrootExec(e.root, "ldconfig"); err != nil {
 		return err
 	}
+	// Set up account for dbus (TODO: Add sysusers.d file for this
 	if err := e.configureDbus(); err != nil {
 		return err
 	}
+	// Create the required nodes for eopkg to run without bind mounts
 	if err := CreateDeviceNode(e.root, DevNodeRandom); err != nil {
 		return err
 	}
 	if err := CreateDeviceNode(e.root, DevNodeURandom); err != nil {
 		return err
 	}
+	// Start dbus to allow configure-pending
 	if err := e.startDBUS(); err != nil {
 		return err
 	}
+	// Run all postinstalls inside chroot
 	if err := ChrootExec(e.root, "eopkg configure-pending"); err != nil {
 		e.killDBUS()
 		return err
 	}
-	return e.killDBUS()
+	// Buhbye dbus
+	if err := e.killDBUS(); err != nil {
+		return err
+	}
+	// Delete cached assets
+	if err := ChrootExec(e.root, "eopkg delete-cache"); err != nil {
+		return err
+	}
+	return nil
 }
 
 // This needs to die in a fire and will not be supported when sol replaces eopkg
