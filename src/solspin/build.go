@@ -27,6 +27,11 @@ func (s *SolSpin) Build() error {
 		return err
 	}
 
+	if err := s.StartImageBuild(); err != nil {
+		s.logImage.Error(err)
+		return err
+	}
+
 	defer s.builder.Cleanup()
 	return nil
 }
