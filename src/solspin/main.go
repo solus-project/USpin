@@ -69,7 +69,7 @@ func NewSolSpin(path string) (*SolSpin, error) {
 	ret.logImage = log.WithFields(logrus.Fields{"imageType": buildType})
 
 	// TODO: Stop hardcoding this!
-	pkgType := "eopkg"
+	pkgType := pkg.PackageManagerEopkg
 
 	// Get our package manager
 	if ret.packager, err = pkg.NewManager(pkgType); err != nil {

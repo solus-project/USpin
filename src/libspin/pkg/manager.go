@@ -53,7 +53,7 @@ type Manager interface {
 
 // NewManager will return an appropriate package manager instance for
 // the given name, if it exists.
-func NewManager(name string) (Manager, error) {
+func NewManager(name PackageManager) (Manager, error) {
 	switch name {
 	case PackageManagerEopkg:
 		return NewEopkgManager(), nil

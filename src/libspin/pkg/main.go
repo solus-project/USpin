@@ -26,7 +26,7 @@
 //
 // Using a package manager instance is as simple as gaining a reference to it,
 // via the NewPackageManager method.
-//      manager, err := pkg.NewManager("eopkg")
+//      manager, err := pkg.NewManager(pkg.PackageManagerEopkg)
 //
 // Placement in the lifecycle
 //
@@ -55,9 +55,14 @@ type DeviceNode struct {
 	Path  string // Path within a chroot (no / prefix)
 }
 
+// PackageManager is the type of pkg.Manager that is to be used for packaging
+// operations. This type is built-in as there is only a limited set of supported
+// package managers at any time.
+type PackageManager string
+
 const (
 	// PackageManagerEopkg is the package manager used within Solus
-	PackageManagerEopkg = "eopkg"
+	PackageManagerEopkg PackageManager = "eopkg"
 )
 
 var (
