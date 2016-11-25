@@ -18,20 +18,32 @@ package main
 
 // Build will attempt to build the image, and return an error if this fails
 func (s *SolSpin) Build() error {
+	// Initialise our builder before we go anywhere
 	if err := s.builder.Init(s.spec); err != nil {
 		s.logImage.Error(err)
 		return err
 	}
+	// Make sure that the package manager requirements are met
 	if err := s.packager.Init(s.spec.Config); err != nil {
 		s.logPackage.Error(err)
 		return err
 	}
 
+	// Always perform cleanup duty.
+	defer s.builder.Cleanup()
+
+	// Start building the base parts of the image
 	if err := s.StartImageBuild(); err != nil {
 		s.logImage.Error(err)
 		return err
 	}
 
-	defer s.builder.Cleanup()
+	// Hand over to the package manager
+	if err := s.InstallPackages(); err != nil {
+		s.logPackage.Error(err)
+		return err
+	}
+
+	// TODO: Finish the image
 	return nil
 }
