@@ -98,9 +98,12 @@ func main() {
 		printUsage(1)
 	}
 
-	_, err := NewSolSpin(os.Args[1])
+	spin, err := NewSolSpin(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(1)
+	}
+	if err := spin.Build(); err != nil {
 		os.Exit(1)
 	}
 }
