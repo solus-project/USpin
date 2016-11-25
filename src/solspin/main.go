@@ -17,6 +17,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Sirupsen/logrus"
 	"libspin"
@@ -27,6 +28,7 @@ import (
 
 var log *logrus.Logger
 
+// Set up the main logger formatting used in SolSpin
 func init() {
 	form := &logrus.TextFormatter{}
 	form.FullTimestamp = true
@@ -34,6 +36,22 @@ func init() {
 	log = logrus.New()
 	log.Out = os.Stderr
 	log.Formatter = form
+}
+
+// SolSpin is the main solspin binary lifetime tracking object
+type SolSpin struct {
+	logImage   *logrus.Logger
+	logPackage *logrus.Logger
+
+	builder  image.Builder
+	packager pkg.Manager
+	spec     *libspin.ImageSpec
+}
+
+// NewSolSpin will return a new SolSpin instance which stores global
+// state for the duration of an image spin process.
+func NewSolSpin(path string) (*SolSpin, error) {
+	return nil, errors.New("Not yet implemented")
 }
 
 func printUsage(exitCode int) {
@@ -48,102 +66,14 @@ func printUsage(exitCode int) {
 	os.Exit(exitCode)
 }
 
-func doBuild(spinfile string) {
-	var spec *libspin.ImageSpec
-	var err error
-	var builder image.Builder
-	var pman pkg.Manager
-
-	// Check the user has root privs
-	if os.Geteuid() != 0 {
-		log.WithFields(logrus.Fields{"type": "privilege", "euid": os.Geteuid()}).Error("solspin requires root privileges")
-		os.Exit(1)
-	}
-
-	log.WithFields(logrus.Fields{"filename": spinfile}).Info("Loading .spin file")
-
-	if spec, err = libspin.NewImageSpec(spinfile); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
-
-	// For nicer logging
-	imgType := spec.Config.Image.Type
-	// TODO: Don't hardcode package manager??
-	packageManager := "eopkg"
-	logImg := log.WithFields(logrus.Fields{"imageType": imgType})
-	logPkg := log.WithFields(logrus.Fields{"packageManager": packageManager})
-
-	// Get the builder instance
-	builder, err = image.NewBuilder(spec.Config.Image.Type)
-	if err != nil {
-		logImg.Fatal(err)
-	}
-	defer builder.Cleanup()
-
-	logImg.Info("Initialising builder")
-	if err = builder.Init(spec); err != nil {
-		logImg.Error(err)
-		return
-	}
-
-	// Try to init the package manager
-	pman, err = pkg.NewManager("eopkg")
-	if err != nil {
-		logPkg.Error(err)
-		return
-	}
-
-	logPkg.Info("Initialising package manager")
-	if err = pman.Init(spec.Config); err != nil {
-		logPkg.Error(err)
-		return
-	}
-
-	logImg.Info("Preparing workspace")
-	if err = builder.PrepareWorkspace(); err != nil {
-		logImg.Error(err)
-		return
-	}
-
-	logImg.Info("Creating storage")
-	if err = builder.CreateStorage(); err != nil {
-		logImg.Error(err)
-		return
-	}
-
-	logImg.Info("Mounting storage")
-	if err = builder.MountStorage(); err != nil {
-		logImg.Error(err)
-		return
-	}
-
-	// Attempt to init root now
-	logPkg.Info("Initialising root with package manager")
-	if err = pman.InitRoot(builder.GetRootDir()); err != nil {
-		logPkg.Error(err)
-		return
-	}
-
-	logPkg.Info("Applying operations")
-	for _, opset := range spec.Stack.Blocks {
-		if err := pman.ApplyOperations(opset.Ops); err != nil {
-			logPkg.Error(err)
-			return
-		}
-	}
-
-	logPkg.Info("Finalizing package operations")
-	if err = pman.FinalizeRoot(); err != nil {
-		logPkg.Error(err)
-		return
-	}
-}
-
 func main() {
 	if len(os.Args) < 2 {
 		printUsage(1)
 	}
-	doBuild(os.Args[1])
-	log.Error("Not yet implemented")
+
+	_, err := NewSolSpin(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
 }
