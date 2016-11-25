@@ -23,19 +23,16 @@ func (s *SolSpin) StartImageBuild() error {
 
 	s.logImage.Info("Preparing workspace")
 	if err = s.builder.PrepareWorkspace(); err != nil {
-		s.logImage.Error(err)
 		return err
 	}
 
 	s.logImage.Info("Creating storage")
 	if err = s.builder.CreateStorage(); err != nil {
-		s.logImage.Error(err)
 		return err
 	}
 
 	s.logImage.Info("Mounting storage")
 	if err = s.builder.MountStorage(); err != nil {
-		s.logImage.Error(err)
 		return err
 	}
 	return nil

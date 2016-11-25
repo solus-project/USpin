@@ -29,14 +29,12 @@ func (s *SolSpin) InstallPackages() error {
 
 	for _, opset := range s.spec.Stack.Blocks {
 		if err := s.packager.ApplyOperations(opset.Ops); err != nil {
-			s.logPackage.Error(err)
 			return err
 		}
 	}
 
 	s.logPackage.Info("Finalizing package operations")
 	if err := s.packager.FinalizeRoot(); err != nil {
-		s.logPackage.Error(err)
 		return err
 	}
 	return nil
