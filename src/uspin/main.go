@@ -20,9 +20,9 @@ package main
 import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
-	"libspin"
-	"libspin/image"
-	"libspin/pkg"
+	"libuspin"
+	"libuspin/image"
+	"libuspin/pkg"
 	"os"
 )
 
@@ -45,7 +45,7 @@ type USpin struct {
 
 	builder  image.Builder
 	packager pkg.Manager
-	spec     *libspin.ImageSpec
+	spec     *libuspin.ImageSpec
 }
 
 // NewUSpin will return a new USpin instance which stores global
@@ -55,7 +55,7 @@ func NewUSpin(path string) (*USpin, error) {
 	var err error
 
 	// Attempt to get the image spec first
-	if ret.spec, err = libspin.NewImageSpec(path); err != nil {
+	if ret.spec, err = libuspin.NewImageSpec(path); err != nil {
 		return nil, err
 	}
 

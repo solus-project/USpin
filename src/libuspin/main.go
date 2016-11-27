@@ -14,17 +14,17 @@
 // limitations under the License.
 //
 
-// Package libspin provides key utilities in dealing with the USpin
+// Package libuspin provides key utilities in dealing with the USpin
 // configuration formats.
 //
 // Notably it provides the ImageSpec type, core to the main routines within
 // USpin.
-package libspin
+package libuspin
 
 import (
 	"fmt"
-	"libspin/config"
-	"libspin/spec"
+	"libuspin/config"
+	"libuspin/spec"
 	"path/filepath"
 	"strings"
 )

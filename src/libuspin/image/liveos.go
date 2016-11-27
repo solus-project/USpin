@@ -18,7 +18,7 @@ package image
 
 import (
 	"errors"
-	"libspin"
+	"libuspin"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -47,7 +47,7 @@ func init() {
 // A LiveOSBuilder is responsible for building ISO format images that are USB
 // compatible. It is the "LiveCD" type of Builder
 type LiveOSBuilder struct {
-	img            *libspin.ImageSpec
+	img            *libuspin.ImageSpec
 	rootfsImg      string
 	rootfsDir      string
 	rootfsFormat   string
@@ -64,7 +64,7 @@ func NewLiveOSBuilder() *LiveOSBuilder {
 }
 
 // Init will initialise a LiveOSBuilder from the given spec
-func (l *LiveOSBuilder) Init(img *libspin.ImageSpec) error {
+func (l *LiveOSBuilder) Init(img *libuspin.ImageSpec) error {
 	l.img = img
 
 	// Ensure all required binaries are available before we go doing anything.

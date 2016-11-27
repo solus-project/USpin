@@ -18,9 +18,9 @@ package pkg
 
 import (
 	"io/ioutil"
-	"libspin/config"
-	"libspin/image"
-	"libspin/spec"
+	"libuspin/config"
+	"libuspin/image"
+	"libuspin/spec"
 	"os"
 	"os/exec"
 	"path/filepath"

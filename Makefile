@@ -7,10 +7,10 @@ BINARIES = \
 	uspin
 
 LIBRARIES = \
-	libspin/config \
-	libspin/image \
-	libspin/pkg \
-	libspin/spec
+	libuspin/config \
+	libuspin/image \
+	libuspin/pkg \
+	libuspin/spec
 
 GO_TESTS = \
 	$(addsuffix .test,$(LIBRARIES))

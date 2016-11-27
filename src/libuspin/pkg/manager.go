@@ -18,8 +18,8 @@ package pkg
 
 import (
 	"errors"
-	"libspin/config"
-	"libspin/spec"
+	"libuspin/config"
+	"libuspin/spec"
 )
 
 // Manager is the interface that should be implemented by vendors to enable

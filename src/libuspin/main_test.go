@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-package libspin
+package libuspin
 
 import (
 	"testing"

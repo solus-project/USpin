@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
 	"io"
-	"libspin/config"
+	"libuspin/config"
 	"os"
 	"os/exec"
 	"path/filepath"

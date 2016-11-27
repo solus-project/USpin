@@ -18,8 +18,8 @@ package image
 
 import (
 	"fmt"
-	"libspin"
-	"libspin/config"
+	"libuspin"
+	"libuspin/config"
 )
 
 // A Builder is the contract definition for all image builders, and the implementations
@@ -27,7 +27,7 @@ import (
 type Builder interface {
 
 	// Init will initialise the builder from the given configuration
-	Init(img *libspin.ImageSpec) error
+	Init(img *libuspin.ImageSpec) error
 
 	// PrepareWorkspace will attempt to do all prework for setting up the image
 	// deployment areas and such.
