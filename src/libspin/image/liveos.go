@@ -145,8 +145,13 @@ func (l *LiveOSBuilder) MountStorage() error {
 }
 
 // UnmountStorage will unmount the rootfs.img from earlier
+// This is the last point in which the storage is used, so we check the filesystem
+// is OK here.
 func (l *LiveOSBuilder) UnmountStorage() error {
-	return GetMountManager().Unmount(l.rootfsDir)
+	if err := GetMountManager().Unmount(l.rootfsDir); err != nil {
+		return err
+	}
+	return CheckFS(l.rootfsImg, l.rootfsFormat)
 }
 
 // GetRootDir returns the path to the mounted rootfs.img
