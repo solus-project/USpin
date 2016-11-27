@@ -21,12 +21,21 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-var filesystemCommands map[string]string
+// FilesystemFormatFunc is the prototype for functions that format filesystems
+// to ensure we can use dedicated functions that can handle filesystem paths
+// correctly (i.e. spaces)
+type FilesystemFormatFunc func(filename string) error
+
+var filesystemCommands map[string]FilesystemFormatFunc
+
+func formatExt4(filename string) error {
+	return ExecStdoutArgs("mkfs", []string{"-t", "ext4", "-F", filename})
+}
 
 func init() {
 	// Initialise the filesystemCommands
-	filesystemCommands = make(map[string]string)
-	filesystemCommands["ext4"] = "mkfs -t ext4 -F %s"
+	filesystemCommands = make(map[string]FilesystemFormatFunc)
+	filesystemCommands["ext4"] = formatExt4
 }
 
 // FormatAs will format the given path with the filesystem specified.
@@ -40,5 +49,5 @@ func FormatAs(filename string, filesystem string) error {
 		"filename":   filename,
 		"filesystem": filesystem,
 	}).Info("Formatting filesystem")
-	return ExecStdout(fmt.Sprintf(command, filename))
+	return command(filename)
 }
