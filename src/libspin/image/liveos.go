@@ -156,7 +156,53 @@ func (l *LiveOSBuilder) GetRootDir() string {
 
 // The very last call in the chain, we seal the deal by spinning the ISO
 func (l *LiveOSBuilder) spinISO() error {
-	return ErrNotYetImplemented
+	uefi := false
+	syslinux := false
+	outputFilename := "dummy.iso"
+	volumeID := "DummyISO"
+	command := []string{
+		"-as", "mkisofs",
+		"-iso-level",
+		"3",
+		"-full-iso9660-filenames",
+		"-volid",
+		volumeID,
+		"-appid",
+		volumeID,
+	}
+	// This is where we'd install syslinux or other loader..
+	// Note we'll need to do investigation for GRUB to determine precisely how to
+	// get the cat and bin files
+	if syslinux {
+		command = append(command, []string{
+			"-eltorito-boot",
+			"isolinux/isolinux.bin",
+			"-eltorito-catalog",
+			"isolinux/boot.cat",
+			"-no-emul-boot",
+			"-boot-load-size",
+			"4",
+			"-boot-info-table",
+			"-isohybrid-mbr",
+			"isolinux/isohdpfx.bin",
+		}...)
+	}
+	if uefi {
+		command = append(command, []string{
+			"-eltorito-alt-boot",
+			"-e",
+			"efi.img", // TODO: Use appropriate origin
+			"-no-emul-boot",
+			"-isohybrid-gpt-basdat",
+		}...)
+	}
+	// Set the output filename and directory
+	command = append(command, []string{
+		"-output",
+		outputFilename,
+		".", // Create from current directory
+	}...)
+	return ExecStdoutArgsDir(l.deployDir, "xorriso", command)
 }
 
 // FinalizeImage will go ahead and finish up the ISO construction
