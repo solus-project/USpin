@@ -107,6 +107,7 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 		l.rootfsDir,
 		l.deployDir,
 		l.liveosDir,
+		l.liveStagingDir,
 	}
 
 	// Create all required directories
