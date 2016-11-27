@@ -92,10 +92,10 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 		return err
 	}
 	// Initialise our base variables
-	l.rootfsImg = l.JoinPath("rootfs.img")
 	l.rootfsDir = l.JoinPath("rootfs")
 	l.deployDir = l.JoinPath("deploy")
 	l.liveosDir = l.JoinPath(l.deployDir, "LiveOS")
+	l.rootfsImg = l.JoinPath(l.liveosDir, "rootfs.img")
 
 	// As and when we add new directories, populate them here
 	requiredDirs := []string{
