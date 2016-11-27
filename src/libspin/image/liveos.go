@@ -156,5 +156,10 @@ func (l *LiveOSBuilder) GetRootDir() string {
 
 // FinalizeImage will go ahead and finish up the ISO construction
 func (l *LiveOSBuilder) FinalizeImage() error {
+	// First up, create the squashfs
+	squash := filepath.Join(l.liveosDir, "squashfs.img")
+	if err := CreateSquashfs(l.liveStagingDir, squash, l.img.Config.LiveOS.Compression); err != nil {
+		return err
+	}
 	return ErrNotYetImplemented
 }
