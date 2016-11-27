@@ -96,10 +96,10 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 	l.rootfsDir = l.JoinPath("rootfs")
 	l.deployDir = l.JoinPath("deploy")
 	// Inside the ISO target
-	l.liveosDir = l.JoinPath(l.deployDir, "LiveOS")
+	l.liveosDir = l.JoinPath("deploy", "LiveOS")
 	// Inside the workspace only
-	l.liveStagingDir = l.JoinPath(l.workspace, "LiveOS")
-	l.rootfsImg = l.JoinPath(l.liveStagingDir, "rootfs.img")
+	l.liveStagingDir = l.JoinPath("LiveOS")
+	l.rootfsImg = l.JoinPath("LiveOS", "rootfs.img")
 
 	// As and when we add new directories, populate them here
 	requiredDirs := []string{
