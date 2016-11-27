@@ -43,7 +43,7 @@ func checkExt4(filename string) error {
 		return err
 	}
 	// Force fix any issues now
-	return ExecStdoutArgs("e2fsck", []string{"-f", filename})
+	return ExecStdoutArgs("e2fsck", []string{"-y", "-f", filename})
 }
 
 func init() {
