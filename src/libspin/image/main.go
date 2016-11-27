@@ -142,7 +142,7 @@ func CopyFile(source, dest string) error {
 func GetSquashfsArgs(compressionType config.CompressionType) ([]string, error) {
 	switch compressionType {
 	case config.CompressionGzip:
-		return []string{"-comp", "gz"}, nil
+		return []string{"-comp", "gzip"}, nil
 	case config.CompressionXZ:
 		return []string{"-comp", "xz"}, nil
 	default:
