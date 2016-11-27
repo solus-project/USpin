@@ -153,3 +153,8 @@ func (l *LiveOSBuilder) UnmountStorage() error {
 func (l *LiveOSBuilder) GetRootDir() string {
 	return l.rootfsDir
 }
+
+// FinalizeImage will go ahead and finish up the ISO construction
+func (l *LiveOSBuilder) FinalizeImage() error {
+	return ErrNotYetImplemented
+}

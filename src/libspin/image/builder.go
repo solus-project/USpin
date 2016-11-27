@@ -48,6 +48,10 @@ type Builder interface {
 	// to image finalisation
 	UnmountStorage() error
 
+	// FinalizeImage will complete the stage2 part of the image construction, whereby
+	// all manual input from package managers, etc, is no longer needed.
+	FinalizeImage() error
+
 	// GetRootDir is used by implementations to return the root directory for the
 	// OS files
 	GetRootDir() string

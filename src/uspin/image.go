@@ -16,10 +16,6 @@
 
 package main
 
-import (
-	"errors"
-)
-
 // StartImageBuild will perform all steps up until the point where it is time
 // for the pkg.Manager to step in and populate the rootfs.
 func (s *USpin) StartImageBuild() error {
@@ -48,5 +44,6 @@ func (s *USpin) FinishImageBuild() error {
 	if err := s.builder.UnmountStorage(); err != nil {
 		return err
 	}
-	return errors.New("Not yet fully implemented")
+	s.logImage.Info("Finalizing image")
+	return s.builder.FinalizeImage()
 }
