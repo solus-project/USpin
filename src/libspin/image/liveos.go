@@ -154,6 +154,11 @@ func (l *LiveOSBuilder) GetRootDir() string {
 	return l.rootfsDir
 }
 
+// The very last call in the chain, we seal the deal by spinning the ISO
+func (l *LiveOSBuilder) spinISO() error {
+	return ErrNotYetImplemented
+}
+
 // FinalizeImage will go ahead and finish up the ISO construction
 func (l *LiveOSBuilder) FinalizeImage() error {
 	// First up, create the squashfs
@@ -161,5 +166,7 @@ func (l *LiveOSBuilder) FinalizeImage() error {
 	if err := CreateSquashfs(l.liveStagingDir, squash, l.img.Config.LiveOS.Compression); err != nil {
 		return err
 	}
-	return ErrNotYetImplemented
+
+	// TODO: Install bootloader, copy asset files, put kernel in place, etc.
+	return l.spinISO()
 }
