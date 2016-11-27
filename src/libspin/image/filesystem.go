@@ -34,7 +34,12 @@ var filesystemCommands map[string]FilesystemFormatFunc
 var checkCommands map[string]FilesystemCheckFunc
 
 func formatExt4(filename string) error {
-	return ExecStdoutArgs("mkfs", []string{"-t", "ext4", "-F", filename})
+	// Format it
+	if err := ExecStdoutArgs("mkfs", []string{"-t", "ext4", "-F", filename}); err != nil {
+		return err
+	}
+	// Set the mount count so it doesn't get fsck'd during live boot
+	return ExecStdoutArgs("tune2fs", []string{"-c0", "-i0", filename})
 }
 
 func checkExt4(filename string) error {
