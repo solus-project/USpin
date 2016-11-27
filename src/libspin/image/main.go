@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
 	"io"
+	"libspin/config"
 	"os"
 	"os/exec"
 	"strings"
@@ -134,4 +135,41 @@ func CopyFile(source, dest string) error {
 	// If it fails, meh.
 	os.Chtimes(dest, st.ModTime(), st.ModTime())
 	return nil
+}
+
+// GetSquashfsArgs returns the compression arg set for a given compression type
+func GetSquashfsArgs(compressionType config.CompressionType) ([]string, error) {
+	switch compressionType {
+	case config.CompressionGzip:
+		return []string{"-comp", "gz"}, nil
+	case config.CompressionXZ:
+		return []string{"-comp", "xz"}, nil
+	default:
+		return nil, fmt.Errorf("Unknown compression type: %v", compressionType)
+	}
+}
+
+// CreateSquashfs will create a new squashfs filesystem image at the given outputFile path,
+// containing the tree found at path, using compressionType (gzip or xz).
+func CreateSquashfs(path, outputFile string, compressionType config.CompressionType) error {
+	command := []string{
+		path,
+		outputFile,
+	}
+	// May have to set -keep-as-directory
+	if st, err := os.Stat(path); err == nil {
+		if st.Mode().IsDir() {
+			command = append(command, "-keep-as-directory")
+		}
+	} else {
+		return err
+	}
+	// TODO: Add -processors nCPU (4)
+	if execArgs, err := GetSquashfsArgs(compressionType); err == nil {
+		command = append(command, execArgs...)
+	} else {
+		return err
+	}
+	// TODO: Check whether this needs to be run in the parent directory (probably.)
+	return ExecStdoutArgs("mksquashfs", command)
 }
