@@ -29,15 +29,9 @@ import (
 	"syscall"
 )
 
-var filesystemCommands map[string]string
-
 var log *logrus.Logger
 
 func init() {
-	// Initialise the filesystemCommands
-	filesystemCommands = make(map[string]string)
-	filesystemCommands["ext4"] = "mkfs -t ext4 -F %s"
-
 	// Create the logger
 	form := &logrus.TextFormatter{}
 	form.FullTimestamp = true
@@ -92,20 +86,6 @@ func CreateSparseFile(filename string, nMegabytes int) error {
 		return err
 	}
 	return nil
-}
-
-// FormatAs will format the given path with the filesystem specified.
-// Note: You should only use this with image paths, it's dangerous!
-func FormatAs(filename string, filesystem string) error {
-	command, ok := filesystemCommands[filesystem]
-	if !ok {
-		return fmt.Errorf("Cannot format with unknown filesystem '%v'", filesystem)
-	}
-	log.WithFields(logrus.Fields{
-		"filename":   filename,
-		"filesystem": filesystem,
-	}).Info("Formatting filesystem")
-	return ExecStdout(fmt.Sprintf(command, filename))
 }
 
 // CopyFile will copy the file and permissions to the new target
