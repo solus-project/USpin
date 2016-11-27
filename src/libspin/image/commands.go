@@ -23,20 +23,44 @@ import (
 	"strings"
 )
 
-// ExecStdoutArgs is a convenience function to execute a command on stdout with
-// the given arguments
-func ExecStdoutArgs(command string, args []string) error {
+// Internal helper for the Exec functions
+func execHelper(command string, args []string) (*exec.Cmd, error) {
 	var err error
 	// Search the path if necessary
 	if !strings.Contains(command, "/") {
 		command, err = exec.LookPath(command)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 	c := exec.Command(command, args...)
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
+	return c, nil
+}
+
+// ExecStdoutArgs is a convenience function to execute a command on stdout with
+// the given arguments
+func ExecStdoutArgs(command string, args []string) error {
+	var c *exec.Cmd
+	var err error
+
+	if c, err = execHelper(command, args); err != nil {
+		return err
+	}
+	return c.Run()
+}
+
+// ExecStdoutArgsDir is a convenience function to execute a command on stdout with
+// the given arguments, in the given working directory
+func ExecStdoutArgsDir(dir string, command string, args []string) error {
+	var c *exec.Cmd
+	var err error
+
+	if c, err = execHelper(command, args); err != nil {
+		return err
+	}
+	c.Dir = dir
 	return c.Run()
 }
 
