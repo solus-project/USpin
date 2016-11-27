@@ -26,21 +26,38 @@ import (
 // correctly (i.e. spaces)
 type FilesystemFormatFunc func(filename string) error
 
+// A FilesystemCheckFunc is a function prototype for performing filesystem
+// checks, i.e. a rootfs.img after unmounting
+type FilesystemCheckFunc func(filename string) error
+
 var filesystemCommands map[string]FilesystemFormatFunc
+var checkCommands map[string]FilesystemCheckFunc
 
 func formatExt4(filename string) error {
 	return ExecStdoutArgs("mkfs", []string{"-t", "ext4", "-F", filename})
 }
 
+func checkExt4(filename string) error {
+	// Check it for errors
+	if err := ExecStdoutArgs("e2fsck", []string{"-y", filename}); err != nil {
+		return err
+	}
+	// Force fix any issues now
+	return ExecStdoutArgs("e2fsck", []string{"-f", filename})
+}
+
 func init() {
-	// Initialise the filesystemCommands
+	// Initialise the command maps
 	filesystemCommands = make(map[string]FilesystemFormatFunc)
+	checkCommands = make(map[string]FilesystemCheckFunc)
+
 	filesystemCommands["ext4"] = formatExt4
+	checkCommands["ext4"] = checkExt4
 }
 
 // FormatAs will format the given path with the filesystem specified.
 // Note: You should only use this with image paths, it's dangerous!
-func FormatAs(filename string, filesystem string) error {
+func FormatAs(filename, filesystem string) error {
 	command, ok := filesystemCommands[filesystem]
 	if !ok {
 		return fmt.Errorf("Cannot format with unknown filesystem '%v'", filesystem)
@@ -49,5 +66,20 @@ func FormatAs(filename string, filesystem string) error {
 		"filename":   filename,
 		"filesystem": filesystem,
 	}).Info("Formatting filesystem")
+	return command(filename)
+}
+
+// CheckFS will try to check/fix the filesystems pointed to by filename
+// using the helpers denoted by filesystem.
+// This should only be used for internal image code on loopback devices!
+func CheckFS(filename, filesystem string) error {
+	command, ok := checkCommands[filesystem]
+	if !ok {
+		return fmt.Errorf("Cannot check with unknown filesystem '%v'", filesystem)
+	}
+	log.WithFields(logrus.Fields{
+		"filename":   filename,
+		"filesystem": filesystem,
+	}).Info("Checking filesystem")
 	return command(filename)
 }
