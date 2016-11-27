@@ -47,14 +47,15 @@ func init() {
 // A LiveOSBuilder is responsible for building ISO format images that are USB
 // compatible. It is the "LiveCD" type of Builder
 type LiveOSBuilder struct {
-	img          *libspin.ImageSpec
-	rootfsImg    string
-	rootfsDir    string
-	rootfsFormat string
-	rootfsSize   int
-	deployDir    string
-	liveosDir    string
-	workspace    string
+	img            *libspin.ImageSpec
+	rootfsImg      string
+	rootfsDir      string
+	rootfsFormat   string
+	rootfsSize     int
+	deployDir      string
+	liveosDir      string
+	liveStagingDir string
+	workspace      string
 }
 
 // NewLiveOSBuilder should only be used by builder.go
@@ -94,8 +95,11 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 	// Initialise our base variables
 	l.rootfsDir = l.JoinPath("rootfs")
 	l.deployDir = l.JoinPath("deploy")
+	// Inside the ISO target
 	l.liveosDir = l.JoinPath(l.deployDir, "LiveOS")
-	l.rootfsImg = l.JoinPath(l.liveosDir, "rootfs.img")
+	// Inside the workspace only
+	l.liveStagingDir = l.JoinPath(l.workspace, "LiveOS")
+	l.rootfsImg = l.JoinPath(l.liveStagingDir, "rootfs.img")
 
 	// As and when we add new directories, populate them here
 	requiredDirs := []string{
