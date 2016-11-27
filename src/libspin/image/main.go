@@ -24,6 +24,7 @@ import (
 	"libspin/config"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"syscall"
 )
@@ -156,6 +157,13 @@ func CreateSquashfs(path, outputFile string, compressionType config.CompressionT
 		path,
 		outputFile,
 	}
+	dirName := ""
+	if fp, err := filepath.Abs(path); err == nil {
+		dirName = filepath.Dir(fp)
+	} else {
+		return err
+	}
+
 	// May have to set -keep-as-directory
 	if st, err := os.Stat(path); err == nil {
 		if st.Mode().IsDir() {
@@ -171,5 +179,5 @@ func CreateSquashfs(path, outputFile string, compressionType config.CompressionT
 		return err
 	}
 	// TODO: Check whether this needs to be run in the parent directory (probably.)
-	return ExecStdoutArgs("mksquashfs", command)
+	return ExecStdoutArgsDir(dirName, "mksquashfs", command)
 }
