@@ -25,11 +25,30 @@ import (
 // A Loader provides abstraction around various bootloader implementations.
 type Loader interface {
 	Init() error
+	// GetCapabilities returns the supported capabilities of this bootloader implementation
+	GetCapabilities() Capability
 }
 
 // A LoaderType is a pseudo enum type for the bootloader to restrict to
 // supported implementations
 type LoaderType string
+
+// Capability refers to the type of operations that a bootloader supports
+type Capability int
+
+const (
+	// CapInstallUEFI means the bootloader supports UEFI loading
+	CapInstallUEFI Capability = 1 << 1
+
+	// CapInstallLegacy means the bootloader supports MBR/legacy loading
+	CapInstallLegacy Capability = 1 << 2
+
+	// CapInstallISO is used for bootloaders reporting ISO support
+	CapInstallISO Capability = 1 << 3
+
+	// CapInstallRaw is reported by bootloaders that can install to block devices
+	CapInstallRaw Capability = 1 << 4
+)
 
 const (
 	// LoaderTypeSyslinux refers to syslinux + isolinux

@@ -88,6 +88,11 @@ func (s *SyslinuxLoader) Init() error {
 	return nil
 }
 
+// GetCapabilities will return isolinux support only for syslinux right now
+func (s *SyslinuxLoader) GetCapabilities() Capability {
+	return CapInstallISO | CapInstallLegacy
+}
+
 // NewSyslinuxLoader will return a newly created SyslinuxLoader instance
 func NewSyslinuxLoader() *SyslinuxLoader {
 	s := &SyslinuxLoader{
