@@ -182,7 +182,7 @@ func (e *EopkgManager) copyBaselayout() error {
 		srcPath := filepath.Join(baseDir, file.Name())
 		tgtPath := filepath.Join(tgtDir, file.Name())
 
-		if err = build.CopyFile(srcPath, tgtPath); err != nil {
+		if err = disk.CopyFile(srcPath, tgtPath); err != nil {
 			return err
 		}
 	}

@@ -20,7 +20,6 @@ package build
 import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
-	"io"
 	"libuspin/config"
 	"os"
 	"os/exec"
@@ -85,36 +84,6 @@ func CreateSparseFile(filename string, nMegabytes int) error {
 	if err = syscall.Ftruncate(int(f.Fd()), sz); err != nil {
 		return err
 	}
-	return nil
-}
-
-// CopyFile will copy the file and permissions to the new target
-func CopyFile(source, dest string) error {
-	var src *os.File
-	var dst *os.File
-	var err error
-	var st os.FileInfo
-
-	// Stat the source first
-	st, err = os.Stat(source)
-	if err != nil {
-		return nil
-	}
-	if src, err = os.Open(source); err != nil {
-		return err
-	}
-	defer src.Close()
-	if dst, err = os.OpenFile(dest, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, st.Mode()); err != nil {
-		return err
-	}
-	// Copy the files
-	if _, err = io.Copy(dst, src); err != nil {
-		dst.Close()
-		return err
-	}
-	dst.Close()
-	// If it fails, meh.
-	os.Chtimes(dest, st.ModTime(), st.ModTime())
 	return nil
 }
 
