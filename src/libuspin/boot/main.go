@@ -34,7 +34,7 @@ type Loader interface {
 type LoaderType string
 
 // Capability refers to the type of operations that a bootloader supports
-type Capability int
+type Capability uint8
 
 const (
 	// CapInstallUEFI means the bootloader supports UEFI loading
