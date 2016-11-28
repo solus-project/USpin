@@ -22,21 +22,21 @@ import (
 	"errors"
 )
 
-// A Bootloader provides abstraction around various bootloader implementations.
-type Bootloader interface {
+// A Loader provides abstraction around various bootloader implementations.
+type Loader interface {
 	Init() error
 }
 
-// A Type is a pseudo enum type for the bootloader to restrict to
+// A LoaderType is a pseudo enum type for the bootloader to restrict to
 // supported implementations
-type Type string
+type LoaderType string
 
 const (
-	// BootloaderTypeSyslinux refers to syslinux + isolinux
-	BootloaderTypeSyslinux Type = "syslinux"
+	// LoaderTypeSyslinux refers to syslinux + isolinux
+	LoaderTypeSyslinux LoaderType = "syslinux"
 )
 
-// New will create a new Bootloader instance for the given name, if supported
-func New(impl Type) (Bootloader, error) {
+// NewLoader will create a new Loader instance for the given name, if supported
+func NewLoader(impl LoaderType) (Loader, error) {
 	return nil, errors.New("Not yet implemented")
 }
