@@ -163,7 +163,7 @@ func (l *LiveOSBuilder) GetRootDir() string {
 func (l *LiveOSBuilder) spinISO() error {
 	uefi := false
 	syslinux := false
-	outputFilename := l.JoinPath("dummy.iso")
+	outputFilename := l.img.Config.LiveOS.FileName
 	volumeID := "DummyISO"
 	command := []string{
 		"-as", "mkisofs",
