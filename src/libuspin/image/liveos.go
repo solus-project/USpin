@@ -82,15 +82,11 @@ func (l *LiveOSBuilder) Init(img *libuspin.ImageSpec) error {
 	l.rootfsFormat = l.img.Config.LiveOS.RootfsFormat
 	l.rootfsSize = l.img.Config.LiveOS.RootfsSize
 
-	// init the bootloaders
-	for _, nom := range img.Config.LiveOS.Bootloaders {
-		if loader, err := boot.NewLoader(nom); err == nil {
-			// TODO: validate the bootloader
-			// store bootloader now it's validated
-			l.loaders = append(l.loaders, loader)
-		} else {
-			return err
-		}
+	// Init the bootloaders
+	if loaders, err := boot.InitLoaders(l.img.Config.LiveOS.Bootloaders); err == nil {
+		l.loaders = loaders
+	} else {
+		return err
 	}
 
 	return nil

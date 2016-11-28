@@ -73,6 +73,21 @@ func NewLoader(impl LoaderType) (Loader, error) {
 	}
 }
 
+// InitLoaders will attempt to return an initialised set of loaders as a helper
+// to other Builder implementations
+func InitLoaders(loaderType []LoaderType) ([]Loader, error) {
+	var ret []Loader
+
+	for _, name := range loaderType {
+		if loader, err := NewLoader(name); err == nil {
+			ret = append(ret, loader)
+		} else {
+			return nil, err
+		}
+	}
+	return ret, nil
+}
+
 // GetLoaderWithMask will look in the set of loaders for the given mask.
 // Note it will always return the *first* one found, i.e. the first one specified
 // in the configuration
