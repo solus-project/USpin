@@ -20,6 +20,7 @@ package boot
 
 import (
 	"errors"
+	"libuspin/config"
 )
 
 // A Loader provides abstraction around various bootloader implementations.
@@ -58,10 +59,6 @@ type ConfigurationSource interface {
 	GetBootDevice() string
 }
 
-// A LoaderType is a pseudo enum type for the bootloader to restrict to
-// supported implementations
-type LoaderType string
-
 // Capability refers to the type of operations that a bootloader supports
 type Capability uint8
 
@@ -79,11 +76,6 @@ const (
 	CapInstallRaw Capability = 1 << iota
 )
 
-const (
-	// LoaderTypeSyslinux refers to syslinux + isolinux
-	LoaderTypeSyslinux LoaderType = "syslinux"
-)
-
 var (
 	// ErrNotYetImplemented is just a placeholder
 	ErrNotYetImplemented = errors.New("Not yet implemented")
@@ -93,9 +85,9 @@ var (
 )
 
 // NewLoader will create a new Loader instance for the given name, if supported
-func NewLoader(impl LoaderType) (Loader, error) {
+func NewLoader(impl config.LoaderType) (Loader, error) {
 	switch impl {
-	case LoaderTypeSyslinux:
+	case config.LoaderTypeSyslinux:
 		return NewSyslinuxLoader(), nil
 	default:
 		return nil, ErrUnknownLoader
@@ -104,7 +96,7 @@ func NewLoader(impl LoaderType) (Loader, error) {
 
 // InitLoaders will attempt to return an initialised set of loaders as a helper
 // to other Builder implementations
-func InitLoaders(loaderType []LoaderType) ([]Loader, error) {
+func InitLoaders(loaderType []config.LoaderType) ([]Loader, error) {
 	var ret []Loader
 
 	for _, name := range loaderType {

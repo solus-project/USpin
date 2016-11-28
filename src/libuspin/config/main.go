@@ -23,7 +23,6 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"io/ioutil"
-	"libuspin/boot"
 	"os"
 	"strings"
 )
@@ -31,9 +30,18 @@ import (
 // ImageType is the type of image that will be created
 type ImageType string
 
+// A LoaderType is a pseudo enum type for the bootloader to restrict to
+// supported implementations
+type LoaderType string
+
 const (
 	// ImageTypeLiveOS is an ISO type image that may also be USB compatible
 	ImageTypeLiveOS ImageType = "liveos"
+)
+
+const (
+	// LoaderTypeSyslinux refers to syslinux + isolinux
+	LoaderTypeSyslinux LoaderType = "syslinux"
 )
 
 // SectionImage describes the [image] portion of a spin file
@@ -63,8 +71,8 @@ func New(cpath string) (*ImageConfiguration, error) {
 			RootfsFormat: "ext4",
 			RootfsSize:   4000,
 			// Default to isolinux
-			Bootloaders: []boot.LoaderType{
-				boot.LoaderTypeSyslinux,
+			Bootloaders: []LoaderType{
+				LoaderTypeSyslinux,
 			},
 		},
 	}

@@ -19,7 +19,6 @@ package config
 import (
 	"errors"
 	"fmt"
-	"libuspin/boot"
 	"strings"
 )
 
@@ -42,7 +41,7 @@ type SectionLiveOS struct {
 	RootfsSize   int             `toml:"rootfs_size"`   // Size of the image in megabytes (default 4000)
 	RootfsFormat string          `toml:"rootfs_format"` // Format of the rootfs, defaults to ext4
 
-	Bootloaders []boot.LoaderType `toml:"bootloaders"` // Which bootloaders to enable
+	Bootloaders []LoaderType `toml:"bootloaders"` // Which bootloaders to enable
 }
 
 // ValidateSectionLiveOS will determine if the configuration is valid for a LiveOS
