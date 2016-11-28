@@ -74,7 +74,18 @@ func (s *SyslinuxLoader) LocateAsset(name string) error {
 // Init will attempt to initialise this loader if all host requirements are
 // actually met.
 func (s *SyslinuxLoader) Init() error {
-	return ErrNotYetImplemented
+	for _, item := range SyslinuxAssets {
+		if err := s.LocateAsset(item); err != nil {
+			return err
+		}
+	}
+	// TODO: Only call this when producing an ISO!
+	for _, item := range SyslinuxAssetsISO {
+		if err := s.LocateAsset(item); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // NewSyslinuxLoader will return a newly created SyslinuxLoader instance
