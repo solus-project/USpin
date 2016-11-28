@@ -30,4 +30,10 @@ install: $(BINS)
 	test -d $(DESTDIR)/usr/bin || install -D -d -m 00755 $(DESTDIR)/usr/bin; \
 	install -m 00755 builds/* $(DESTDIR)/usr/bin/.
 
+ensure_modules:
+	@ ( \
+		git submodule init; \
+		git submodule update; \
+	);
+
 all: $(BINS)
