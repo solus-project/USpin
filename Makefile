@@ -1,4 +1,5 @@
 PROJECT_ROOT := src/
+VERSION = 0.1
 
 .DEFAULT_GOAL := all
 
@@ -35,5 +36,8 @@ ensure_modules:
 		git submodule init; \
 		git submodule update; \
 	);
+
+release:
+	git archive --format=tar.gz --verbose -o USpin-$(VERSION).tar.gz HEAD --prefix=USpin-$(VERSION)/
 
 all: $(BINS)
