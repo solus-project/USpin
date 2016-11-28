@@ -108,5 +108,30 @@ func NewSyslinuxLoader() *SyslinuxLoader {
 
 // Install will do the real work of installing syslinux bootloader
 func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
+	// Currently we're only ever invoked as Legacy|ISO
+	bootdir := s.config.IsoLinux.BootDirectory
+
+	bootdirTarget := c.JoinDeployPath(s.config.IsoLinux.BootDirectory)
+
+	// First off actually try to install the boot directory
+	if err := os.MkdirAll(bootdirTarget, 00755); err != nil {
+		return err
+	}
+
+	// Collect required assets
+	var reqAssets []string
+	for _, key := range SyslinuxAssets {
+		reqAssets = append(reqAssets, key)
+	}
+	for _, key := range SyslinuxAssetsISO {
+		reqAssets = append(reqAssets, key)
+	}
+
+	// Install the ISO assets
+	for _, asset := range reqAssets {
+		target := c.JoinDeployPath(bootdir, asset)
+		fmt.Fprintf(os.Stderr, "Need to copy %v -> %v\n", s.cachedAssets[asset], target)
+	}
+
 	return ErrNotYetImplemented
 }
