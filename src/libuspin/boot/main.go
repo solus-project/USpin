@@ -96,11 +96,15 @@ func NewLoader(impl config.LoaderType) (Loader, error) {
 
 // InitLoaders will attempt to return an initialised set of loaders as a helper
 // to other Builder implementations
-func InitLoaders(loaderType []config.LoaderType) ([]Loader, error) {
+func InitLoaders(c *config.ImageConfiguration, loaderType []config.LoaderType) ([]Loader, error) {
 	var ret []Loader
 
 	for _, name := range loaderType {
 		if loader, err := NewLoader(name); err == nil {
+			// Init the loader
+			if err := loader.Init(c); err != nil {
+				return nil, err
+			}
 			ret = append(ret, loader)
 		} else {
 			return nil, err

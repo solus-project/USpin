@@ -83,7 +83,7 @@ func (l *LiveOSBuilder) Init(img *libuspin.ImageSpec) error {
 	l.rootfsSize = l.img.Config.LiveOS.RootfsSize
 
 	// Init the bootloaders
-	if loaders, err := boot.InitLoaders(l.img.Config.LiveOS.Bootloaders); err == nil {
+	if loaders, err := boot.InitLoaders(l.img.Config, l.img.Config.LiveOS.Bootloaders); err == nil {
 		l.loaders = loaders
 	} else {
 		return err
