@@ -19,7 +19,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 	"libuspin"
 	_ "libuspin/boot"
 	"libuspin/build"
@@ -27,22 +27,18 @@ import (
 	"os"
 )
 
-var log *logrus.Logger
-
 // Set up the main logger formatting used in USpin
 func init() {
-	form := &logrus.TextFormatter{}
+	form := &log.TextFormatter{}
 	form.FullTimestamp = true
 	form.TimestampFormat = "15:04:05"
-	log = logrus.New()
-	log.Out = os.Stderr
-	log.Formatter = form
+	log.SetFormatter(form)
 }
 
 // USpin is the main USpin binary lifetime tracking object
 type USpin struct {
-	logImage   *logrus.Entry
-	logPackage *logrus.Entry
+	logImage   *log.Entry
+	logPackage *log.Entry
 
 	builder  build.Builder
 	packager pkg.Manager
@@ -67,7 +63,7 @@ func NewUSpin(path string) (*USpin, error) {
 	}
 
 	// Get our image log
-	ret.logImage = log.WithFields(logrus.Fields{"imageType": buildType})
+	ret.logImage = log.WithFields(log.Fields{"imageType": buildType})
 
 	// TODO: Stop hardcoding this!
 	pkgType := pkg.PackageManagerEopkg
@@ -78,7 +74,7 @@ func NewUSpin(path string) (*USpin, error) {
 	}
 
 	// Get packager log
-	ret.logPackage = log.WithFields(logrus.Fields{"packageManager": pkgType})
+	ret.logPackage = log.WithFields(log.Fields{"packageManager": pkgType})
 
 	return ret, nil
 }
