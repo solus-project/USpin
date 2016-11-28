@@ -39,6 +39,9 @@ const (
 var (
 	// ErrNotYetImplemented is just a placeholder
 	ErrNotYetImplemented = errors.New("Not yet implemented")
+
+	// ErrUnknownLoader is reported for an unknown bootloader
+	ErrUnknownLoader = errors.New("Unknown bootloader configured")
 )
 
 // NewLoader will create a new Loader instance for the given name, if supported
@@ -47,6 +50,6 @@ func NewLoader(impl LoaderType) (Loader, error) {
 	case LoaderTypeSyslinux:
 		return NewSyslinuxLoader(), nil
 	default:
-		return nil, ErrNotYetImplemented
+		return nil, ErrUnknownLoader
 	}
 }
