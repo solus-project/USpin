@@ -22,3 +22,17 @@ package bootloader
 type Bootloader interface {
 	Init() error
 }
+
+// A Type is a pseudo enum type for the bootloader to restrict to
+// supported implementations
+type Type string
+
+const (
+	// BootloaderTypeSyslinux refers to syslinux + isolinux
+	BootloaderTypeSyslinux Type = "syslinux"
+)
+
+// New will create a new Bootloader instance for the given name, if supported
+func New(impl Type) (Bootloader, error) {
+	return nil, errors.New("Not yet implemented")
+}
