@@ -244,11 +244,25 @@ func (l *LiveOSBuilder) spinISO() error {
 	return ExecStdoutArgsDir(l.deployDir, "xorriso", command)
 }
 
+// Install the bootloader for the given image
+func (l *LiveOSBuilder) installBootloader() error {
+	// For now we're only interested in legacy install, so deal with that
+	caps := boot.CapInstallISO | boot.CapInstallLegacy
+	bloader := boot.GetLoaderWithMask(l.loaders, caps)
+
+	return bloader.Install(caps, l)
+}
+
 // FinalizeImage will go ahead and finish up the ISO construction
 func (l *LiveOSBuilder) FinalizeImage() error {
 	// First up, create the squashfs
 	squash := filepath.Join(l.liveosDir, "squashfs.img")
 	if err := CreateSquashfs(l.liveStagingDir, squash, l.img.Config.LiveOS.Compression); err != nil {
+		return err
+	}
+
+	// Attempt installation of bootloader
+	if err := l.installBootloader(); err != nil {
 		return err
 	}
 
