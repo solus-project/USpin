@@ -22,7 +22,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"libuspin"
 	_ "libuspin/boot"
-	"libuspin/image"
+	"libuspin/build"
 	"libuspin/pkg"
 	"os"
 )
@@ -44,7 +44,7 @@ type USpin struct {
 	logImage   *logrus.Entry
 	logPackage *logrus.Entry
 
-	builder  image.Builder
+	builder  build.Builder
 	packager pkg.Manager
 	spec     *libuspin.ImageSpec
 }
@@ -62,7 +62,7 @@ func NewUSpin(path string) (*USpin, error) {
 
 	// Get a builder
 	buildType := ret.spec.Config.Image.Type
-	if ret.builder, err = image.NewBuilder(buildType); err != nil {
+	if ret.builder, err = build.NewBuilder(buildType); err != nil {
 		return nil, err
 	}
 

@@ -18,8 +18,8 @@ package pkg
 
 import (
 	"io/ioutil"
+	"libuspin/build"
 	"libuspin/config"
-	"libuspin/image"
 	"libuspin/spec"
 	"os"
 	"os/exec"
@@ -93,7 +93,7 @@ func (e *EopkgManager) InitRoot(root string) error {
 
 	// Now attempt to bind mount the cache directory to be .. well. usable
 	e.cacheTarget = filepath.Join(root, "var", "cache", "eopkg", "packages")
-	if err := image.GetMountManager().BindMount(EopkgCacheDirectory, e.cacheTarget); err != nil {
+	if err := build.GetMountManager().BindMount(EopkgCacheDirectory, e.cacheTarget); err != nil {
 		return err
 	}
 
@@ -123,7 +123,7 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 // ensure that dbus, etc, works.
 func (e *EopkgManager) FinalizeRoot() error {
 	// First things first, unmount the cache
-	if err := image.GetMountManager().Unmount(e.cacheTarget); err != nil {
+	if err := build.GetMountManager().Unmount(e.cacheTarget); err != nil {
 		return err
 	}
 	// Copy base layout
@@ -131,7 +131,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Before we start chrooting, update libraries to be usable..
-	if err := image.ChrootExec(e.root, "ldconfig"); err != nil {
+	if err := build.ChrootExec(e.root, "ldconfig"); err != nil {
 		return err
 	}
 	// Set up account for dbus (TODO: Add sysusers.d file for this
@@ -139,10 +139,10 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Create the required nodes for eopkg to run without bind mounts
-	if err := image.CreateDeviceNode(e.root, image.DevNodeRandom); err != nil {
+	if err := build.CreateDeviceNode(e.root, build.DevNodeRandom); err != nil {
 		return err
 	}
-	if err := image.CreateDeviceNode(e.root, image.DevNodeURandom); err != nil {
+	if err := build.CreateDeviceNode(e.root, build.DevNodeURandom); err != nil {
 		return err
 	}
 	// Start dbus to allow configure-pending
@@ -150,7 +150,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Run all postinstalls inside chroot
-	if err := image.ChrootExec(e.root, "eopkg configure-pending"); err != nil {
+	if err := build.ChrootExec(e.root, "eopkg configure-pending"); err != nil {
 		e.killDBUS()
 		return err
 	}
@@ -159,7 +159,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Delete cached assets
-	if err := image.ChrootExec(e.root, "eopkg delete-cache"); err != nil {
+	if err := build.ChrootExec(e.root, "eopkg delete-cache"); err != nil {
 		return err
 	}
 	return nil
@@ -181,7 +181,7 @@ func (e *EopkgManager) copyBaselayout() error {
 		srcPath := filepath.Join(baseDir, file.Name())
 		tgtPath := filepath.Join(tgtDir, file.Name())
 
-		if err = image.CopyFile(srcPath, tgtPath); err != nil {
+		if err = build.CopyFile(srcPath, tgtPath); err != nil {
 			return err
 		}
 	}
@@ -193,10 +193,10 @@ func (e *EopkgManager) startDBUS() error {
 	if e.dbusActive {
 		return nil
 	}
-	if err := image.ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
+	if err := build.ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
 		return err
 	}
-	if err := image.ChrootExec(e.root, "dbus-daemon --system"); err != nil {
+	if err := build.ChrootExec(e.root, "dbus-daemon --system"); err != nil {
 		return err
 	}
 	e.dbusActive = true
@@ -228,16 +228,16 @@ func (e *EopkgManager) killDBUS() error {
 	}
 
 	pid := strings.Split(string(b), "\n")[0]
-	return image.ExecStdoutArgs("kill", []string{"-9", pid})
+	return build.ExecStdoutArgs("kill", []string{"-9", pid})
 }
 
 // This is also largely anti-stateless but is required just to get dbus running
 // so we can configure-pending. sol can't come quick enough...
 func (e *EopkgManager) configureDbus() error {
-	if err := image.AddGroup(e.root, "messagebus", 18); err != nil {
+	if err := build.AddGroup(e.root, "messagebus", 18); err != nil {
 		return err
 	}
-	if err := image.AddSystemUser(e.root, "messagebus", "D-Bus Message Daemon", "/var/run/dbus", "/bin/false", 18, 18); err != nil {
+	if err := build.AddSystemUser(e.root, "messagebus", "D-Bus Message Daemon", "/var/run/dbus", "/bin/false", 18, 18); err != nil {
 		return err
 	}
 	return nil
@@ -255,7 +255,7 @@ func (e *EopkgManager) eopkgExecRoot(args []string) error {
 		"-D", e.root,
 	}
 	args = append(args, endArgs...)
-	return image.ExecStdoutArgs("eopkg", args)
+	return build.ExecStdoutArgs("eopkg", args)
 }
 
 // Add a repository to the target

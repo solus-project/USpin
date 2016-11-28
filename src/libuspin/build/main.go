@@ -14,8 +14,8 @@
 // limitations under the License.
 //
 
-// Package image provides routines for the core elements of image building
-package image
+// Package build provides routines for the core elements of image building
+package build
 
 import (
 	"fmt"
