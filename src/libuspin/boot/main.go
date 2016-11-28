@@ -72,3 +72,21 @@ func NewLoader(impl LoaderType) (Loader, error) {
 		return nil, ErrUnknownLoader
 	}
 }
+
+// GetLoaderWithMask will look in the set of loaders for the given mask.
+// Note it will always return the *first* one found, i.e. the first one specified
+// in the configuration
+func GetLoaderWithMask(loaders []Loader, mask Capability) Loader {
+	for _, i := range loaders {
+		if i.GetCapabilities()&mask != 0 {
+			return i
+		}
+	}
+	return nil
+}
+
+// HaveLoaderWithMask will look in the set of loaders for the given mask, and
+// simply return if the given mask is supported or not.
+func HaveLoaderWithMask(loaders []Loader, mask Capability) bool {
+	return GetLoaderWithMask(loaders, mask) != nil
+}
