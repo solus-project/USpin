@@ -14,10 +14,11 @@
 // limitations under the License.
 //
 
-package build
+package disk
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -180,7 +181,7 @@ func (m *MountManager) UnmountAll() {
 	sort.Sort(LenSort(keys))
 	for _, key := range keys {
 		if err := m.Unmount(key); err != nil {
-			log.Error(err)
+			fmt.Fprintf(os.Stderr, "%v\n", err)
 		}
 	}
 }

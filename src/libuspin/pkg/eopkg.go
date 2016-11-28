@@ -20,6 +20,7 @@ import (
 	"io/ioutil"
 	"libuspin/build"
 	"libuspin/config"
+	"libuspin/disk"
 	"libuspin/spec"
 	"os"
 	"os/exec"
@@ -93,7 +94,7 @@ func (e *EopkgManager) InitRoot(root string) error {
 
 	// Now attempt to bind mount the cache directory to be .. well. usable
 	e.cacheTarget = filepath.Join(root, "var", "cache", "eopkg", "packages")
-	if err := build.GetMountManager().BindMount(EopkgCacheDirectory, e.cacheTarget); err != nil {
+	if err := disk.GetMountManager().BindMount(EopkgCacheDirectory, e.cacheTarget); err != nil {
 		return err
 	}
 
@@ -123,7 +124,7 @@ func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
 // ensure that dbus, etc, works.
 func (e *EopkgManager) FinalizeRoot() error {
 	// First things first, unmount the cache
-	if err := build.GetMountManager().Unmount(e.cacheTarget); err != nil {
+	if err := disk.GetMountManager().Unmount(e.cacheTarget); err != nil {
 		return err
 	}
 	// Copy base layout

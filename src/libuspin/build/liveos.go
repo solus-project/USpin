@@ -20,6 +20,7 @@ import (
 	"errors"
 	"libuspin"
 	"libuspin/boot"
+	"libuspin/disk"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -161,20 +162,20 @@ func (l *LiveOSBuilder) CreateStorage() error {
 // Cleanup currently does nothing within this builder
 func (l *LiveOSBuilder) Cleanup() {
 	log.Info("Cleaning up")
-	GetMountManager().UnmountAll()
+	disk.GetMountManager().UnmountAll()
 }
 
 // MountStorage will mount the rootfs.img so that the package manager can
 // take over
 func (l *LiveOSBuilder) MountStorage() error {
-	return GetMountManager().Mount(l.rootfsImg, l.rootfsDir, l.rootfsFormat, "loop")
+	return disk.GetMountManager().Mount(l.rootfsImg, l.rootfsDir, l.rootfsFormat, "loop")
 }
 
 // UnmountStorage will unmount the rootfs.img from earlier
 // This is the last point in which the storage is used, so we check the filesystem
 // is OK here.
 func (l *LiveOSBuilder) UnmountStorage() error {
-	if err := GetMountManager().Unmount(l.rootfsDir); err != nil {
+	if err := disk.GetMountManager().Unmount(l.rootfsDir); err != nil {
 		return err
 	}
 	return CheckFS(l.rootfsImg, l.rootfsFormat)

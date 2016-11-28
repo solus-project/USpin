@@ -9,8 +9,9 @@ BINARIES = \
 
 LIBRARIES = \
 	libuspin/boot \
-	libuspin/config \
 	libuspin/build \
+	libuspin/config \
+	libuspin/disk \
 	libuspin/pkg \
 	libuspin/spec
 
