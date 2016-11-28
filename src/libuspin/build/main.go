@@ -19,7 +19,7 @@ package build
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 	"libuspin/config"
 	"os"
 	"os/exec"
@@ -27,18 +27,6 @@ import (
 	"strings"
 	"syscall"
 )
-
-var log *logrus.Logger
-
-func init() {
-	// Create the logger
-	form := &logrus.TextFormatter{}
-	form.FullTimestamp = true
-	form.TimestampFormat = "15:04:05"
-	log = logrus.New()
-	log.Out = os.Stderr
-	log.Formatter = form
-}
 
 // ExecStdout is a convenience function to execute a command to the stdout
 // and return the error, if any
@@ -71,7 +59,7 @@ func ExecStdout(command string) error {
 // This is highly dependent on the underlying filesystem at the directory
 // where the file is to be created, making use of the syscall ftruncate.
 func CreateSparseFile(filename string, nMegabytes int) error {
-	log.WithFields(logrus.Fields{
+	log.WithFields(log.Fields{
 		"filename": filename,
 		"size":     nMegabytes}).Info("Creating sparse file")
 	f, err := os.OpenFile(filename, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 00644)

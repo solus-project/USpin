@@ -18,6 +18,7 @@ package build
 
 import (
 	"errors"
+	log "github.com/Sirupsen/logrus"
 	"libuspin"
 	"libuspin/boot"
 	"libuspin/disk"

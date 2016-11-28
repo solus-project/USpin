@@ -18,7 +18,7 @@ package build
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 )
 
 // FilesystemFormatFunc is the prototype for functions that format filesystems
@@ -67,7 +67,7 @@ func FormatAs(filename, filesystem string) error {
 	if !ok {
 		return fmt.Errorf("Cannot format with unknown filesystem '%v'", filesystem)
 	}
-	log.WithFields(logrus.Fields{
+	log.WithFields(log.Fields{
 		"filename":   filename,
 		"filesystem": filesystem,
 	}).Info("Formatting filesystem")
@@ -82,7 +82,7 @@ func CheckFS(filename, filesystem string) error {
 	if !ok {
 		return fmt.Errorf("Cannot check with unknown filesystem '%v'", filesystem)
 	}
-	log.WithFields(logrus.Fields{
+	log.WithFields(log.Fields{
 		"filename":   filename,
 		"filesystem": filesystem,
 	}).Info("Checking filesystem")
