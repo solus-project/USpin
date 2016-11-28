@@ -19,6 +19,7 @@ package image
 import (
 	"errors"
 	"libuspin"
+	"libuspin/boot"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -56,6 +57,9 @@ type LiveOSBuilder struct {
 	liveosDir      string
 	liveStagingDir string
 	workspace      string
+
+	// For storing bootloader bits
+	loaders []boot.Loader
 }
 
 // NewLiveOSBuilder should only be used by builder.go
@@ -77,6 +81,17 @@ func (l *LiveOSBuilder) Init(img *libuspin.ImageSpec) error {
 	// rootfs.img particulars
 	l.rootfsFormat = l.img.Config.LiveOS.RootfsFormat
 	l.rootfsSize = l.img.Config.LiveOS.RootfsSize
+
+	// init the bootloaders
+	for _, nom := range img.Config.LiveOS.Bootloaders {
+		if loader, err := boot.NewLoader(nom); err == nil {
+			// TODO: validate the bootloader
+			// store bootloader now it's validated
+			l.loaders = append(l.loaders, loader)
+		} else {
+			return err
+		}
+	}
 
 	return nil
 }
