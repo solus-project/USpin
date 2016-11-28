@@ -7,7 +7,7 @@ BINARIES = \
 	uspin
 
 LIBRARIES = \
-	libuspin/bootloader \
+	libuspin/boot \
 	libuspin/config \
 	libuspin/image \
 	libuspin/pkg \
