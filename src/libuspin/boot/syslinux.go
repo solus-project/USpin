@@ -100,3 +100,8 @@ func NewSyslinuxLoader() *SyslinuxLoader {
 	}
 	return s
 }
+
+// Install will do the real work of installing syslinux bootloader
+func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
+	return ErrNotYetImplemented
+}

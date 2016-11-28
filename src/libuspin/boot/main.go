@@ -24,9 +24,38 @@ import (
 
 // A Loader provides abstraction around various bootloader implementations.
 type Loader interface {
+
+	// Init is used by bootloader implementations to assert sanity & host-side tooling
+	// is present.
 	Init() error
+
 	// GetCapabilities returns the supported capabilities of this bootloader implementation
 	GetCapabilities() Capability
+
+	// Install will have this boot loader implementation install using the given boot
+	// configuration.
+	Install(mode Capability, c ConfigurationSource) error
+}
+
+// ConfigurationSource should be implemented by Builder instances (or their helpers)
+// to help with bootloader installation.
+type ConfigurationSource interface {
+
+	// JoinRootPath is used by implementations to join a resource path on the rootfs
+	JoinRootPath(paths ...string) string
+
+	// JoinDeployPath is used by implementations to join a resource path on the deployment
+	// directory.
+	// This is mostly of interest to ISO deployments
+	JoinDeployPath(paths ...string) string
+
+	// GetRootDevice should return the device used for / mount, if relevant. This
+	// should return "" unless used in Raw capability
+	GetRootDevice() string
+
+	// GetBootDevice should return the device used for the boot mount, if relevant.
+	// This should return "" unless used in the Raw capability
+	GetBootDevice() string
 }
 
 // A LoaderType is a pseudo enum type for the bootloader to restrict to
