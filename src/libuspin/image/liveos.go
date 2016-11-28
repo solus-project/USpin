@@ -94,9 +94,9 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 	}
 
 	// Purge existing workspace always
-	if st, err := os.Stat(l.workspace); err != nil {
+	if st, err := os.Stat(l.workspace); err == nil {
 		if st != nil && st.Mode().IsDir() {
-			if e2 := os.RemoveAll(l.workspace); e2 != nil {
+			if err = os.RemoveAll(l.workspace); err != nil {
 				return err
 			}
 		}
