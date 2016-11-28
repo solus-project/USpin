@@ -89,6 +89,11 @@ func (l *LiveOSBuilder) Init(img *libuspin.ImageSpec) error {
 		return err
 	}
 
+	// Primary bootloader is one with Legacy&ISO capability
+	if !boot.HaveLoaderWithMask(l.loaders, boot.CapInstallISO|boot.CapInstallLegacy) {
+		return errors.New("No usable bootloader found. Need ISO|Legacy")
+	}
+
 	return nil
 }
 
