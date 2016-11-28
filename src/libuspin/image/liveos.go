@@ -182,7 +182,9 @@ func (l *LiveOSBuilder) spinISO() error {
 	}
 	volumeID := "DummyISO"
 	command := []string{
-		"-as", "mkisofs",
+		"-no_rc", // Forbid reading startup files which may skew ISO generation
+		"-as",
+		"mkisofs",
 		"-iso-level",
 		"3",
 		"-full-iso9660-filenames",
