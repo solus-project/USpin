@@ -3,7 +3,7 @@ USpin
 
 [![Report](https://goreportcard.com/badge/github.com/solus-project/USpin)](https://goreportcard.com/report/github.com/solus-project/USpin) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Universal image creation utilities. Used to produce bootable Linux medium in an agnostic fashion.
+Universal image creation utilities. Used to produce bootable Linux medium in an agnostic fashion. This is still a **Work In Progress**.
 
 USpin is a [Solus project](https://solus-project.com/).
 
@@ -18,6 +18,33 @@ Rationale
 Intended to succeed the existing `solus-image-creator.py` script with something a bit more robust that can construct multiple image types.
 
 Currently the existing image creator can only construct a simple `ISO9660` image, however Solus also makes use of chrootable base images for the `overlayfs` system employed in `evobuild`.
+
+Planned support
+---------------
+
+Those with a fire symbol (🔥) are currently considered important to Solus projects and are the active priority. After stabilisation we can work on the support for other medium, and at that point will happily take contributions (post v1)
+
+**Medium**
+
+ - `LiveOS` (dracut distros) 🔥
+ - `raw` filesystem type (partitions in disk image) 🔥
+ - `flat` image support (no partitions, i.e. an `ext4` loopback image) 🔥
+ - `casper` (Ubuntu)
+ - `debian-live` (Vanilla Debian images)
+
+**Boot**:
+ - `isolinux`/`syslinux` 🔥
+ - `systemd`-class bootloaders 🔥
+ - `grub` "2"
+
+**Package Management**:
+
+- `eopkg` (done) 🔥
+- `sol` (for validation in Solus)
+- `yum`
+- `dnf`
+- `swupd`
+- `.deb` (`dpkg`/`apt-get`/`apt`) (via `debootstrap` maybe?)
 
 TODO
 ----
@@ -34,6 +61,14 @@ TODO
  - [ ] Construct specifications for our chroot builder images
  - [ ] Add support for VM/Container images
 
+Supported Medium Types (WIP)
+----------------------------
+
+**LiveOS**
+
+A LiveOS image is an `ISO9660` image containing a live operating system. This is the `dracut` LiveOS image type, currently used by `Solus`, `Fedora`, available in `Gentoo` and potentially others.
+
+By default a *hybrid* ISO is created, that is an El Torito bootable image that may be booted in either an optical drive or on removal media such as a USB thumb drive. This image will use (currently) `isolinux` for the bootloader. As the project is further implemented, support will be added for `UEFI` booting too.
 
 License
 -------
