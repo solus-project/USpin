@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"io/ioutil"
+	"libuspin/boot"
 	"os"
 	"strings"
 )
@@ -61,6 +62,10 @@ func New(cpath string) (*ImageConfiguration, error) {
 		LiveOS: SectionLiveOS{
 			RootfsFormat: "ext4",
 			RootfsSize:   4000,
+			// Default to isolinux
+			Bootloaders: []boot.LoaderType{
+				boot.LoaderTypeSyslinux,
+			},
 		},
 	}
 	var data []byte
