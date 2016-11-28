@@ -12,6 +12,17 @@ USpin is a [Solus project](https://solus-project.com/).
 
 [![You Spin Me Right Round](https://img.youtube.com/vi/PGNiXGX2nLU/0.jpg)](https://www.youtube.com/watch?v=PGNiXGX2nLU)
 
+**Note**
+Solus, USpin, and the Solus Project Team, are not endorsed by any projects listed here in terms of planned support. We are simply creating a tool to simplify
+management and creation of various images all from one place. As developers may experiment with, be involved in, or test other projects and distros for
+many reasons (including validation of projects we develop such as Budgie) - it is useful even to us to be able to produce medium for other distros using
+a single standardized tool.
+
+Obviously the core benefit to us is in producing our own medium, however others are welcome to join in and contribute too, because there are a great many
+tools for creating distro images, each one more specialised than the last. It also serves somewhat as a research project, in seeing "how others do" to find
+ways in which Solus can improve itself too. The more specialised the support for Solus in the tool in contrast to other distros will highlight to us exactly
+what we can and should improve.
+
 
 Rationale
 -------
