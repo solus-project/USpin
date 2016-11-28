@@ -27,7 +27,9 @@ TODO
  - [x] Add config format for the main image configuration
  - [x] Add utilities for image format & creation (`dd`/`fallocate`, etc)
  - [x] Implement full `eopkg` support in generic `pkg.Manager` interface
- - [ ] Add basic ISO9660 support once again
+ - [x] Add basic ISO9660 support once again
+ - [ ] Add complete Legacy Boot bootloader support for `isolinux`
+ - [ ] Enhance bootloader support for UEFI
  - [ ] Build (successfully!) an existing Solus image specification
  - [ ] Construct specifications for our chroot builder images
  - [ ] Add support for VM/Container images
