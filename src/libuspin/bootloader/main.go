@@ -18,6 +18,10 @@
 // setup and installation on various medium types.
 package bootloader
 
+import (
+	"errors"
+)
+
 // A Bootloader provides abstraction around various bootloader implementations.
 type Bootloader interface {
 	Init() error
