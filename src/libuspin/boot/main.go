@@ -28,7 +28,7 @@ type Loader interface {
 
 	// Init is used by bootloader implementations to assert sanity & host-side tooling
 	// is present.
-	Init() error
+	Init(c *config.ImageConfiguration) error
 
 	// GetCapabilities returns the supported capabilities of this bootloader implementation
 	GetCapabilities() Capability

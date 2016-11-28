@@ -18,6 +18,7 @@ package boot
 
 import (
 	"fmt"
+	"libuspin/config"
 	"os"
 	"path/filepath"
 )
@@ -53,6 +54,9 @@ var (
 type SyslinuxLoader struct {
 	// A basename to full path mapping of the asset paths (i.e. vesamenu.c32 -> /usr/share/blah)
 	cachedAssets map[string]string
+
+	// Store the configuration for particulars we need to implement
+	config *config.ImageConfiguration
 }
 
 // LocateAsset will attempt to find the given asset and then cache it
@@ -73,7 +77,7 @@ func (s *SyslinuxLoader) LocateAsset(name string) error {
 
 // Init will attempt to initialise this loader if all host requirements are
 // actually met.
-func (s *SyslinuxLoader) Init() error {
+func (s *SyslinuxLoader) Init(c *config.ImageConfiguration) error {
 	for _, item := range SyslinuxAssets {
 		if err := s.LocateAsset(item); err != nil {
 			return err
@@ -85,6 +89,7 @@ func (s *SyslinuxLoader) Init() error {
 			return err
 		}
 	}
+	s.config = c
 	return nil
 }
 
