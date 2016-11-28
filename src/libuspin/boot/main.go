@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-// Package bootloader provides implementations to help manage the bootloader
+// Package boot provides implementations to help manage the bootloader
 // setup and installation on various medium types.
-package bootloader
+package boot
 
 import (
 	"errors"
