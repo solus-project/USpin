@@ -204,7 +204,6 @@ func (e *EopkgManager) startDBUS() error {
 }
 
 // killDBUS will stop dbus again
-// TODO: Remove the file
 func (e *EopkgManager) killDBUS() error {
 	// No sense killing dbus twice
 	if !e.dbusActive {

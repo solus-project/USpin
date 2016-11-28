@@ -158,6 +158,5 @@ func CreateSquashfs(path, outputFile string, compressionType config.CompressionT
 	} else {
 		return err
 	}
-	// TODO: Check whether this needs to be run in the parent directory (probably.)
 	return ExecStdoutArgsDir(dirName, "mksquashfs", command)
 }

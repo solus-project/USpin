@@ -50,6 +50,5 @@ func (s *USpin) Build() error {
 		return err
 	}
 
-	// TODO: Finish the image
 	return nil
 }
