@@ -36,7 +36,17 @@ const (
 	LoaderTypeSyslinux LoaderType = "syslinux"
 )
 
+var (
+	// ErrNotYetImplemented is just a placeholder
+	ErrNotYetImplemented = errors.New("Not yet implemented")
+)
+
 // NewLoader will create a new Loader instance for the given name, if supported
 func NewLoader(impl LoaderType) (Loader, error) {
-	return nil, errors.New("Not yet implemented")
+	switch impl {
+	case LoaderTypeSyslinux:
+		return NewSyslinuxLoader(), nil
+	default:
+		return nil, ErrNotYetImplemented
+	}
 }
