@@ -269,3 +269,27 @@ func (l *LiveOSBuilder) FinalizeImage() error {
 	// TODO: Install bootloader, copy asset files, put kernel in place, etc.
 	return l.spinISO()
 }
+
+//
+// The following are all ConfigurationSource methods
+//
+
+// GetBootDevice always returns nil for LiveOS
+func (l *LiveOSBuilder) GetBootDevice() string {
+	return ""
+}
+
+// GetRootDevice always returns nil for LiveOS
+func (l *LiveOSBuilder) GetRootDevice() string {
+	return ""
+}
+
+// JoinDeployPath will return a path within the LiveOS workspace
+func (l *LiveOSBuilder) JoinDeployPath(paths ...string) string {
+	return filepath.Join(l.deployDir, filepath.Join(paths...))
+}
+
+// JoinRootPath will return a path within the LiveOS rootfs image
+func (l *LiveOSBuilder) JoinRootPath(paths ...string) string {
+	return filepath.Join(l.rootfsDir, filepath.Join(paths...))
+}
