@@ -92,6 +92,16 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 	if l.workspace, err = filepath.Abs("./workspace"); err != nil {
 		return err
 	}
+
+	// Purge existing workspace always
+	if st, err := os.Stat(l.workspace); err != nil {
+		if st.Mode().IsDir() {
+			if err := os.RemoveAll(l.workspace); err != nil {
+				return err
+			}
+		}
+	}
+
 	// Initialise our base variables
 	l.rootfsDir = l.JoinPath("rootfs")
 	l.deployDir = l.JoinPath("deploy")
