@@ -33,6 +33,7 @@ func init() {
 	form.FullTimestamp = true
 	form.TimestampFormat = "15:04:05"
 	log.SetFormatter(form)
+	log.SetLevel(log.DebugLevel)
 }
 
 // USpin is the main USpin binary lifetime tracking object
