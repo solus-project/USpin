@@ -38,16 +38,16 @@ type Capability uint8
 
 const (
 	// CapInstallUEFI means the bootloader supports UEFI loading
-	CapInstallUEFI Capability = 1 << 1
+	CapInstallUEFI Capability = 1 << iota
 
 	// CapInstallLegacy means the bootloader supports MBR/legacy loading
-	CapInstallLegacy Capability = 1 << 2
+	CapInstallLegacy Capability = 1 << iota
 
 	// CapInstallISO is used for bootloaders reporting ISO support
-	CapInstallISO Capability = 1 << 3
+	CapInstallISO Capability = 1 << iota
 
 	// CapInstallRaw is reported by bootloaders that can install to block devices
-	CapInstallRaw Capability = 1 << 4
+	CapInstallRaw Capability = 1 << iota
 )
 
 const (
