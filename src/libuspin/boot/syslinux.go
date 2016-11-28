@@ -19,6 +19,7 @@ package boot
 import (
 	"fmt"
 	"libuspin/config"
+	"libuspin/disk"
 	"os"
 	"path/filepath"
 )
@@ -130,7 +131,9 @@ func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 	// Install the ISO assets
 	for _, asset := range reqAssets {
 		target := c.JoinDeployPath(bootdir, asset)
-		fmt.Fprintf(os.Stderr, "Need to copy %v -> %v\n", s.cachedAssets[asset], target)
+		if err := disk.CopyFile(s.cachedAssets[asset], target); err != nil {
+			return err
+		}
 	}
 
 	return ErrNotYetImplemented
