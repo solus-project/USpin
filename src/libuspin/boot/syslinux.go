@@ -110,9 +110,9 @@ func NewSyslinuxLoader() *SyslinuxLoader {
 // Install will do the real work of installing syslinux bootloader
 func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 	// Currently we're only ever invoked as Legacy|ISO
-	bootdir := s.config.IsoLinux.BootDirectory
+	bootdir := s.config.Isolinux.BootDirectory
 
-	bootdirTarget := c.JoinDeployPath(s.config.IsoLinux.BootDirectory)
+	bootdirTarget := c.JoinDeployPath(bootdir)
 
 	// First off actually try to install the boot directory
 	if err := os.MkdirAll(bootdirTarget, 00755); err != nil {

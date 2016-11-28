@@ -60,7 +60,7 @@ type ImageConfiguration struct {
 	Image    SectionImage    `toml:"image"`
 	Branding SectionBranding `toml:"branding"`
 	LiveOS   SectionLiveOS   `toml:"liveos"`
-	IsoLinux SectionIsolinux `toml:"isolinux"`
+	Isolinux SectionIsolinux `toml:"isolinux"`
 }
 
 // New will return a new ImageConfiguration for the given path and attempt to
@@ -76,7 +76,7 @@ func New(cpath string) (*ImageConfiguration, error) {
 				LoaderTypeSyslinux,
 			},
 		},
-		IsoLinux: SectionIsolinux{
+		Isolinux: SectionIsolinux{
 			BootDirectory: "boot",
 		},
 	}
