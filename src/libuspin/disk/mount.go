@@ -18,7 +18,7 @@ package disk
 
 import (
 	"fmt"
-	"os"
+	log "github.com/Sirupsen/logrus"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -181,7 +181,7 @@ func (m *MountManager) UnmountAll() {
 	sort.Sort(LenSort(keys))
 	for _, key := range keys {
 		if err := m.Unmount(key); err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
+			log.Error(err)
 		}
 	}
 }
