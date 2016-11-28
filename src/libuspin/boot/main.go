@@ -93,7 +93,7 @@ func InitLoaders(loaderType []LoaderType) ([]Loader, error) {
 // in the configuration
 func GetLoaderWithMask(loaders []Loader, mask Capability) Loader {
 	for _, i := range loaders {
-		if i.GetCapabilities()&mask != 0 {
+		if i.GetCapabilities()&mask == mask {
 			return i
 		}
 	}
