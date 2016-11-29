@@ -21,7 +21,6 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"libuspin"
-	_ "libuspin/boot"
 	"libuspin/build"
 	"libuspin/pkg"
 	"os"
