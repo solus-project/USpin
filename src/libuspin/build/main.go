@@ -18,27 +18,13 @@
 package build
 
 import (
-	"errors"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"libuspin/commands"
 	"libuspin/config"
 	"os"
 	"path/filepath"
-	"strings"
 	"syscall"
-)
-
-// A Kernel is exactly what it looks like. :p
-type Kernel struct {
-	Version  string
-	Path     string
-	BaseName string
-}
-
-var (
-	// ErrNoKernelFound is returned when a builder cannot find a kernel in the given root
-	ErrNoKernelFound = errors.New("Could not find a valid kernel")
 )
 
 // CreateSparseFile will create a new sparse file with the given filename and
@@ -104,50 +90,4 @@ func CreateSquashfs(path, outputFile string, compressionType config.CompressionT
 		return err
 	}
 	return commands.ExecStdoutArgsDir(dirName, "mksquashfs", command)
-}
-
-// GetKernelFromRoot will attempt to "learn" about the kernel from the rootfs
-// and return a populated kernel struct.
-func GetKernelFromRoot(root string) (*Kernel, error) {
-	// Add more as time goes by.
-	possiblePaths := []string{
-		filepath.Join(root, "vmlinuz"),
-		filepath.Join(root, "boot", "vmlinuz"),
-	}
-
-	for _, p := range possiblePaths {
-		// as an example, /vmlinuz -> boot/kernel-4.8.10
-		if kpath, err := filepath.EvalSymlinks(p); err == nil {
-			p = kpath
-		} else {
-			return nil, err
-		}
-
-		st, err := os.Stat(p)
-		if err != nil || st == nil {
-			continue
-		}
-
-		// TODO: Add more scan thingers.
-		baseNom := filepath.Base(p)
-		splits := strings.Split(p, "-")
-		if len(splits) < 2 {
-			log.WithFields(log.Fields{
-				"kernel": baseNom,
-			}).Warning("Don't know how to handle kernel version")
-			continue
-		}
-		version := strings.Join(splits[1:], "-")
-		log.WithFields(log.Fields{
-			"kernel":  baseNom,
-			"version": version,
-		}).Info("Discovered usable kernel")
-		return &Kernel{
-			Version:  version,
-			BaseName: baseNom,
-			Path:     p,
-		}, nil
-	}
-
-	return nil, ErrNoKernelFound
 }

@@ -65,7 +65,7 @@ type LiveOSBuilder struct {
 	loaders []boot.Loader
 
 	// The kernel to be used for booting
-	kernel *Kernel
+	kernel *boot.Kernel
 }
 
 // NewLiveOSBuilder should only be used by builder.go
@@ -275,7 +275,7 @@ func (l *LiveOSBuilder) installBootloader() error {
 // CollectAssets will collect the kernel and create a new initramfs to be used
 // during the boot process
 func (l *LiveOSBuilder) CollectAssets() error {
-	kernel, err := GetKernelFromRoot(l.rootfsDir)
+	kernel, err := boot.GetKernelFromRoot(l.rootfsDir)
 	if err != nil {
 		return err
 	}
