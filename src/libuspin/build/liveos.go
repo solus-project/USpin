@@ -308,8 +308,19 @@ func (l *LiveOSBuilder) CollectAssets() error {
 		return err
 	}
 
-	// TODO: Generate dracut
-	return ErrNotYetImplemented
+	// Copy the new live.img asset across
+	dracSource := filepath.Join(l.rootfsDir, "live.img")
+	dracTarget := filepath.Join(bootdir, "initrd.img")
+	if err := disk.CopyFile(dracSource, dracTarget); err != nil {
+		return err
+	}
+
+	// Nuke live.img from the filesyste,
+	if err := os.Remove(dracSource); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // FinalizeImage will go ahead and finish up the ISO construction
