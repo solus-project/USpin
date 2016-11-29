@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-// Package commands provides utilities for executing commands within uspin
+// Package commands provides utilities for executing commands within libosdev
 package commands
 
 import (

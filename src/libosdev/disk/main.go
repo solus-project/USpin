@@ -15,7 +15,7 @@
 //
 
 // Package disk provides convenience functions for manipulating disks and I/O
-// functions within libuspin.
+// functions within libosdev.
 package disk
 
 import (
