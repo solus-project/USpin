@@ -18,7 +18,7 @@ package boot
 
 import (
 	"fmt"
-	"libosdev/disk"
+	"github.com/solus-project/libosdev/disk"
 	"libuspin/config"
 	"os"
 	"path/filepath"

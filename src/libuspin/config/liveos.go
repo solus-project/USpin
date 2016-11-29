@@ -19,7 +19,7 @@ package config
 import (
 	"errors"
 	"fmt"
-	"libosdev/disk"
+	"github.com/solus-project/libosdev/disk"
 	"strings"
 )
 

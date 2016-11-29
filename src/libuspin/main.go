@@ -24,7 +24,7 @@ package libuspin
 import (
 	"errors"
 	"fmt"
-	"libosdev/pkg"
+	"github.com/solus-project/libosdev/pkg"
 	"libuspin/config"
 	"libuspin/spec"
 	"path/filepath"

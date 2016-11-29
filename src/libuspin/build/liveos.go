@@ -19,8 +19,8 @@ package build
 import (
 	"errors"
 	log "github.com/Sirupsen/logrus"
-	"libosdev/commands"
-	"libosdev/disk"
+	"github.com/solus-project/libosdev/commands"
+	"github.com/solus-project/libosdev/disk"
 	"libuspin"
 	"libuspin/boot"
 	"os"

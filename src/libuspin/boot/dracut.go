@@ -18,7 +18,7 @@ package boot
 
 import (
 	"fmt"
-	"libosdev/commands"
+	"github.com/solus-project/libosdev/commands"
 	"strings"
 )
 
