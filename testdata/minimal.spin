@@ -12,3 +12,4 @@ bootloaders = ["syslinux"]
 # Branding particulars
 [branding]
 title = "Solus 1.2.1"
+start_string = "Start Solus"
