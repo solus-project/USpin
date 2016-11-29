@@ -110,9 +110,7 @@ func NewSyslinuxLoader() *SyslinuxLoader {
 // Install will do the real work of installing syslinux bootloader
 func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 	// Currently we're only ever invoked as Legacy|ISO
-	bootdir := s.config.Isolinux.BootDirectory
-
-	bootdirTarget := c.JoinDeployPath(bootdir)
+	bootdirTarget := c.JoinDeployPath("isolinux")
 
 	// First off actually try to install the boot directory
 	if err := os.MkdirAll(bootdirTarget, 00755); err != nil {
@@ -130,7 +128,7 @@ func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 
 	// Install the ISO assets
 	for _, asset := range reqAssets {
-		target := c.JoinDeployPath(bootdir, asset)
+		target := c.JoinDeployPath("isolinux", asset)
 		if err := disk.CopyFile(s.cachedAssets[asset], target); err != nil {
 			return err
 		}
@@ -142,14 +140,13 @@ func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 // GetSpecialFile will return the special paths for isolinux
 func (s *SyslinuxLoader) GetSpecialFile(t FileType) string {
 	// Currently we're only ever invoked as Legacy|ISO
-	bootdir := s.config.Isolinux.BootDirectory
 	switch t {
 	case FileTypeBootElToritoBinary:
-		return filepath.Join(bootdir, "isolinux.bin")
+		return filepath.Join("isolinux", "isolinux.bin")
 	case FileTypeBootElToritoCatalog:
-		return filepath.Join(bootdir, "boot.cat")
+		return filepath.Join("isolinux", "boot.cat")
 	case FileTypeBootMBR:
-		return filepath.Join(bootdir, "isohdpfx.bin")
+		return filepath.Join("isolinux", "isohdpfx.bin")
 	default:
 		return ""
 	}

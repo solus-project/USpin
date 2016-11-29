@@ -18,5 +18,4 @@ package config
 
 // SectionIsolinux describes the [isolinux] portion of a spin file
 type SectionIsolinux struct {
-	BootDirectory string `toml:"bootdir"` // Where to install boot assets
 }

@@ -76,9 +76,6 @@ func New(cpath string) (*ImageConfiguration, error) {
 				LoaderTypeSyslinux,
 			},
 		},
-		Isolinux: SectionIsolinux{
-			BootDirectory: "boot",
-		},
 	}
 	var data []byte
 	var err error
