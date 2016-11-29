@@ -19,6 +19,7 @@ package disk
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"libuspin/commands"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -61,17 +62,17 @@ type MountEntry struct {
 
 // Umount will attempt to unmount the given path
 func (m *MountEntry) Umount() error {
-	return ExecStdout(fmt.Sprintf("umount %v", m.MountPoint))
+	return commands.ExecStdoutArgs("umount", []string{m.MountPoint})
 }
 
 // UmountForce will attempt to forcibly detach the mountpoint
 func (m *MountEntry) UmountForce() error {
-	return ExecStdout(fmt.Sprintf("umount -f %v", m.MountPoint))
+	return commands.ExecStdoutArgs("umount", []string{"-f", m.MountPoint})
 }
 
 // UmountLazy will attempt a lazy detach of the node
 func (m *MountEntry) UmountLazy() error {
-	return ExecStdout(fmt.Sprintf("umount -l %v", m.MountPoint))
+	return commands.ExecStdoutArgs("umount", []string{"-l", m.MountPoint})
 }
 
 // UmountSync will attempt everything possible to umount itself
@@ -132,19 +133,27 @@ func (m *MountManager) Mount(sourcepath, destpath, filesystem string, options ..
 		return fmt.Errorf("Path already known to MountManager: %v", dpath)
 	}
 
-	cmd := fmt.Sprintf("mount %v %v", sourcepath, destpath)
+	command := []string{
+		sourcepath,
+		destpath,
+	}
+
 	if len(options) > 1 {
 		optString := strings.Join(options, ",")
-		cmd += fmt.Sprintf(" -o %v", optString)
+		command = append(command, "-o")
+		command = append(command, optString)
 	}
 	// Might be empty if bind-mounting
 	if filesystem != "--bind" {
-		cmd += fmt.Sprintf(" -t %v", filesystem)
+		command = append(command, []string{
+			"-t",
+			filesystem,
+		}...)
 	} else {
-		cmd += " --bind"
+		command = append(command, "--bind")
 	}
 
-	if err := ExecStdout(cmd); err != nil {
+	if err := commands.ExecStdoutArgs("mount", command); err != nil {
 		return err
 	}
 	m.insertMount(sourcepath, dpath)
@@ -173,7 +182,7 @@ func (m *MountManager) Unmount(mountpoint string) error {
 
 // UnmountAll will attempt to unmount all registered mountpoints
 func (m *MountManager) UnmountAll() {
-	ExecStdout("sync")
+	commands.ExecStdoutArgs("sync", nil)
 	var keys []string
 	for key := range m.mounts {
 		keys = append(keys, key)
