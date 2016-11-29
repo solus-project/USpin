@@ -138,3 +138,19 @@ func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 
 	return ErrNotYetImplemented
 }
+
+// GetSpecialFile will return the special paths for isolinux
+func (s *SyslinuxLoader) GetSpecialFile(t FileType) string {
+	// Currently we're only ever invoked as Legacy|ISO
+	bootdir := s.config.Isolinux.BootDirectory
+	switch t {
+	case FileTypeBootElToritoBinary:
+		return filepath.Join(bootdir, "isolinux.bin")
+	case FileTypeBootElToritoCatalog:
+		return filepath.Join(bootdir, "boot.cat")
+	case FileTypeBootMBR:
+		return filepath.Join(bootdir, "isohdpfx.bin")
+	default:
+		return ""
+	}
+}

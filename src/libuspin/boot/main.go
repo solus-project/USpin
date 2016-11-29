@@ -23,6 +23,24 @@ import (
 	"libuspin/config"
 )
 
+// A FileType is a named special file
+type FileType string
+
+const (
+	// FileTypeBootElToritoCatalog should be within the boot directory on an ISO's
+	// boot directory, depending on the bootloader implementation. Note this is not
+	// a "real" file but one created by xorriso.
+	FileTypeBootElToritoCatalog FileType = "boot.cat"
+
+	// FileTypeBootElToritoBinary is the isolinux.bin style file, i.e. the actual
+	// bootloader itself.
+	FileTypeBootElToritoBinary FileType = "boot.bin"
+
+	// FileTypeBootMBR is the ISO MBR file. This permits hybrid ISO generation for
+	// both USB & CD.
+	FileTypeBootMBR FileType = "boot.mbr"
+)
+
 // A Loader provides abstraction around various bootloader implementations.
 type Loader interface {
 
@@ -36,6 +54,11 @@ type Loader interface {
 	// Install will have this boot loader implementation install using the given boot
 	// configuration.
 	Install(mode Capability, c ConfigurationSource) error
+
+	// GetSpecialFile is to enable a private communication method between builder and
+	// loader to get well known file types, i.e. "boot.cat"
+	// These should *always* respect the relative path rules of the builders
+	GetSpecialFile(t FileType) string
 }
 
 // ConfigurationSource should be implemented by Builder instances (or their helpers)
