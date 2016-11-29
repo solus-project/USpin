@@ -26,9 +26,11 @@ import (
 
 // A Kernel is exactly what it looks like. :p
 type Kernel struct {
-	Version  string
-	Path     string
-	BaseName string
+	Version      string
+	Path         string
+	BaseName     string
+	TargetPath   string // Relative path within the filesystem
+	TargetInitrd string // Relative initrd path within the filesystem
 }
 
 var (

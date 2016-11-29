@@ -80,6 +80,10 @@ type ConfigurationSource interface {
 	// GetBootDevice should return the device used for the boot mount, if relevant.
 	// This should return "" unless used in the Raw capability
 	GetBootDevice() string
+
+	// GetKernel should return the default kernel, configured with the correct
+	// asset path
+	GetKernel() *Kernel
 }
 
 // Capability refers to the type of operations that a bootloader supports

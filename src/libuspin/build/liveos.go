@@ -282,7 +282,8 @@ func (l *LiveOSBuilder) CollectAssets() error {
 	l.kernel = kernel
 
 	// Create the boot/ directory
-	bootdir := l.JoinDeployPath(l.img.Config.LiveOS.BootDir)
+	bootbase := l.img.Config.LiveOS.BootDir
+	bootdir := l.JoinDeployPath(bootbase)
 	if err := os.MkdirAll(bootdir, 00755); err != nil {
 		return err
 	}
@@ -292,6 +293,10 @@ func (l *LiveOSBuilder) CollectAssets() error {
 	if err := disk.CopyFile(kernel.Path, ktgt); err != nil {
 		return err
 	}
+
+	// Required by the bootloaders
+	l.kernel.TargetPath = filepath.Join(bootbase, "kernel")
+	l.kernel.TargetInitrd = filepath.Join(bootbase, "initrd.img")
 
 	// TODO: Generate dracut
 	return ErrNotYetImplemented
@@ -336,4 +341,9 @@ func (l *LiveOSBuilder) JoinDeployPath(paths ...string) string {
 // JoinRootPath will return a path within the LiveOS rootfs image
 func (l *LiveOSBuilder) JoinRootPath(paths ...string) string {
 	return filepath.Join(l.rootfsDir, filepath.Join(paths...))
+}
+
+// GetKernel returns our stored kernel object
+func (l *LiveOSBuilder) GetKernel() *boot.Kernel {
+	return l.kernel
 }
