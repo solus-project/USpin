@@ -315,7 +315,7 @@ func (l *LiveOSBuilder) CollectAssets() error {
 		return err
 	}
 
-	// Nuke live.img from the filesyste,
+	// Nuke live.img from the filesystem
 	if err := os.Remove(dracSource); err != nil {
 		return err
 	}
