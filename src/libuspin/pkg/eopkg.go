@@ -19,6 +19,7 @@ package pkg
 import (
 	"io/ioutil"
 	"libuspin/build"
+	"libuspin/commands"
 	"libuspin/config"
 	"libuspin/disk"
 	"libuspin/spec"
@@ -132,7 +133,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Before we start chrooting, update libraries to be usable..
-	if err := build.ChrootExec(e.root, "ldconfig"); err != nil {
+	if err := commands.ChrootExec(e.root, "ldconfig"); err != nil {
 		return err
 	}
 	// Set up account for dbus (TODO: Add sysusers.d file for this
@@ -151,7 +152,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Run all postinstalls inside chroot
-	if err := build.ChrootExec(e.root, "eopkg configure-pending"); err != nil {
+	if err := commands.ChrootExec(e.root, "eopkg configure-pending"); err != nil {
 		e.killDBUS()
 		return err
 	}
@@ -160,7 +161,7 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Delete cached assets
-	if err := build.ChrootExec(e.root, "eopkg delete-cache"); err != nil {
+	if err := commands.ChrootExec(e.root, "eopkg delete-cache"); err != nil {
 		return err
 	}
 	return nil
@@ -194,10 +195,10 @@ func (e *EopkgManager) startDBUS() error {
 	if e.dbusActive {
 		return nil
 	}
-	if err := build.ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
+	if err := commands.ChrootExec(e.root, "dbus-uuidgen --ensure"); err != nil {
 		return err
 	}
-	if err := build.ChrootExec(e.root, "dbus-daemon --system"); err != nil {
+	if err := commands.ChrootExec(e.root, "dbus-daemon --system"); err != nil {
 		return err
 	}
 	e.dbusActive = true
@@ -229,16 +230,16 @@ func (e *EopkgManager) killDBUS() error {
 	}
 
 	pid := strings.Split(string(b), "\n")[0]
-	return build.ExecStdoutArgs("kill", []string{"-9", pid})
+	return commands.ExecStdoutArgs("kill", []string{"-9", pid})
 }
 
 // This is also largely anti-stateless but is required just to get dbus running
 // so we can configure-pending. sol can't come quick enough...
 func (e *EopkgManager) configureDbus() error {
-	if err := build.AddGroup(e.root, "messagebus", 18); err != nil {
+	if err := commands.AddGroup(e.root, "messagebus", 18); err != nil {
 		return err
 	}
-	if err := build.AddSystemUser(e.root, "messagebus", "D-Bus Message Daemon", "/var/run/dbus", "/bin/false", 18, 18); err != nil {
+	if err := commands.AddSystemUser(e.root, "messagebus", "D-Bus Message Daemon", "/var/run/dbus", "/bin/false", 18, 18); err != nil {
 		return err
 	}
 	return nil
@@ -256,7 +257,7 @@ func (e *EopkgManager) eopkgExecRoot(args []string) error {
 		"-D", e.root,
 	}
 	args = append(args, endArgs...)
-	return build.ExecStdoutArgs("eopkg", args)
+	return commands.ExecStdoutArgs("eopkg", args)
 }
 
 // Add a repository to the target

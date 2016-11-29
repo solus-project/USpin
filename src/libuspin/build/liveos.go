@@ -21,6 +21,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"libuspin"
 	"libuspin/boot"
+	"libuspin/commands"
 	"libuspin/disk"
 	"os"
 	"os/exec"
@@ -243,7 +244,7 @@ func (l *LiveOSBuilder) spinISO() error {
 		outputFilename,
 		".", // Create from current directory
 	}...)
-	return ExecStdoutArgsDir(l.deployDir, "xorriso", command)
+	return commands.ExecStdoutArgsDir(l.deployDir, "xorriso", command)
 }
 
 // Install the bootloader for the given image

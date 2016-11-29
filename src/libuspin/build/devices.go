@@ -18,6 +18,7 @@ package build
 
 import (
 	"fmt"
+	"libuspin/commands"
 	"path/filepath"
 )
 
@@ -47,5 +48,5 @@ func CreateDeviceNode(root string, node *DeviceNode) error {
 	fpath := filepath.Join(root, node.Path)
 	cmd := []string{"-m", node.Mode, fpath, "c", fmt.Sprintf("%d", node.Major), fmt.Sprintf("%d", node.Minor)}
 
-	return ExecStdoutArgs("mknod", cmd)
+	return commands.ExecStdoutArgs("mknod", cmd)
 }

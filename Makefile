@@ -10,6 +10,7 @@ BINARIES = \
 LIBRARIES = \
 	libuspin/boot \
 	libuspin/build \
+	libuspin/commands \
 	libuspin/config \
 	libuspin/disk \
 	libuspin/pkg \

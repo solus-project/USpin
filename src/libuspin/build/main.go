@@ -20,6 +20,7 @@ package build
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"libuspin/commands"
 	"libuspin/config"
 	"os"
 	"os/exec"
@@ -115,5 +116,5 @@ func CreateSquashfs(path, outputFile string, compressionType config.CompressionT
 	} else {
 		return err
 	}
-	return ExecStdoutArgsDir(dirName, "mksquashfs", command)
+	return commands.ExecStdoutArgsDir(dirName, "mksquashfs", command)
 }

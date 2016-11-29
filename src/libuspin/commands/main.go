@@ -14,7 +14,8 @@
 // limitations under the License.
 //
 
-package build
+// Package commands provides utilities for executing commands within uspin
+package commands
 
 import (
 	"fmt"

@@ -19,6 +19,7 @@ package build
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"libuspin/commands"
 )
 
 // FilesystemFormatFunc is the prototype for functions that format filesystems
@@ -35,20 +36,20 @@ var checkCommands map[string]FilesystemCheckFunc
 
 func formatExt4(filename string) error {
 	// Format it
-	if err := ExecStdoutArgs("mkfs", []string{"-t", "ext4", "-F", filename}); err != nil {
+	if err := commands.ExecStdoutArgs("mkfs", []string{"-t", "ext4", "-F", filename}); err != nil {
 		return err
 	}
 	// Set the mount count so it doesn't get fsck'd during live boot
-	return ExecStdoutArgs("tune2fs", []string{"-c0", "-i0", filename})
+	return commands.ExecStdoutArgs("tune2fs", []string{"-c0", "-i0", filename})
 }
 
 func checkExt4(filename string) error {
 	// Check it for errors
-	if err := ExecStdoutArgs("e2fsck", []string{"-y", filename}); err != nil {
+	if err := commands.ExecStdoutArgs("e2fsck", []string{"-y", filename}); err != nil {
 		return err
 	}
 	// Force fix any issues now
-	return ExecStdoutArgs("e2fsck", []string{"-y", "-f", filename})
+	return commands.ExecStdoutArgs("e2fsck", []string{"-y", "-f", filename})
 }
 
 func init() {
