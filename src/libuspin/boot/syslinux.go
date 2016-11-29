@@ -194,7 +194,7 @@ func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 
 	brand := s.config.Branding.Title
 	str := s.config.Branding.StartString
-	label := c.GetBootDevice()
+	label := c.GetRootDevice()
 
 	// Write our template data
 	tmplData := IsolinuxTemplate{
