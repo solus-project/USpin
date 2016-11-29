@@ -41,12 +41,14 @@ type EopkgManager struct {
 	root        string // rootfs path
 	cacheTarget string // Where we mount the cache directory
 
+	targetMode bool // Whether we're in target mode or not.
+
 	dbusActive bool // Whether we have dbus alive or not
 }
 
 // NewEopkgManager will return a newly initialised EopkgManager
 func NewEopkgManager() *EopkgManager {
-	return &EopkgManager{}
+	return &EopkgManager{targetMode: false}
 }
 
 // Init will check that eopkg is available host side
@@ -61,6 +63,7 @@ func (e *EopkgManager) Init() error {
 // InitRoot will set up the filesystem root in accordance with eopkg needs
 func (e *EopkgManager) InitRoot(root string) error {
 	e.root = root
+	e.targetMode = true
 
 	// Ensures we don't end up with /var/lock vs /run/lock nonsense
 	reqDirs := []string{
@@ -231,6 +234,9 @@ func (e *EopkgManager) Cleanup() error {
 // Eopkg specific functions
 
 func (e *EopkgManager) eopkgExecRoot(args []string) error {
+	if !e.targetMode {
+		return commands.ExecStdoutArgs("eopkg", args)
+	}
 	endArgs := []string{
 		"-D", e.root,
 	}
@@ -252,7 +258,10 @@ func (e *EopkgManager) InstallGroups(ignoreSafety bool, groups []string) error {
 			comp,
 		}...)
 	}
-	cmd := []string{"install", "-y", "--ignore-comar"}
+	cmd := []string{"install", "-y"}
+	if e.targetMode {
+		cmd = append(cmd, "--ignore-comar")
+	}
 	cmd = append(cmd, componentNames...)
 	if ignoreSafety {
 		cmd = append(cmd, "--ignore-safety")
@@ -262,7 +271,10 @@ func (e *EopkgManager) InstallGroups(ignoreSafety bool, groups []string) error {
 
 // InstallPackages will install the named eopkgs to the target
 func (e *EopkgManager) InstallPackages(ignoreSafety bool, packages []string) error {
-	cmd := []string{"install", "-y", "--ignore-comar"}
+	cmd := []string{"install", "-y"}
+	if e.targetMode {
+		cmd = append(cmd, "--ignore-comar")
+	}
 	cmd = append(cmd, packages...)
 	if ignoreSafety {
 		cmd = append(cmd, "--ignore-safety")
