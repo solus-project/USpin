@@ -77,6 +77,7 @@ func New(cpath string) (*ImageConfiguration, error) {
 			Bootloaders: []LoaderType{
 				LoaderTypeSyslinux,
 			},
+			Label: "uspin.ISO",
 		},
 	}
 	var data []byte
