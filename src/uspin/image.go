@@ -41,6 +41,11 @@ func (s *USpin) StartImageBuild() error {
 // FinishImageBuild will perform all the last steps required to finalize an
 // image for final "spin".
 func (s *USpin) FinishImageBuild() error {
+	s.logImage.Info("Collecting assets")
+	if err := s.builder.CollectAssets(); err != nil {
+		return err
+	}
+
 	if err := s.builder.UnmountStorage(); err != nil {
 		return err
 	}

@@ -63,6 +63,9 @@ type LiveOSBuilder struct {
 
 	// For storing bootloader bits
 	loaders []boot.Loader
+
+	// The kernel to be used for booting
+	kernel *Kernel
 }
 
 // NewLiveOSBuilder should only be used by builder.go
@@ -267,6 +270,17 @@ func (l *LiveOSBuilder) installBootloader() error {
 	bloader := boot.GetLoaderWithMask(l.loaders, caps)
 
 	return bloader.Install(caps, l)
+}
+
+// CollectAssets will collect the kernel and create a new initramfs to be used
+// during the boot process
+func (l *LiveOSBuilder) CollectAssets() error {
+	kernel, err := GetKernelFromRoot(l.rootfsDir)
+	if err != nil {
+		return err
+	}
+	l.kernel = kernel
+	return ErrNotYetImplemented
 }
 
 // FinalizeImage will go ahead and finish up the ISO construction

@@ -43,6 +43,11 @@ type Builder interface {
 	// the rootfs.
 	MountStorage() error
 
+	// CollectAssets will be called after the package manager is finished, and prior to
+	// UnmountStorage is invoked. This will give the implementation a chance to collect
+	// and build any assets they need from the rootfs before it is sealed up.
+	CollectAssets() error
+
 	// UnmountStorage should be used by the implementation to tear down any mounts
 	// previously erected in MountStorage() for package manager operations, prior
 	// to image finalisation
