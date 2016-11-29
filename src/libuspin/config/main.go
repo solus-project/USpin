@@ -52,7 +52,8 @@ type SectionImage struct {
 
 // SectionBranding describes the image branding rules
 type SectionBranding struct {
-	Title string `toml:"title"` // Title of the OS to use in bootloaders
+	Title       string `toml:"title"`        // Title of the OS to use in bootloaders
+	StartString string `toml:"start_string"` // main launcher entry, i.e. "Start Blahblah"
 }
 
 // ImageConfiguration is the configuration for an image build

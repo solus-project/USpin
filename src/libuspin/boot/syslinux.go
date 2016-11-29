@@ -27,9 +27,10 @@ import (
 
 // IsolinuxTemplate is used to populate fields in the isolinux.cfg
 type IsolinuxTemplate struct {
-	Kernel *Kernel
-	Label  string // CDLABEL
-	Brand  string // Needs to come from config!
+	Kernel      *Kernel
+	Label       string // CDLABEL
+	Title       string // Needs to come from config!
+	StartString string
 }
 
 var (
@@ -40,7 +41,7 @@ timeout 50
 default live
 
 MENU RESOLUTION 1024 768
-menu title {{.Brand}}
+menu title {{.Title}}
 
 menu color screen       37;40      #80ffffff #00000000 std
 MENU COLOR border       30;44   #40ffffff #a0000000 std
@@ -62,7 +63,7 @@ MENU HSHIFT 25
 MENU TABMSGROW 11
 
 label live
-  menu label Start {{.Brand}}
+  menu label {{.StartString}}
   kernel /{{.Kernel.TargetPath}}
   append initrd=/{{.Kernel.TargetInitrd}} root=live:CDLABEL={{.Label}} ro rd.luks=0 rd.md=0 quiet splash --
 menu default
@@ -191,11 +192,15 @@ func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 		}
 	}
 
+	brand := s.config.Branding.Title
+	str := s.config.Branding.StartString
+
 	// Write our template data
 	tmplData := IsolinuxTemplate{
-		Kernel: c.GetKernel(),
-		Label:  "DummyISO",
-		Brand:  "NEEDFIX",
+		Kernel:      c.GetKernel(),
+		Label:       "DummyISO",
+		Title:       brand,
+		StartString: str,
 	}
 
 	cfg := c.JoinDeployPath("isolinux", "isolinux.cfg")
