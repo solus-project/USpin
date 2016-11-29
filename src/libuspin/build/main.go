@@ -23,36 +23,9 @@ import (
 	"libuspin/commands"
 	"libuspin/config"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"strings"
 	"syscall"
 )
-
-// ExecStdout is a convenience function to execute a command to the stdout
-// and return the error, if any
-func ExecStdout(command string) error {
-	splits := strings.Fields(command)
-	var c *exec.Cmd
-	cmdName := splits[0]
-	var err error
-	// Search the path if necessary
-	if !strings.Contains(cmdName, "/") {
-		cmdName, err = exec.LookPath(cmdName)
-		if err != nil {
-			return err
-		}
-	}
-	// Ensure we pass arguments
-	if len(splits) == 1 {
-		c = exec.Command(cmdName)
-	} else {
-		c = exec.Command(cmdName, splits[1:]...)
-	}
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	return c.Run()
-}
 
 // CreateSparseFile will create a new sparse file with the given filename and
 // size in nMegabytes/
