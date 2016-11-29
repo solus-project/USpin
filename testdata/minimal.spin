@@ -8,6 +8,7 @@ type = "liveos"
 compression = "gzip"
 filename = "Solus-1.2.1.iso"
 bootloaders = ["syslinux"]
+label = "SolusLive"
 
 # Branding particulars
 [branding]
