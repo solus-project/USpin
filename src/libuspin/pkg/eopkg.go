@@ -276,9 +276,12 @@ func (e *EopkgManager) installComponents(ops []spec.Operation, ignoreSafety bool
 	var componentNames []string
 	for _, comp := range ops {
 		c := comp.(*spec.OpGroup)
-		componentNames = append(componentNames, c.GroupName)
+		componentNames = append(componentNames, []string{
+			"-c",
+			c.GroupName,
+		}...)
 	}
-	cmd := []string{"install", "-y", "--ignore-comar", "-c"}
+	cmd := []string{"install", "-y", "--ignore-comar"}
 	cmd = append(cmd, componentNames...)
 	if ignoreSafety {
 		cmd = append(cmd, "--ignore-safety")
