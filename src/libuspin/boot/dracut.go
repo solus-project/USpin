@@ -31,7 +31,6 @@ var (
 	// TODO: Investigate now-dead stuff and curate this list
 	DracutLiveOSDrivers = []string{
 		"squashfs",
-		"ext3",
 		"ext2",
 		"vfat",
 		"msdos",
@@ -45,7 +44,6 @@ var (
 		"usb_storage",
 		"usbhid",
 		"dm_mod",
-		"device-mapper",
 		"ata_generic",
 		"libata",
 	}
