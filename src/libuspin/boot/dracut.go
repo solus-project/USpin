@@ -18,6 +18,8 @@ package boot
 
 import (
 	"fmt"
+	"libuspin/commands"
+	"strings"
 )
 
 var (
@@ -60,8 +62,11 @@ type Dracut struct {
 	// Extra drivers to enable
 	Drivers []string
 
-	// The filename to use within the root
+	// The filename to use within the root (should include / prefix)
 	OutputFilename string
+
+	// Compression method, i.e. --lz4, --gzip, etc.
+	CompressionMethod string
 
 	k *Kernel
 }
@@ -69,6 +74,31 @@ type Dracut struct {
 // NewDracut returns a new Dracut object for generation
 func NewDracut(k *Kernel) *Dracut {
 	return &Dracut{
-		OutputFilename: fmt.Sprintf("/boot/initramfs-%v.img", k.Version),
+		OutputFilename:    fmt.Sprintf("/boot/initramfs-%v.img", k.Version),
+		CompressionMethod: "--lz4",
 	}
+}
+
+// Exec will build the command run dracut within the chroot
+func (d *Dracut) Exec(path string) error {
+	cmd := fmt.Sprintf("dracut --no-hostonly-cmdline -N --kver \"%v\"", d.k.Version)
+
+	if d.CompressionMethod != "" {
+		cmd += " " + d.CompressionMethod
+	}
+
+	if len(d.Modules) > 0 {
+		cmd += fmt.Sprintf(" --add \"%v\"", strings.Join(d.Modules, " "))
+	}
+	if len(d.Drivers) > 0 {
+		cmd += fmt.Sprintf(" --add-drivers \"%v\"", strings.Join(d.Drivers, " "))
+	}
+
+	if !strings.HasPrefix(d.OutputFilename, "/") {
+		return fmt.Errorf("Invalid dracut name: %v", d.OutputFilename)
+	}
+
+	cmd += fmt.Sprintf(" \"%v\"", d.OutputFilename)
+
+	return commands.ChrootExec(path, cmd)
 }
