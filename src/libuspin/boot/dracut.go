@@ -76,6 +76,7 @@ func NewDracut(k *Kernel) *Dracut {
 	return &Dracut{
 		OutputFilename:    fmt.Sprintf("/boot/initramfs-%v.img", k.Version),
 		CompressionMethod: "--lz4",
+		k:                 k,
 	}
 }
 
