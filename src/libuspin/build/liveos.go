@@ -19,10 +19,10 @@ package build
 import (
 	"errors"
 	log "github.com/Sirupsen/logrus"
+	"libosdev/commands"
+	"libosdev/disk"
 	"libuspin"
 	"libuspin/boot"
-	"libuspin/commands"
-	"libuspin/disk"
 	"os"
 	"os/exec"
 	"path/filepath"

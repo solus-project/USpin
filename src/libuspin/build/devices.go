@@ -18,7 +18,7 @@ package build
 
 import (
 	"fmt"
-	"libuspin/commands"
+	"libosdev/commands"
 	"path/filepath"
 )
 

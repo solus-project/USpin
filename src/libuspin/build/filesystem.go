@@ -19,7 +19,7 @@ package build
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
-	"libuspin/commands"
+	"libosdev/commands"
 )
 
 // FilesystemFormatFunc is the prototype for functions that format filesystems

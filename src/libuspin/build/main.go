@@ -20,7 +20,7 @@ package build
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
-	"libuspin/commands"
+	"libosdev/commands"
 	"libuspin/config"
 	"os"
 	"path/filepath"

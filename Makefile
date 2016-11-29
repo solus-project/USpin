@@ -10,10 +10,10 @@ BINARIES = \
 LIBRARIES = \
 	libuspin/boot \
 	libuspin/build \
-	libuspin/commands \
+	libosdev/commands \
 	libuspin/config \
-	libuspin/disk \
-	libuspin/pkg \
+	libosdev/disk \
+	libosdev/pkg \
 	libuspin/spec
 
 GO_TESTS = \

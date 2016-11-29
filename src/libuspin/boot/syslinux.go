@@ -18,8 +18,8 @@ package boot
 
 import (
 	"fmt"
+	"libosdev/disk"
 	"libuspin/config"
-	"libuspin/disk"
 	"os"
 	"path/filepath"
 	"text/template"

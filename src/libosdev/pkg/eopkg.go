@@ -18,10 +18,10 @@ package pkg
 
 import (
 	"io/ioutil"
+	"libosdev/commands"
+	"libosdev/disk"
 	"libuspin/build"
-	"libuspin/commands"
 	"libuspin/config"
-	"libuspin/disk"
 	"libuspin/spec"
 	"os"
 	"os/exec"

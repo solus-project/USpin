@@ -19,7 +19,7 @@ package disk
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
-	"libuspin/commands"
+	"libosdev/commands"
 	"path/filepath"
 	"sort"
 	"strings"

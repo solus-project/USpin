@@ -18,7 +18,7 @@ package boot
 
 import (
 	"fmt"
-	"libuspin/commands"
+	"libosdev/commands"
 	"strings"
 )
 

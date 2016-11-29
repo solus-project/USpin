@@ -20,9 +20,9 @@ package main
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"libosdev/pkg"
 	"libuspin"
 	"libuspin/build"
-	"libuspin/pkg"
 	"os"
 )
 
