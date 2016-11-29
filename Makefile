@@ -11,10 +11,7 @@ LIBRARIES = \
 	libuspin \
 	libuspin/boot \
 	libuspin/build \
-	libosdev/commands \
 	libuspin/config \
-	libosdev/disk \
-	libosdev/pkg \
 	libuspin/spec
 
 GO_TESTS = \
