@@ -20,7 +20,6 @@ import (
 	"io/ioutil"
 	"libosdev/commands"
 	"libosdev/disk"
-	"libuspin/spec"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -98,25 +97,6 @@ func (e *EopkgManager) InitRoot(root string) error {
 	}
 
 	return nil
-}
-
-// ApplyOperations will apply the given set of operations via eopkg
-func (e *EopkgManager) ApplyOperations(ops []spec.Operation) error {
-	if len(ops) == 0 {
-		return ErrNotEnoughOps
-	}
-	switch ops[0].(type) {
-	case *spec.OpRepo:
-		return e.addRepos(ops)
-	case *spec.OpGroup:
-		ignoreSafety := ops[0].(*spec.OpGroup).IgnoreSafety
-		return e.installComponents(ops, ignoreSafety)
-	case *spec.OpPackage:
-		ignoreSafety := ops[0].(*spec.OpPackage).IgnoreSafety
-		return e.installPackages(ops, ignoreSafety)
-	default:
-		return ErrUnknownOperation
-	}
 }
 
 // FinalizeRoot will configure all of the eopkgs installed in the system, and
@@ -258,25 +238,18 @@ func (e *EopkgManager) eopkgExecRoot(args []string) error {
 	return commands.ExecStdoutArgs("eopkg", args)
 }
 
-// Add a repository to the target
-func (e *EopkgManager) addRepos(ops []spec.Operation) error {
-	for _, repo := range ops {
-		r := repo.(*spec.OpRepo)
-		if err := e.eopkgExecRoot([]string{"add-repo", r.RepoName, r.RepoURI}); err != nil {
-			return err
-		}
-	}
-	return nil
+// AddRepo will add the new eopkg repo to the target
+func (e *EopkgManager) AddRepo(identifier, uri string) error {
+	return e.eopkgExecRoot([]string{"add-repo", identifier, uri})
 }
 
-// Install the named components
-func (e *EopkgManager) installComponents(ops []spec.Operation, ignoreSafety bool) error {
+// InstallGroups will install the named eopkg components to the target
+func (e *EopkgManager) InstallGroups(ignoreSafety bool, groups []string) error {
 	var componentNames []string
-	for _, comp := range ops {
-		c := comp.(*spec.OpGroup)
+	for _, comp := range groups {
 		componentNames = append(componentNames, []string{
 			"-c",
-			c.GroupName,
+			comp,
 		}...)
 	}
 	cmd := []string{"install", "-y", "--ignore-comar"}
@@ -287,15 +260,10 @@ func (e *EopkgManager) installComponents(ops []spec.Operation, ignoreSafety bool
 	return e.eopkgExecRoot(cmd)
 }
 
-// Install the named packages
-func (e *EopkgManager) installPackages(ops []spec.Operation, ignoreSafety bool) error {
-	var pkgNames []string
-	for _, p := range ops {
-		pk := p.(*spec.OpPackage)
-		pkgNames = append(pkgNames, pk.Name)
-	}
+// InstallPackages will install the named eopkgs to the target
+func (e *EopkgManager) InstallPackages(ignoreSafety bool, packages []string) error {
 	cmd := []string{"install", "-y", "--ignore-comar"}
-	cmd = append(cmd, pkgNames...)
+	cmd = append(cmd, packages...)
 	if ignoreSafety {
 		cmd = append(cmd, "--ignore-safety")
 	}

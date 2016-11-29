@@ -38,6 +38,23 @@ type Manager interface {
 	// allowing any post configuration, etc, to take place.
 	FinalizeRoot() error
 
+	// InstallPackages will ask the package manager implementation to install the
+	// given package set.
+	// ignoreSafety is dependent on the package manager, but is usually used to
+	// avoid automatic dependencies such as system.base in Solus, or recommends
+	// in dpkg.
+	InstallPackages(ignoreSafety bool, packages []string) error
+
+	// InstallGroups will ask the package manager implementation to install the
+	// given groups (components in some distros)
+	// ignoreSafety is dependent on the package manager, but is usually used to
+	// avoid automatic dependencies such as system.base in Solus, or recommends
+	// in dpkg.
+	InstallGroups(ignoreSafety bool, groups []string) error
+
+	// AddRepo asks the package manager to add the given repository to the system
+	AddRepo(identifier, uri string) error
+
 	// Cleanup may be called at any time, and the package manager implementation
 	// should ensure it cleans anything it did in the past, such as closing open
 	// processes.
