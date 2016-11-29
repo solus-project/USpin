@@ -16,6 +16,10 @@
 
 package main
 
+import (
+	"libuspin"
+)
+
 // InstallPackages will install all required packages into the rootfs
 func (s *USpin) InstallPackages() error {
 	s.logPackage.Info("Applying operations")
@@ -35,7 +39,7 @@ func (s *USpin) InstallPackages() error {
 	}
 
 	for _, opset := range s.spec.Stack.Blocks {
-		if err := s.packager.ApplyOperations(opset.Ops); err != nil {
+		if err := libuspin.ApplyOperations(s.packager, opset.Ops); err != nil {
 			return err
 		}
 	}

@@ -20,7 +20,6 @@ import (
 	"io/ioutil"
 	"libosdev/commands"
 	"libosdev/disk"
-	"libuspin/build"
 	"libuspin/spec"
 	"os"
 	"os/exec"
@@ -140,10 +139,10 @@ func (e *EopkgManager) FinalizeRoot() error {
 		return err
 	}
 	// Create the required nodes for eopkg to run without bind mounts
-	if err := build.CreateDeviceNode(e.root, build.DevNodeRandom); err != nil {
+	if err := disk.CreateDeviceNode(e.root, disk.DevNodeRandom); err != nil {
 		return err
 	}
-	if err := build.CreateDeviceNode(e.root, build.DevNodeURandom); err != nil {
+	if err := disk.CreateDeviceNode(e.root, disk.DevNodeURandom); err != nil {
 		return err
 	}
 	// Start dbus to allow configure-pending

@@ -22,7 +22,9 @@
 package libuspin
 
 import (
+	"errors"
 	"fmt"
+	"libosdev/pkg"
 	"libuspin/config"
 	"libuspin/spec"
 	"path/filepath"
@@ -69,4 +71,10 @@ func NewImageSpec(spinFile string) (*ImageSpec, error) {
 		Stack:  parser.Stack,
 		Config: conf,
 	}, nil
+}
+
+// ApplyOperations will apply the given spec operations against the package
+// manager instance
+func ApplyOperations(manager pkg.Manager, ops []spec.Operation) error {
+	return errors.New("Unable to install packages atm")
 }

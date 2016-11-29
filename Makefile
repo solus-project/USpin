@@ -8,6 +8,7 @@ BINARIES = \
 	uspin
 
 LIBRARIES = \
+	libuspin \
 	libuspin/boot \
 	libuspin/build \
 	libosdev/commands \

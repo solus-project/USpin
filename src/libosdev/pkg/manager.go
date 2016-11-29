@@ -18,7 +18,6 @@ package pkg
 
 import (
 	"errors"
-	"libuspin/spec"
 )
 
 // Manager is the interface that should be implemented by vendors to enable
@@ -34,10 +33,6 @@ type Manager interface {
 	// filesystem layout, i.e. for usr-merge situations, or for working around
 	// default directories created by a host-side package manager tool.
 	InitRoot(root string) error
-
-	// ApplyOperations should apply all of the given operations in bulk, as they
-	// are always guaranteed to have the same type.
-	ApplyOperations(ops []spec.Operation) error
 
 	// FinalizeRoot should be invoked once all packaging operations have been applied,
 	// allowing any post configuration, etc, to take place.
