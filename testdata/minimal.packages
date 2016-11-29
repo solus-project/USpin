@@ -9,9 +9,9 @@ Solus = https://packages.solus-project.com/unstable/eopkg-index.xml.xz
 @system.base
 
 # so we can actually boot
-# dracut
-# kernel
-# kernel-modules
+dracut
+kernel
+kernel-modules
 # equally: @kernel.image
 
 # enable networking
