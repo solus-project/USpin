@@ -23,6 +23,18 @@ import (
 	"os"
 )
 
+// CompressionType is the possible compression type to be used with a LiveOS
+// image build
+type CompressionType string
+
+const (
+	// CompressionGzip will compress the squashfs with gzip
+	CompressionGzip CompressionType = "gzip"
+
+	// CompressionXZ will compress the squashfs using xz
+	CompressionXZ CompressionType = "xz"
+)
+
 // CopyFile will copy the file and permissions to the new target
 func CopyFile(source, dest string) error {
 	var src *os.File

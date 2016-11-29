@@ -19,27 +19,16 @@ package config
 import (
 	"errors"
 	"fmt"
+	"libosdev/disk"
 	"strings"
-)
-
-// CompressionType is the possible compression type to be used with a LiveOS
-// image build
-type CompressionType string
-
-const (
-	// CompressionGzip will compress the squashfs with gzip
-	CompressionGzip CompressionType = "gzip"
-
-	// CompressionXZ will compress the squashfs using xz
-	CompressionXZ CompressionType = "xz"
 )
 
 // SectionLiveOS is the Live ISO specific configuration
 type SectionLiveOS struct {
-	Compression  CompressionType `toml:"compression"`   // The type of compression to use on the LiveOS
-	FileName     string          `toml:"filename"`      // The resulting filename for this image spin
-	RootfsSize   int             `toml:"rootfs_size"`   // Size of the image in megabytes (default 4000)
-	RootfsFormat string          `toml:"rootfs_format"` // Format of the rootfs, defaults to ext4
+	Compression  disk.CompressionType `toml:"compression"`   // The type of compression to use on the LiveOS
+	FileName     string               `toml:"filename"`      // The resulting filename for this image spin
+	RootfsSize   int                  `toml:"rootfs_size"`   // Size of the image in megabytes (default 4000)
+	RootfsFormat string               `toml:"rootfs_format"` // Format of the rootfs, defaults to ext4
 
 	Label string `toml:"label"` // Label to give the resulting ISO
 
@@ -51,7 +40,7 @@ type SectionLiveOS struct {
 // ValidateSectionLiveOS will determine if the configuration is valid for a LiveOS
 func ValidateSectionLiveOS(l *SectionLiveOS) error {
 	switch l.Compression {
-	case CompressionGzip, CompressionXZ:
+	case disk.CompressionGzip, disk.CompressionXZ:
 	default:
 		return fmt.Errorf("Unknown compression type: %v", l.Compression)
 	}

@@ -20,7 +20,6 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"libosdev/commands"
-	"libuspin/config"
 	"os"
 	"path/filepath"
 	"syscall"
@@ -49,11 +48,11 @@ func CreateSparseFile(filename string, nMegabytes int) error {
 }
 
 // GetSquashfsArgs returns the compression arg set for a given compression type
-func GetSquashfsArgs(compressionType config.CompressionType) ([]string, error) {
+func GetSquashfsArgs(compressionType CompressionType) ([]string, error) {
 	switch compressionType {
-	case config.CompressionGzip:
+	case CompressionGzip:
 		return []string{"-comp", "gzip"}, nil
-	case config.CompressionXZ:
+	case CompressionXZ:
 		return []string{"-comp", "xz"}, nil
 	default:
 		return nil, fmt.Errorf("Unknown compression type: %v", compressionType)
@@ -62,7 +61,7 @@ func GetSquashfsArgs(compressionType config.CompressionType) ([]string, error) {
 
 // CreateSquashfs will create a new squashfs filesystem image at the given outputFile path,
 // containing the tree found at path, using compressionType (gzip or xz).
-func CreateSquashfs(path, outputFile string, compressionType config.CompressionType) error {
+func CreateSquashfs(path, outputFile string, compressionType CompressionType) error {
 	command := []string{
 		path,
 		outputFile,
