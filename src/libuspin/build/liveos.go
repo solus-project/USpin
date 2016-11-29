@@ -72,10 +72,7 @@ type LiveOSBuilder struct {
 
 // NewLiveOSBuilder should only be used by builder.go
 func NewLiveOSBuilder() *LiveOSBuilder {
-	// TODO: Unhardcode!
-	return &LiveOSBuilder{
-		cdlabel: "DummyISO",
-	}
+	return &LiveOSBuilder{}
 }
 
 // Init will initialise a LiveOSBuilder from the given spec
@@ -92,6 +89,7 @@ func (l *LiveOSBuilder) Init(img *libuspin.ImageSpec) error {
 	// rootfs.img particulars
 	l.rootfsFormat = l.img.Config.LiveOS.RootfsFormat
 	l.rootfsSize = l.img.Config.LiveOS.RootfsSize
+	l.cdlabel = l.img.Config.LiveOS.Label
 
 	// Init the bootloaders
 	if loaders, err := boot.InitLoaders(l.img.Config, l.img.Config.LiveOS.Bootloaders); err == nil {
