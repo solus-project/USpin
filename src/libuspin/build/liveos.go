@@ -61,6 +61,8 @@ type LiveOSBuilder struct {
 	liveStagingDir string
 	workspace      string
 
+	cdlabel string // What to name the ISO
+
 	// For storing bootloader bits
 	loaders []boot.Loader
 
@@ -70,7 +72,10 @@ type LiveOSBuilder struct {
 
 // NewLiveOSBuilder should only be used by builder.go
 func NewLiveOSBuilder() *LiveOSBuilder {
-	return &LiveOSBuilder{}
+	// TODO: Unhardcode!
+	return &LiveOSBuilder{
+		cdlabel: "DummyISO",
+	}
 }
 
 // Init will initialise a LiveOSBuilder from the given spec
@@ -201,7 +206,7 @@ func (l *LiveOSBuilder) spinISO() error {
 	} else {
 		return err
 	}
-	volumeID := "DummyISO"
+	volumeID := l.cdlabel
 	command := []string{
 		"-no_rc", // Forbid reading startup files which may skew ISO generation
 		"-as",
@@ -349,9 +354,9 @@ func (l *LiveOSBuilder) GetBootDevice() string {
 	return ""
 }
 
-// GetRootDevice always returns nil for LiveOS
+// GetRootDevice will actually return the cdlabel for ISO mode bootloaders
 func (l *LiveOSBuilder) GetRootDevice() string {
-	return ""
+	return l.cdlabel
 }
 
 // JoinDeployPath will return a path within the LiveOS workspace
