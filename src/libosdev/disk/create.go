@@ -18,7 +18,6 @@ package disk
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"libosdev/commands"
 	"os"
 	"path/filepath"
@@ -31,9 +30,6 @@ import (
 // This is highly dependent on the underlying filesystem at the directory
 // where the file is to be created, making use of the syscall ftruncate.
 func CreateSparseFile(filename string, nMegabytes int) error {
-	log.WithFields(log.Fields{
-		"filename": filename,
-		"size":     nMegabytes}).Info("Creating sparse file")
 	f, err := os.OpenFile(filename, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 00644)
 	if err != nil {
 		return err
