@@ -298,6 +298,16 @@ func (l *LiveOSBuilder) CollectAssets() error {
 	l.kernel.TargetPath = filepath.Join(bootbase, "kernel")
 	l.kernel.TargetInitrd = filepath.Join(bootbase, "initrd.img")
 
+	// Attempt to build dracut image
+	drac := boot.NewDracut(l.kernel)
+	drac.Modules = boot.DracutLiveOSModules
+	drac.Drivers = boot.DracutLiveOSDrivers
+	drac.OutputFilename = "/live.img"
+
+	if err := drac.Exec(l.rootfsDir); err != nil {
+		return err
+	}
+
 	// TODO: Generate dracut
 	return ErrNotYetImplemented
 }
