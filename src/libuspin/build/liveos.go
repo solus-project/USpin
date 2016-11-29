@@ -280,6 +280,20 @@ func (l *LiveOSBuilder) CollectAssets() error {
 		return err
 	}
 	l.kernel = kernel
+
+	// Create the boot/ directory
+	bootdir := l.JoinDeployPath(l.img.Config.LiveOS.BootDir)
+	if err := os.MkdirAll(bootdir, 00755); err != nil {
+		return err
+	}
+
+	// Copy the kernel, standard "kernel" name
+	ktgt := filepath.Join(bootdir, "kernel")
+	if err := disk.CopyFile(kernel.Path, ktgt); err != nil {
+		return err
+	}
+
+	// TODO: Generate dracut
 	return ErrNotYetImplemented
 }
 
