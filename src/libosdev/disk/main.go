@@ -19,7 +19,6 @@
 package disk
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"io"
 	"os"
 )
@@ -30,11 +29,6 @@ func CopyFile(source, dest string) error {
 	var dst *os.File
 	var err error
 	var st os.FileInfo
-
-	log.WithFields(log.Fields{
-		"source": source,
-		"dest":   dest,
-	}).Debug("Copying file")
 
 	// Stat the source first
 	st, err = os.Stat(source)

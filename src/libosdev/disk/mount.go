@@ -18,8 +18,8 @@ package disk
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"libosdev/commands"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -190,7 +190,7 @@ func (m *MountManager) UnmountAll() {
 	sort.Sort(LenSort(keys))
 	for _, key := range keys {
 		if err := m.Unmount(key); err != nil {
-			log.Error(err)
+			fmt.Fprintf(os.Stderr, "Error umount: %v\n", err)
 		}
 	}
 }
