@@ -117,6 +117,12 @@ func GetKernelFromRoot(root string) (*Kernel, error) {
 
 	for _, p := range possiblePaths {
 		// as an example, /vmlinuz -> boot/kernel-4.8.10
+		if kpath, err := filepath.EvalSymlinks(p); err == nil {
+			p = kpath
+		} else {
+			return nil, err
+		}
+
 		st, err := os.Stat(p)
 		if err != nil || st == nil {
 			continue
