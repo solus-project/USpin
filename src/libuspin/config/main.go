@@ -71,6 +71,7 @@ func New(cpath string) (*ImageConfiguration, error) {
 		LiveOS: SectionLiveOS{
 			RootfsFormat: "ext4",
 			RootfsSize:   4000,
+			BootDir:      "boot",
 			// Default to isolinux
 			Bootloaders: []LoaderType{
 				LoaderTypeSyslinux,

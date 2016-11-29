@@ -41,6 +41,8 @@ type SectionLiveOS struct {
 	RootfsSize   int             `toml:"rootfs_size"`   // Size of the image in megabytes (default 4000)
 	RootfsFormat string          `toml:"rootfs_format"` // Format of the rootfs, defaults to ext4
 
+	BootDir string `toml:"bootdir"` // Where to store boot assets, i.e. boot/
+
 	Bootloaders []LoaderType `toml:"bootloaders"` // Which bootloaders to enable
 }
 
@@ -54,6 +56,10 @@ func ValidateSectionLiveOS(l *SectionLiveOS) error {
 	l.FileName = strings.TrimSpace(l.FileName)
 	if l.FileName == "" {
 		return errors.New("Invalid filename for livecd")
+	}
+	l.BootDir = strings.TrimSpace(l.BootDir)
+	if strings.HasPrefix(l.BootDir, "/") {
+		return errors.New("Invalid path for bootdir")
 	}
 	return nil
 }
