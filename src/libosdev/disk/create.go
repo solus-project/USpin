@@ -14,8 +14,7 @@
 // limitations under the License.
 //
 
-// Package build provides routines for the core elements of image building
-package build
+package disk
 
 import (
 	"fmt"

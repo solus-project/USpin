@@ -158,10 +158,10 @@ func (l *LiveOSBuilder) PrepareWorkspace() error {
 // CreateStorage will create the rootfs.img in which we will contain the
 // Live OS
 func (l *LiveOSBuilder) CreateStorage() error {
-	if err := CreateSparseFile(l.rootfsImg, l.rootfsSize); err != nil {
+	if err := disk.CreateSparseFile(l.rootfsImg, l.rootfsSize); err != nil {
 		return err
 	}
-	if err := FormatAs(l.rootfsImg, l.rootfsFormat); err != nil {
+	if err := disk.FormatAs(l.rootfsImg, l.rootfsFormat); err != nil {
 		return err
 	}
 	return nil
@@ -186,7 +186,7 @@ func (l *LiveOSBuilder) UnmountStorage() error {
 	if err := disk.GetMountManager().Unmount(l.rootfsDir); err != nil {
 		return err
 	}
-	return CheckFS(l.rootfsImg, l.rootfsFormat)
+	return disk.CheckFS(l.rootfsImg, l.rootfsFormat)
 }
 
 // GetRootDir returns the path to the mounted rootfs.img
@@ -330,7 +330,7 @@ func (l *LiveOSBuilder) CollectAssets() error {
 func (l *LiveOSBuilder) FinalizeImage() error {
 	// First up, create the squashfs
 	squash := filepath.Join(l.liveosDir, "squashfs.img")
-	if err := CreateSquashfs(l.liveStagingDir, squash, l.img.Config.LiveOS.Compression); err != nil {
+	if err := disk.CreateSquashfs(l.liveStagingDir, squash, l.img.Config.LiveOS.Compression); err != nil {
 		return err
 	}
 

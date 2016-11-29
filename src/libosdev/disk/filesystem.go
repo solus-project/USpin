@@ -14,11 +14,10 @@
 // limitations under the License.
 //
 
-package build
+package disk
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"libosdev/commands"
 )
 
@@ -68,10 +67,6 @@ func FormatAs(filename, filesystem string) error {
 	if !ok {
 		return fmt.Errorf("Cannot format with unknown filesystem '%v'", filesystem)
 	}
-	log.WithFields(log.Fields{
-		"filename":   filename,
-		"filesystem": filesystem,
-	}).Info("Formatting filesystem")
 	return command(filename)
 }
 
@@ -83,9 +78,5 @@ func CheckFS(filename, filesystem string) error {
 	if !ok {
 		return fmt.Errorf("Cannot check with unknown filesystem '%v'", filesystem)
 	}
-	log.WithFields(log.Fields{
-		"filename":   filename,
-		"filesystem": filesystem,
-	}).Info("Checking filesystem")
 	return command(filename)
 }
