@@ -24,7 +24,7 @@ func (s *USpin) Build() error {
 		return err
 	}
 	// Make sure that the package manager requirements are met
-	if err := s.packager.Init(s.spec.Config); err != nil {
+	if err := s.packager.Init(); err != nil {
 		s.logPackage.Error(err)
 		return err
 	}

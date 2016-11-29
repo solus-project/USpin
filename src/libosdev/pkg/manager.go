@@ -18,7 +18,6 @@ package pkg
 
 import (
 	"errors"
-	"libuspin/config"
 	"libuspin/spec"
 )
 
@@ -26,10 +25,9 @@ import (
 // USpin to understand them and construct images according to their particulars.
 type Manager interface {
 
-	// Init will allwo implementations to initialise themselves according to any
-	// particulars in the image configuration, allowing it to make better informed
-	// decisions later on.
-	Init(conf *config.ImageConfiguration) error
+	// Init will allow implementations to initialise themselves assuming that
+	// host-side dependencies need to be met.
+	Init() error
 
 	// InitRoot implementations should set up the root filesystem to handle any
 	// quirks prior to installing packages. This also allows manipulating the

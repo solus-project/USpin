@@ -21,7 +21,6 @@ import (
 	"libosdev/commands"
 	"libosdev/disk"
 	"libuspin/build"
-	"libuspin/config"
 	"libuspin/spec"
 	"os"
 	"os/exec"
@@ -52,8 +51,8 @@ func NewEopkgManager() *EopkgManager {
 	return &EopkgManager{}
 }
 
-// Init will attempt to initialise EopkgManager from the given configuration
-func (e *EopkgManager) Init(conf *config.ImageConfiguration) error {
+// Init will check that eopkg is available host side
+func (e *EopkgManager) Init() error {
 	// Ensure the system has eopkg available first!
 	if _, err := exec.LookPath("eopkg"); err != nil {
 		return err
