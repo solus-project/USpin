@@ -22,6 +22,54 @@ import (
 	"libuspin/disk"
 	"os"
 	"path/filepath"
+	"text/template"
+)
+
+// IsolinuxTemplate is used to populate fields in the isolinux.cfg
+type IsolinuxTemplate struct {
+	Kernel *Kernel
+	Label  string // CDLABEL
+	Brand  string // Needs to come from config!
+}
+
+var (
+	// DefaultIsolinuxTemplate is the built-in template for isolinux.cfg
+	DefaultIsolinuxTemplate = `
+ui vesamenu.c32
+timeout 50
+default live
+
+MENU RESOLUTION 1024 768
+menu title {{.Brand}}
+
+menu color screen       37;40      #80ffffff #00000000 std
+MENU COLOR border       30;44   #40ffffff #a0000000 std
+MENU COLOR title        1;36;44 #ffffffff #a0000000 std
+MENU COLOR sel          7;37;40 #e0ffffff #20ffffff all
+MENU COLOR unsel        37;44   #50ffffff #a0000000 std
+MENU COLOR help         37;40   #c0ffffff #a0000000 std
+MENU COLOR timeout_msg  37;40   #80ffffff #00000000 std
+MENU COLOR timeout      1;37;40 #c0ffffff #00000000 std
+MENU COLOR msg07        37;40   #90ffffff #a0000000 std
+MENU COLOR tabmsg       31;40   #ffDEDEDE #00000000 std
+MENU HIDDEN
+MENU HIDDENROW 7
+MENU WIDTH 78
+MENU MARGIN 15
+MENU ROWS 4
+MENU VSHIFT 17
+MENU HSHIFT 25
+MENU TABMSGROW 11
+
+label live
+  menu label Start {{.Brand}}
+  kernel /{{.Kernel.TargetPath}}
+  append initrd=/{{.Kernel.TargetInitrd}} root=live:CDLABEL={{.Label}} ro rd.luks=0 rd.md=0 quiet splash --
+menu default
+label local
+  menu label Boot from local drive
+  localboot 0x80
+`
 )
 
 var (
@@ -58,6 +106,8 @@ type SyslinuxLoader struct {
 
 	// Store the configuration for particulars we need to implement
 	config *config.ImageConfiguration
+
+	isolinuxTemplate *template.Template
 }
 
 // LocateAsset will attempt to find the given asset and then cache it
@@ -90,6 +140,13 @@ func (s *SyslinuxLoader) Init(c *config.ImageConfiguration) error {
 			return err
 		}
 	}
+	// Parse our default templates
+	// TODO: Make it possible to load from a file!
+	tmpl, err := template.New("isolinux").Parse(DefaultIsolinuxTemplate)
+	if err != nil {
+		return err
+	}
+	s.isolinuxTemplate = tmpl
 	s.config = c
 	return nil
 }
@@ -134,7 +191,20 @@ func (s *SyslinuxLoader) Install(op Capability, c ConfigurationSource) error {
 		}
 	}
 
-	return ErrNotYetImplemented
+	// Write our template data
+	tmplData := IsolinuxTemplate{
+		Kernel: c.GetKernel(),
+		Label:  "DummyISO",
+		Brand:  "NEEDFIX",
+	}
+
+	cfg := c.JoinDeployPath("isolinux", "isolinux.cfg")
+	out, err := os.Create(cfg)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	return s.isolinuxTemplate.Execute(out, tmplData)
 }
 
 // GetSpecialFile will return the special paths for isolinux
