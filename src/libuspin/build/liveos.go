@@ -191,7 +191,6 @@ func (l *LiveOSBuilder) GetRootDir() string {
 // The very last call in the chain, we seal the deal by spinning the ISO
 func (l *LiveOSBuilder) spinISO() error {
 	uefi := false
-	syslinux := false
 	// Get absolute path for "./${name}"
 	outputFilename := l.img.Config.LiveOS.FileName
 	if o, err := filepath.Abs(outputFilename); err == nil {
@@ -212,23 +211,37 @@ func (l *LiveOSBuilder) spinISO() error {
 		"-appid",
 		volumeID,
 	}
+
+	caps := boot.CapInstallISO | boot.CapInstallLegacy
+	bloader := boot.GetLoaderWithMask(l.loaders, caps)
+
+	bootbinFile := bloader.GetSpecialFile(boot.FileTypeBootElToritoBinary)
+	bootcatFile := bloader.GetSpecialFile(boot.FileTypeBootElToritoCatalog)
+	mbrFile := bloader.GetSpecialFile(boot.FileTypeBootMBR)
+
 	// This is where we'd install syslinux or other loader..
 	// Note we'll need to do investigation for GRUB to determine precisely how to
 	// get the cat and bin files
-	if syslinux {
+	if bootbinFile != "" && bootcatFile != "" {
 		command = append(command, []string{
 			"-eltorito-boot",
-			"isolinux/isolinux.bin",
+			bootbinFile,
 			"-eltorito-catalog",
-			"isolinux/boot.cat",
+			bootcatFile,
 			"-no-emul-boot",
 			"-boot-load-size",
 			"4",
 			"-boot-info-table",
-			"-isohybrid-mbr",
-			"isolinux/isohdpfx.bin",
 		}...)
 	}
+	// Enable USB booting per the bootloader
+	if mbrFile != "" {
+		command = append(command, []string{
+			"-isohybrid-mbr",
+			mbrFile,
+		}...)
+	}
+	// Still unused for now
 	if uefi {
 		command = append(command, []string{
 			"-eltorito-alt-boot",
