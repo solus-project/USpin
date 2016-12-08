@@ -67,6 +67,7 @@ TODO
  - [x] Implement full `eopkg` support in generic `pkg.Manager` interface
  - [x] Add basic ISO9660 support once again
  - [x] Add complete Legacy Boot bootloader support for `isolinux`
+ - [ ] Remove repo definition from `.packages` and place in `.spin`, similar to `solbuild`.
  - [ ] Enhance bootloader support for UEFI
  - [ ] Build (successfully!) an existing Solus image specification
  - [ ] Construct specifications for our chroot builder images
