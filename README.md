@@ -5,9 +5,9 @@ USpin
 
 Universal image creation utilities. Used to produce bootable Linux medium in an agnostic fashion. This is still a **Work In Progress**.
 
-USpin is a [Solus project](https://solus-project.com/).
+USpin is a [Solus project](https://getsol.us/).
 
-![logo](https://build.solus-project.com/logo.png)
+![logo](https://build.getsol.us/logo.png)
 
 
 [![You Spin Me Right Round](https://img.youtube.com/vi/PGNiXGX2nLU/0.jpg)](https://www.youtube.com/watch?v=PGNiXGX2nLU)
