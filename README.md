@@ -7,7 +7,7 @@ Universal image creation utilities. Used to produce bootable Linux medium in an 
 
 USpin is a [Solus project](https://solus-project.com/).
 
-![logo](https://build.solus-project.com/logo.png)
+![logo](https://build.getsol.us/logo.png)
 
 
 [![You Spin Me Right Round](https://img.youtube.com/vi/PGNiXGX2nLU/0.jpg)](https://www.youtube.com/watch?v=PGNiXGX2nLU)
